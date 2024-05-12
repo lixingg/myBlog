@@ -2,9 +2,10 @@ import {defineConfig} from 'vitepress'
 import {set_sidebar} from "./utils/auto-gen-sidebar.mjs";	// 改成自己的路径
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base:'/myBlog/',
   head:[['link',{rel:'icon',href:'/logo.png'}]],
   title: "李鑫的博客",
-  description: "steven",
+  description: "李鑫的博客",
   themeConfig: {
     outlineTitle: "文档目录",
     logo: '/logo.png',
