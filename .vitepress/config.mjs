@@ -4,7 +4,7 @@ import {set_sidebar} from "./utils/auto-gen-sidebar.mjs";	// 改成自己的路�
 export default defineConfig({
   head:[['link',{rel:'icon',href:'/logo.png'}]],
   title: "李鑫的博客",
-  description: "李鑫的博客",
+  description: "steven",
   themeConfig: {
     outlineTitle: "文档目录",
     logo: '/logo.png',
