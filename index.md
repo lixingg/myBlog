@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "李鑫的博客"
   #  text: "李鑫的博客"
-  tagline: 成功没有捷径，只有坚持！相信自己，你能行！相信你的明天会更好！
+  tagline: 成功没有捷径，只有坚持！相信自己你能行！相信你的明天会更好！
   image:
     alt: 背景图
     src: /study.svg
