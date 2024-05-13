@@ -186,20 +186,20 @@
 }
 
 @media (min-width: 960px) {
-    .name[data-v-89d2fc22], .text[data-v-89d2fc22] {
+    .container .name {
         /* line-height: 64px; */
         font-size: 41px !important;
     }
 }
 
 @media (min-width: 960px) {
-    .tagline[data-v-89d2fc22] {
+    .tagline{
         font-size: 19px !important;
     }
 }
 
 @media (min-width: 960px) {
-    .VPFeatures[data-v-d6f3b7e5] {
+    .VPFeatures{
         padding: 5px 200px !important;
     }
 }
