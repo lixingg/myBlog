@@ -1,49 +1,34 @@
 ---
 outline: deep
 ---
+# 前言
+###
+#### 前端知识点比较琐碎，需要长久的学习和积累，是一个循序渐进的过程，戒骄戒躁，稳扎稳打
 
-# Runtime API Examples
+### 学习路线
+- [x] 1.html
+- [x] 2.css
+- [x] 3.javascript
+- [x] 4.nodejs
+- [x] 5.jquery
+- [x] 6.ajax
+- [x] 7.typescript
+- [x] 8.vue2
+- [x] 9.vue3
+- [x] 10.微信小程序
+- [x] 11.react
+- [x] 12.react18
+- [x] 13.threeJS
 
-This page demonstrates usage of some of the runtime APIs provided by VitePress.
-
-The main `useData()` API can be used to access site, theme, and page data for the current page. It works in both `.md` and `.vue` files:
-
-```md
-<script setup>
-import { useData } from 'vitepress'
-
-const { theme, page, frontmatter } = useData()
-</script>
-
-## Results
-
-### Theme Data
-<pre>{{ theme }}</pre>
-
-### Page Data
-<pre>{{ page }}</pre>
-
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
-```
-
-<script setup>
-import { useData } from 'vitepress'
-
-const { site, theme, page, frontmatter } = useData()
-</script>
-
-## Results
-
-### Theme Data
-<pre>{{ theme }}</pre>
-
-### Page Data
-<pre>{{ page }}</pre>
-
-### Page Frontmatter
-<pre>{{ frontmatter }}</pre>
-
-## More
-
-Check out the documentation for the [full list of runtime APIs](https://vitepress.dev/reference/runtime-api#usedata).
+### html学习
+[详情](./html学习.md)
+### css学习
+[详情](./css学习.md)
+### javascript学习
+[详情](./js学习.md)
+### react学习
+[详情](./react学习.md)
+### Echarts学习
+[详情](./Echarts学习.md)
+### 面试宝典
+[详情](./面试宝典.md)
