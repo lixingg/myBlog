@@ -188,20 +188,19 @@
 @media (min-width: 960px) {
     .name[data-v-89d2fc22], .text[data-v-89d2fc22] {
         /* line-height: 64px; */
-        font-size: 41px;
+        font-size: 41px !important;
     }
 }
 
 @media (min-width: 960px) {
     .tagline[data-v-89d2fc22] {
-        line-height: 36px;
-        font-size: 19px;
+        font-size: 19px !important;
     }
 }
 
 @media (min-width: 960px) {
     .VPFeatures[data-v-d6f3b7e5] {
-        padding: 5px 200px;
+        padding: 5px 200px !important;
     }
 }
 
