@@ -199,11 +199,11 @@
     }
 }
 
-/*@media (min-width: 960px) {
+@media (min-width: 960px) {
     .VPFeatures[data-v-d6f3b7e5] {
-        padding: 0 200px;
+        padding: 5px 200px;
     }
-}*/
+}
 
 /*@media (min-width: 1440px) {
 .VPSidebar[data-v-8f603b0e] {
