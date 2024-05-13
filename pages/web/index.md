@@ -19,16 +19,18 @@ outline: deep
 - [x] 11.react
 - [x] 12.react18
 - [x] 13.threeJS
+- [x] 14.Echarts
+- [x] 15.疑难解答
 
-### html学习
+### 1、html学习
 [详情](./html学习.md)
-### css学习
+### 2、css学习
 [详情](./css学习.md)
-### javascript学习
+### 3、javascript学习
 [详情](./js学习.md)
-### react学习
+### 11、react学习
 [详情](./react学习.md)
-### Echarts学习
+### 14、Echarts学习
 [详情](./Echarts学习.md)
-### 疑难解答
+### 15、疑难解答
 [详情](./面试宝典.md)
