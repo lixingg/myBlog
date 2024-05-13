@@ -20,28 +20,28 @@ export default defineConfig({
         text: '前端',
         items: [
           {text: '技术中心', link: '/pages/web/'},
-          {text: '面试宝典', link: '/vue/vue2'}
+          // {text: '面试宝典', link: '/vue/vue2'}
         ]
       },
       {
         text: '后端',
         items: [
           {text: '技术中心', link: '/pages/server/'},
-          {text: '面试宝典', link: '/vue/vue2'}
+          // {text: '面试宝典', link: '/vue/vue2'}
         ]
       },
       {
         text: '运维',
         items: [
           {text: '技术中心', link: '/pages/operation/'},
-          {text: '面试宝典', link: '/vue/vue2'}
+          // {text: '面试宝典', link: '/vue/vue2'}
         ]
       },
       {
         text: '网安',
         items: [
-          {text: '技术中心', link: '/pages/operation/'},
-          {text: '面试宝典', link: '/vue/vue2'}
+          {text: '技术中心', link: '/pages/network/'},
+          // {text: '面试宝典', link: '/vue/vue2'}
         ]
       }
     ],

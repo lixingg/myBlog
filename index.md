@@ -40,7 +40,9 @@ features:
   - title: APP应用
     icon:
       src: /app.svg
-    details: 使用uni-app开发，ionic 开发，react-native开发 
+    details: 使用uni-app开发，ionic 开发 参考官方文档，react-native开发
+    linkText?: ionic
+    linK: https://ionic.nodejs.cn/#google_vignette
   - title: 低代码平台
     icon:
       src: /lowCode.svg

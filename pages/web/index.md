@@ -30,5 +30,5 @@ outline: deep
 [详情](./react学习.md)
 ### Echarts学习
 [详情](./Echarts学习.md)
-### 面试宝典
+### 疑难解答
 [详情](./面试宝典.md)
