@@ -16,16 +16,16 @@ hero:
     - theme: brand
       text: 单应用
       link: http://123.60.71.169
-    - theme: brand
+    - theme: alt
       text: 微服务
 #      link: http://123.60.71.169
-    - theme: brand
+    - theme: alt
       text: APP
 #      link: http://123.60.71.169      
-    - theme: brand
+    - theme: alt
       text: 小程序
 #      link: http://123.60.71.169
-    - theme: brand
+    - theme: alt
       text: 桌面端
 #      link: http://123.60.71.169      
 features:
