@@ -204,6 +204,14 @@
     }
 }
 
+/*h2 {*/
+/*    font-family: 仿宋;*/
+/*    font-weight: 600;*/
+/*}*/
+pre{
+    font-size: 16px;
+   font-family: 宋体;
+}
 /*@media (min-width: 1440px) {
 .VPSidebar[data-v-8f603b0e] {
     padding-left: 10px!important;

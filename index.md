@@ -11,15 +11,23 @@ hero:
     src: /study.svg
   actions:
     - theme: brand
-      text: 个人博客
+      text: 博客
       link: https://lixingg.github.io/myBlog/
     - theme: brand
-      text: 个人应用
+      text: 单应用
       link: http://123.60.71.169
     - theme: brand
-      text: 微服务应用
-      link: http://123.60.71.169
-
+      text: 微服务
+#      link: http://123.60.71.169
+    - theme: brand
+      text: APP
+#      link: http://123.60.71.169      
+    - theme: brand
+      text: 小程序
+#      link: http://123.60.71.169
+    - theme: brand
+      text: 桌面端
+#      link: http://123.60.71.169      
 features:
   - title: 关注前沿
     icon:

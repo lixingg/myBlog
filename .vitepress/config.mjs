@@ -3,12 +3,12 @@ import {set_sidebar} from "./utils/auto-gen-sidebar.mjs";	// 改成自己的路�
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   base:'/myBlog/',
-  head:[['link',{rel:'icon',href:'/logo.svg'}]],
+  head:[['link',{rel:'icon',href:'/Avatar.svg'}]],
   title: "李鑫的博客",
   description: "李鑫的博客",
   themeConfig: {
     outlineTitle: "文档目录",
-    logo: '/logo.svg',
+    logo: '/Avatar.svg',
     outline: [2, 6],
     sidebar: false, // 关闭侧边栏
     // showSider: false,
