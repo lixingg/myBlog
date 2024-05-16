@@ -1,3 +1,8 @@
+## React专栏
+### 1、React是什么?
+<pre>
+    react是facebook开源的一个js库，用于构建用户界面。
+</pre>
 ### 1、jsx是什么
 ###
 jsx是javaScript的一种语法扩展，他和模板语言很接近，但是它充分具备javaScript的能力。
