@@ -204,6 +204,13 @@
     }
 }
 
+h3{
+    color: #bd34fe;
+}
+
+ul li{
+    list-style: none;
+}
 /*h2 {*/
 /*    font-family: 仿宋;*/
 /*    font-weight: 600;*/
