@@ -12,7 +12,7 @@ hero:
   actions:
     - theme: brand
       text: 博客
-      link: https://lixingg.github.io/myBlog/
+      link: https://blog.loverzz.cn
     - theme: brand
       text: 单应用
       link: http://123.60.71.169
