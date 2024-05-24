@@ -43,6 +43,13 @@ export default defineConfig({
           {text: '技术中心', link: '/pages/network/'},
           // {text: '面试宝典', link: '/vue/vue2'}
         ]
+      },
+      {
+        text: '软件',
+        items: [
+          {text: '操作文档', link: '/pages/softWare/'},
+          // {text: '面试宝典', link: '/vue/vue2'}
+        ]
       }
     ],
 
