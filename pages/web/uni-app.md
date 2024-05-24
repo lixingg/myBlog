@@ -72,3 +72,16 @@
 -  HBuilderX官方（App离线打包）： https://nativesupport.dcloud.net.cn/AppDocs/usesdk/android.html#versioncode
 
 
+### 2.0 Android Studio如何使用本地的gradle；gradle-6.5-all.zip和gradle-6.1.1-all.zip下载
+
+#### 2.1 下载gradle-6.5-all.zip和gradle-6.1.1-all.zip 通过迅雷下载快
+
+-  2.1.1 通过迅雷下载快，下载地址：https://github.com/gradle/gradle-distributions/releases/download/v6.5.0/gradle-6.5-all.zip
+-  2.1.2 链接 ：https://pan.baidu.com/s/1lqC5X4GQIGAOcDr76TnGyw 提取码 ：hehr （网上看的）
+
+#### 2. OK，下载完压缩包后开始操作：
+-   1.降压缩放放在 .gradle/wrapper/dists 目录下 解压；
+-   2.打开HBuilder-Integrate-AS，gradle/gradle-wrapper.properties，修改distributionUrl=file:/// + 压缩包路径，
+    也就是步骤2中存放压缩包的路径；
+-   3.HBuilder-Integrate-AS 中点击 File -> Settings -> Gradle ，修改分发为本地安装，并将刚刚解压的文件夹路径填上。
+-   4.点击 File -> Invalidate Caches / Restart，重启AS，等待gradle下载完成。
