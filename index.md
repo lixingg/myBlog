@@ -7,7 +7,7 @@ hero:
   #  text: "李鑫的博客"
   tagline: 成功没有捷径，只有坚持！相信自己你能行！相信你的明天会更好！
   image:
-    alt: 背景图
+    alt: 李鑫的博客
     src: /study.svg
   actions:
     - theme: brand
@@ -19,9 +19,11 @@ hero:
     - theme: alt
       text: 微服务
 #      link: http://123.60.71.169
-    - theme: alt
+    - theme: brand
       text: APP
-#      link: http://123.60.71.169      
+      image:
+        src: /app.svg
+      link: http://123.60.71.169:8241/douPlayer.apk    
     - theme: alt
       text: 小程序
 #      link: http://123.60.71.169

@@ -71,7 +71,6 @@
 - 
 -  HBuilderX官方（App离线打包）： https://nativesupport.dcloud.net.cn/AppDocs/usesdk/android.html#versioncode
 
-
 ### 2.0 Android Studio如何使用本地的gradle；gradle-6.5-all.zip和gradle-6.1.1-all.zip下载
 
 #### 2.1 下载gradle-6.5-all.zip和gradle-6.1.1-all.zip 通过迅雷下载快
@@ -85,3 +84,8 @@
     也就是步骤2中存放压缩包的路径；
 -   3.HBuilder-Integrate-AS 中点击 File -> Settings -> Gradle ，修改分发为本地安装，并将刚刚解压的文件夹路径填上。
 -   4.点击 File -> Invalidate Caches / Restart，重启AS，等待gradle下载完成。
+
+### 3.0 配置gradle
+
+### 自己写的仿抖音app(无毒可以扫码下载安装玩，特此声明仅用于学习)
+-  <img src="/douPlayer.png">
