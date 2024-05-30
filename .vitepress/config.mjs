@@ -3,7 +3,7 @@ import {set_sidebar} from "./utils/auto-gen-sidebar.mjs";	// 改成自己的路�
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
     // base:'/myBlog/', // 使用github原始域名相关的配置
-    head: [['link', {rel: 'icon', href: '/Avatar.svg',title:'李鑫的博客',alt:'李鑫的博客'}]],
+    head: [['link', {rel: 'icon', href: '/李鑫的博客.svg',title:'李鑫的博客',alt:'李鑫的博客'}]],
     title: "李鑫的博客",
     description: "李鑫的博客记录者学习内容，" +
         "李鑫的博客是记录着javascript的学习知识点，" +
@@ -21,7 +21,7 @@ export default defineConfig({
         "李鑫的博客让所有人共享学习历程",
     themeConfig: {
         outlineTitle: "文档目录",
-        logo: '/Avatar.svg',
+        logo: '/李鑫的博客.svg',
         outline: [2, 6],
         sidebar: false, // 关闭侧边栏
         // showSider: false,
