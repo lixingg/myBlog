@@ -8,6 +8,7 @@ hero:
   tagline: 成功没有捷径，只有坚持！相信自己你能行！相信你的明天会更好！
   image:
     alt: 李鑫的博客
+    title: 李鑫的博客
     src: /study.svg
   actions:
     - theme: brand
