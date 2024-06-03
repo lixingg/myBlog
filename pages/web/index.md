@@ -17,6 +17,7 @@ outline: deep
 - [x] 9.微信小程序 专栏
 - [x] 10.uni-app 专栏
 - [x] 11.react 专栏
+- [x] 12.react native 专栏
 - [x] 13.threeJS 专栏
 - [x] 14.Echarts 专栏
 - [x] 15.疑难解答
@@ -152,6 +153,19 @@ outline: deep
     如果你正在寻找一种构建现代Web应用程序的方法，那么React是一个很好的选择。
 </pre>
 -    [专栏详情](./react.md)
+
+### 12、React Native 专栏
+
+-    [专栏详情](./react-native.md)
+
+### 13、uni-app 专栏
+
+-    [专栏详情](./uni-app.md)
+
+### 14、vite 专栏
+
+-    [专栏详情](./vite.md)
+
 ### 14、Echarts 专栏
 <pre>
     ECharts是一款基于JavaScript的数据可视化图表库，它提供了直观、生动、可交互且可高度个性化定制的数据可视化图表。
@@ -168,9 +182,7 @@ outline: deep
     作为一个开源项目，ECharts拥有一个活跃的社区，开发者可以在社区中找到大量的教程、文档、案例等资源，并与其他开发者进行交流和分享。
 </pre> 
 -    [专栏详情](./Echarts.md)
-### 13、uni-app 专栏
 
--    [专栏详情](./uni-app.md)
 ### 15、疑难解答
 
 <pre>
