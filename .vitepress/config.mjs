@@ -33,7 +33,7 @@ export default defineConfig({
                 text: '前端',
                 items: [
                     {text: '技术中心', link: '/pages/web/'},
-                    // {text: '面试宝典', link: '/vue/vue2'}
+                    {text: '面试宝典', link: '/pages/web/react'}
                 ]
             },
             {
