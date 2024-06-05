@@ -32,13 +32,29 @@ export default defineConfig({
             {
                 text: '前端',
                 items: [
+                    // {text: 'HTML', link: '/pages/web/html'},
+                    // {text: 'CSS', link: '/pages/web/css'},
+                    // {text: 'Javascript', link: '/pages/web/js'},
+                    // {text: 'nodeJS', link: '/pages/web/nodeJS'},
+                    // {text: 'JQuery', link: '/pages/web/jquery'},
+                    // {text: 'Ajax', link: '/pages/web/ajax'},
+                    // {text: 'typescript', link: '/pages/web/typescript'},
+                    // {text: 'VUE', link: '/pages/web/vue'},
+                    // {text: 'React', link: '/pages/web/react'},
+                    // {text: 'React-native', link: '/pages/web/react-native'},
+                    // {text: 'uni-app', link: '/pages/web/uni-app'},
+                    // {text: 'vite', link: '/pages/web/vite'},
+                    // {text: 'Echarts', link: '/pages/web/Echarts'},
                     {text: '技术中心', link: '/pages/web/'},
-                    {text: '面试宝典', link: '/pages/web/react'}
+
                 ]
             },
             {
                 text: '后端',
                 items: [
+                    {text: 'JAVA', link: '/pages/server/Java'},
+                    {text: 'Python', link: '/pages/server/Python'},
+                    {text: 'GO', link: '/pages/server/GO'},
                     {text: '技术中心', link: '/pages/server/'},
                     // {text: '面试宝典', link: '/vue/vue2'}
                 ]

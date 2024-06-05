@@ -94,15 +94,16 @@ Web概念：特指那些基于浏览器的web网站（本质就是网页）
 
 ####  8、混合App技术配搭
 - 
--  1.[Angular.js](https://angular.cn/docs)基础语法 + [Ionic](https://ionic.nodejs.cn/)（提供了对应的命令行工具 + UI组件）
+-  1.[Angular.js](https://angular.cn/docs)基础语法 + [Ionic](https://ionic.nodejs.cn/)（提供了对应的命令行工具 + UI组件）(Google)
 
--  2.[vue.js](https://cn.vuejs.org/)基础语法 + [Weex](https://weexapp.com/zh/) （提供了对应的命令行工具 + UI组件）
+-  2.[vue.js](https://cn.vuejs.org/)基础语法 + [Weex](https://weexapp.com/zh/) （提供了对应的命令行工具 + UI组件）(Alibaba)
 
--  3.[React.js](https://react.docschina.org/)基础语法 + [React Native](https://www.reactnative.cn/) （提供了对应的命令行工具 + UI组件）
+-  3.[React.js](https://react.docschina.org/)基础语法 + [React Native](https://www.reactnative.cn/) （提供了对应的命令行工具 + UI组件）(Facebook)
 
 -  运行对应的命令行指令打包成可以安装的手机端程序安装包
 
 -  4.[html5+](https://www.html5plus.org/) 中国产业联盟，是工信部下属单位，是为了更好的推进HTML5的商用、更好的为HTML5开发者服务而由产业链厂商共同组成的一个联盟(DCloud)
    ( HBuilder )
   <img src="/web/react-native.png">
+-  5.[Dart](https://dart.cn/) + [Flutter](https://flutterchina.club/) （提供了对应的命令行工具 + UI组件） (Google)
 
