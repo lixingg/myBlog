@@ -268,7 +268,7 @@ ReactDOM.render(<MyComponent/>, document.getElementById('test'))
 ```
 
 ### 13、 组件实例的三大核心属性
-#### 1.state
+#### 1.三大属性 -- state
 > 组件的状态，组件内部使用，外部不能访问
 ##### 1.state标准写法
 ```jsx
@@ -413,6 +413,12 @@ class Car{
     // 类中可以直接写赋值语句，如下代码的含义是：给Car的实例对象添加一个属性，名为
     // year,值为2022
     year = 2022;
+    // 类添加属性
+    static type = 'car';
+    // 类添加方法
+    static getType() {
+        return 'car';
+    }
 }
 
 const c1 = new Car('BYD',1000000);
@@ -469,8 +475,771 @@ ReactDOM.render(<MyComponent/>,document.getElementById('example'));
     - 正确写法: this.setState({comment:'xxxx'})
 ```
 
-#### 2.props
+#### 2.三大属性 -- props
 ##### 1. 理解
 ```text
+1. 每个组件对象都会有props(properties的简写)属性
+
+2. 组件标签的所有属性都保存在props中
 ```
 
+- **1.props的基本使用**
+```jsx
+class MyComponent extends React.Component{
+    render(){
+        const {name,age,gender} = this.props;
+        return (
+            <div>
+                <h2>姓名：{name}</h2>
+                <h2>年龄：{age}</h2>
+                <h2>性别：{gender}</h2>
+            </div>
+        )
+    }
+}
+// age={18} 使用这种方式 传递的数值为 number 或者动态参数传递
+ReactDOM.render(<MyComponent name="Tom" age={18} gender="male"/>,document.getElementById('example'));
+```
+- **2.批量传递props**
+```jsx
+class MyComponent extends React.Component{
+    render(){
+        //注意： props 是只读的 ，不允许修改
+        // this.props.name = 'Jack'; // 此行代码会报错，因为props是只读的
+        const {name,age,gender} = this.props;
+        return (
+            <div>
+                <h2>姓名：{name}</h2>
+                <h2>年龄：{age}</h2>
+                <h2>性别：{gender}</h2>
+            </div>
+        )
+    }
+}
+// 对标签属性进行类型、必要性的限制（设置props属性的类型及必要性）
+MyComponent.propTypes = { // PropTypes 来自 prop-types库
+    name:PropTypes.string.isRequired, // 限制name必传，且为字符串
+    age:PropTypes.number, // 限制age为数值
+    gender:PropTypes.string,// 限制gender为字符串
+    speak:PropTypes.func, // 限制speak为函数
+}
+// 指定默认标签属性值（设置props默认值）
+MyComponent.defaultProps = {
+    age:18,
+    gender:'male',
+}
+
+function speak(){
+    console.log('speak');
+}
+const p = {name:"Tom",age:18,gender:"male",speak};
+// {...p} 并非对象的扩展运算符（克隆对象），而是React提供的新属性，用于批量传递props
+ReactDOM.render(<MyComponent {...p}/>,document.getElementById('example'));
+
+```
+```js
+/*********** 回顾展开运算符的使用 ************/
+let arr1=[1,3,5,7,9];
+let arr2=[2,4,6,8,10];
+console.log(...arr1); // 数组展开： 1 3 5 7 9
+console.log([...arr1,...arr2]); //数组合并： [1,3,5,7,9,2,4,6,8,10]
+
+// 在函数中使用
+function sum(...numbers){ // ...numbers 表示将传入的参数以数组的形式接收
+    return numbers.reduce((preValue,currentValue)=>{
+        return preValue + currentValue;
+    })
+}
+console.log(sum(1,2,3,4,5)); // 15
+
+// 构造字面量对象时使用展开语法
+let person = {name:"Tom",age:18};
+let person2 = {...person}; // 克隆对象
+console.log(...person) // 展开对象报错 TypeError: Spread syntax requires ...iterable[Symbol.iterator] to be a function
+
+// 对象合并 后面相同属性覆盖前面的
+let person3 = {...person,name:"Jack",address:"No.1 Road"}
+console.log(person3); // {name: "Jack", age: 18, address: "No.1 Road"}};
+```
+
+- **3.props的简写方式**
+```jsx
+// 通过类关键字 static 将 添加类的静态属性和方法放在类里面维护，结构更清晰
+class MyComponent extends React.Component{
+    // 对标签属性进行类型、必要性的限制（设置props属性的类型及必要性）
+    static propTypes = { // PropTypes 来自 prop-types库
+        name:PropTypes.string.isRequired, // 限制name必传，且为字符串
+        age:PropTypes.number, // 限制age为数值
+        gender:PropTypes.string,// 限制gender为字符串
+        speak:PropTypes.func, // 限制speak为函数
+    }
+// 指定默认标签属性值（设置props默认值）
+    static defaultProps = {
+        age:18,
+        gender:'male',
+    }
+    render(){
+        const {name,age,gender} = this.props;
+        return (
+            <div>
+                <h2>姓名：{name}</h2>
+                <h2>年龄：{age}</h2>
+                <h2>性别：{gender}</h2>
+            </div>
+        )
+    }
+}
+
+
+function speak(){
+    console.log('speak');
+}
+const p = {name:"Tom",age:18,gender:"male",speak};
+ReactDOM.render(<MyComponent {...p}/>,document.getElementById('example'));
+```
+
+-  **4.类式组件中的构造器与props**
+```jsx
+class MyComponent extends React.Component{
+    constructor(props) {
+        // 构造器是否接收props，是否传递给super，取决于：是否希望在构造器中通过this访问props
+        // console.log(props);
+        super(props);
+       console.log('constructor',this.props); // 通过实例获取props
+        console.log('constructor',props); // 通过接收参数获取props
+    }
+    static propTypes = { 
+        name:PropTypes.string.isRequired, 
+        age:PropTypes.number, 
+        gender:PropTypes.string,
+        speak:PropTypes.func, 
+    }
+    static defaultProps = {
+        age:18,
+        gender:'male',
+    }
+    render(){
+        const {name,age,gender} = this.props;
+        return (
+            <div>
+                <h2>姓名：{name}</h2>
+                <h2>年龄：{age}</h2>
+                <h2>性别：{gender}</h2>
+            </div>
+        )
+    }
+}
+
+const p = {name:"Tom",age:18,gender:"male"};
+ReactDOM.render(<MyComponent {...p}/>,document.getElementById('example'));
+```
+
+-  **5.函数组件使用props**
+```jsx
+// 创建函数式组件 只能使用props (在hooks函数没有诞生之前 state,refs不能用 )
+function MyComponent(props) { 
+    const {name,age,gender} = props;
+    return (
+        <div>
+            <h2>姓名：{name}</h2>
+            <h2>年龄：{age}</h2>
+            <h2>性别：{gender}</h2>
+        </div>
+    )
+}
+// 只能通过这种形式对props进行类型、必要性的限制
+MyComponent.propTypes = { 
+    name:PropTypes.string.isRequired, 
+    age:PropTypes.number, 
+    gender:PropTypes.string,
+    speak:PropTypes.func,
+}
+
+MyComponent.defaultProps = {
+    age:18,
+    gender:'male',
+}
+const p = {name:"Tom",age:18,gender:"male"};
+ReactDOM.render(<MyComponent {...p}/>,document.getElementById('example'));
+```
+
+##### 2.作用
+```text
+1. 通过标签属性从组件外向组件内传递变化的数据
+
+2.注意：组件内部不能修改props数据
+```
+
+##### 3.编码操作
+-  **1.内部读取某个属性值**
+```jsx
+this.props.name
+```
+
+-  **2.对props中的属性值进行类型、必要性的限制**
+```jsx
+// 第一种方式（Reactv15.5开始已弃用）
+MyComponent.propTypes = {
+    name: React.PropTypes.string.isRequired,
+    age: React.PropTypes.number.isRequired,
+    speak: React.PropTypes.func,
+}
+
+// 第二种（新）：
+// 使用prop-types库进行限制（需要引入prop-types库）
+MyComponent.propTypes = {
+    name:PropTypes.string.isRequired,
+    age:PropTypes.number,
+    speak:PropTypes.func,
+}
+
+// static propTypes = {
+//     name:PropTypes.string.isRequired,
+//     age:PropTypes.number,
+//     speak:PropTypes.func,
+// }
+```
+
+-  **3.指定默认标签属性值**
+```jsx
+MyComponent.defaultProps = {
+    name:'老刘',
+    age:18,
+}
+```
+
+-  **4.通过标签属性传递函数类型的props给组件，并使用**
+```jsx
+<MyComponent speak={(name) => alert(`你好${name}`)}/>
+```
+
+- **5.扩展属性：将对象的所有属性通过props传递**
+```jsx
+<MyComponent {...person}/>
+```
+
+- **6.组件类的构造函数**
+```text
+constructor(props) {
+    // 构造器是否接收props，是否传递给super，取决于：是否希望在构造器中通过this访问props
+    // console.log(props);
+    super(props);
+    console.log('constructor',this.props); // 通过实例获取props
+    console.log('constructor',props); // 通过接收参数获取props
+}
+
+```
+
+#### 3.三大属性 -- refs 
+
+##### 1.理解
+```text
+1.组件内的标签可以定义ref属性来标识自己
+2.ref属性值可以是：
+    - 字符串：'xxx'，通过this.refs.xxx来访问组件实例对象（不推荐）
+    - 回调函数：function(c){this.refs = c;}
+    - createRef()创建的容器对象：React.createRef().current
+2.通过this.refs.xxx来访问组件标签实例对象
+```
+
+##### 2.编码
+
+-  **1.字符串形式的refs**
+```jsx
+<input ref="input1"/>
+```
+-  **2.回调函数形式的refs**
+```jsx
+<input ref={(c) => {this.input1 = c; console.log(c)}}/>
+```
+-  **3.createRef()形式的refs**
+```jsx
+<input ref={this.myRef}/>
+```
+
+##### 3.案例
+-  **1.字符串形式的refs**
+```jsx
+// 创建类组件 使用 字符串形式的ref（效率不高，不推荐使用）
+class MyComponent extends React.Component {
+    // 展示左侧输入框的数据
+    showData = () => {
+      const {input1} = this.refs;
+        console.log(input1.value);
+    }
+    render() {
+        return (
+            <div>
+                <input ref="input1" type="text" placeholder="点击按钮提示数据"/>&nbsp;
+                <button onClick={this.showData}>点我提示左侧数据</button>
+            </div>
+        )
+    }
+}
+// 渲染
+ReactDOM.render(<MyComponent/>, document.getElementById('test'));
+```
+-  **2.回调函数形式的refs**
+```jsx
+// 创建类组件 使用 回调函数形式的ref
+class MyComponent extends React.Component {
+    // 展示左侧输入框的数据
+    showData = () => {
+      const {input1} = this;
+        console.log(input1.value);
+    }
+    // ref通过以class绑定函数形式定义的回调函数
+    saveInput = (c) => {
+        this.input1 = c;
+    }
+    
+    render() {
+        return (
+            <div>
+                {/*ref回调函数是以内联函数形式定义的，组件更新的时候会被调用两次 ，第一次c是null ，第二次是节点*/}
+                <input ref={(c) => {this.input1 = c; console.log(c)}} type="text" placeholder="点击按钮提示数据"/>&nbsp;
+                {/*ref回调函数是以class的绑定函数的形式定义的，组件更新的时候不会被调用，但是与内联相比区别不大可以忽略*/}
+                <input ref={this.saveInput1} type="text" placeholder="点击按钮提示数据1"/>&nbsp;
+                <button onClick={this.showData}>点我提示左侧数据</button>
+                <button onClick={this.showData}>点我提示左侧数据1</button>
+            </div>
+        )
+    }
+}
+// 渲染
+ReactDOM.render(<MyComponent/>, document.getElementById('test'));
+```
+
+-  **3.createRef()形式的refs**
+```jsx
+// 创建类组件 使用 createRef
+class MyComponent extends React.Component {
+    /**
+     * 推荐使用
+     * 创建ref容器
+     * React.createRef 调用后可以返回一个容器，这个容器可以存储被ref所标识的节点，该容器是“专人专用”的
+     * */
+    myRef = React.createRef();
+    btnRef = React.createRef();
+    // 展示左侧输入框的数据
+    showData = () => {
+        console.log(this.myRef); // { current: input元素 }
+        console.log(this.myRef.current.value);
+    }
+    render() {
+        return (
+            <div>
+                <input ref={this.myRef} type="text" placeholder="点击按钮提示数据"/>
+                <button ref={this.btnRef} onClick={this.showData}>点我提示左侧数据</button>
+            </div>)
+    }
+}
+// 渲染
+ReactDOM.render(<MyComponent/>, document.getElementById('test'))
+```
+
+##### 4.事件处理
+
+-  **1.通过onXxx属性指定事件处理函数（注意大小写）**
+
+  -  **（a）React使用的是自定义（合成）事件，而不是使用的原生DOM事件 -- 为了更好的兼容性**
+
+  -  **（b）React中的事件是通过事件委托方式处理的（委托给组件最外层的元素）-- 为了高效**
+
+  -  **2.通过event.target得到发生事件的DOM元素对象 -- 不要过度的使用Ref**
+
+```jsx
+// 创建类组件
+class Demo extends React.Component {
+    // 创建ref容器
+    myRef = React.createRef();
+    // 创建点击事件 发生事件的事件源是按钮 不是输入框 不能通过event 获取到输入框的数据 只能通过ref获取
+    showData = () => {
+        alert(this.myRef.current.value);
+    }
+    // 创建失去焦点事件  发生事件的事件源是输入框 可以通过event 获取到输入框的数据
+    showData2 = (event) => {
+        alert(event.target.value);
+    }
+    render() {
+        return (
+            <div>
+                <input ref={this.myRef} onBlur={this.showData} type="text" placeholder="点击按钮提示数据"/>
+                <button onClick={this.showData}>点我提示左侧数据</button>
+                <input  onBlur={this.showData2} type="text" placeholder="点击按钮提示数据"/>
+            </div>
+        )
+    }
+}
+```
+
+### 14.收集表单数据
+#### 1.理解
+
+-  **1.包含表单的组件分类：**
+
+  -  **（1）受控组件**
+
+  -    **表单项输入的数据，实时同步到state中**
+
+```jsx
+/********* 受控组件 （推荐使用）*********/
+// 受控组件： 表单内输入类的dom 随着输入将输入值维护到state中， 需要的时候从state中取(通过事件绑定修改状态 类似于vue的双向数据绑定）
+// 创建一个登录组件
+class Login extends React.Component {
+    state = {
+        username: '',
+        password: ''
+    }
+    // 保存用户名到状态中
+    saveUsername = (event) => {
+        this.setState({username: event.target.value})
+    }
+    // 保存密码到状态中
+    savePassword = (event) => {
+        this.setState({password: event.target.value})
+    }
+    // 表单提交的回调
+    handleSubmit = (event) => {
+        event.preventDefault(); // 阻止表单提交默认行为（跳转页面）
+        const {username, password} = this.state;
+        alert(`你输入的用户名是：${username}，你输入的密码是：${password}`);
+    }
+    render() {
+        return (
+            <form action="http://www.atguigu.com" onSubmit={this.handleSubmit}>
+                用户名：<input onChange={this.saveUsername} type="text" name="username"/>
+                密码：<input onChange={this.savePassword} type="password" name="password"/>
+                <button>登录</button>
+            </form>
+        )
+    }
+}
+// 渲染组件到页面
+ReactDOM.render(<Login/>, document.getElementById('test'))
+````
+
+  -  **（2）非受控组件**
+
+  -    **表单项输入的数据，不会自动同步到state中**
+
+```jsx
+/********* 非受控组件 *********/
+// 非受控组件： 表单内输入类的dom 输入的值现用现取就是非受控组件（通过ref来获取）
+// 创建一个登录组件
+class Login extends React.Component {
+    handleSubmit = (event) => {
+        event.preventDefault(); // 阻止表单提交默认行为（跳转页面）
+        const {username, password} = this; 
+        alert(`你输入的用户名是：${username.value},你输入的密码是：${password.value}`);
+    }
+    render() {
+        return (
+            <form action="http://www.baidu.com" onSubmit={this.handleSubmit}>
+                用户名：<input ref={c => this.username = c} type="text" name="username"/>   
+                密码：<input ref={c => this.password = c} type="password" name="password"/>
+                <button>登录</button>
+            </form>
+        )
+    }
+}
+// 渲染组件
+ReactDOM.render(<Login/>, document.getElementById('test'));
+```
+
+### 15.高阶函数柯里化
+
+  -  **（1）高阶函数**
+
+  -    **如果一个函数符合下面2个规范中的任何一个，那该函数就是高阶函数。**
+
+  -    **1.若A函数，接收的参数是一个函数，那么A就可以称之为高阶函数。**
+
+  -    **2.若A函数，调用的返回值依然是一个函数，那么A就可以称之为高阶函数。**
+
+  -    **常见的高阶函数有：Promise、setTimeout、arr.map()等等**
+```js
+// 高阶函数
+function fn(a, b, c) {
+    return b();
+}
+fn(10, () => {alert(100)}, 20); // 100
+
+```
+
+  -  **（2）柯里化**
+
+  -    **通过函数调用继续返回函数的方式，实现多次接收参数最后统一处理的函数编码形式。**
+```js
+// 柯里化函数
+function sum(a) {
+    return (b) => {
+        return (c) => {
+            return a + b + c;
+        }
+    }
+}
+// 调用柯里化函数
+console.log(sum(1)(2)(3)); // 6
+```
+
+```jsx
+/********* 柯里化 ***********/
+// 创建登录表单组件
+class Login extends React.Component {
+    state = {
+        username: '',
+        password: ''
+    }
+    // 定义高阶函数 保存表单数据到状态中 （柯里化）
+    saveFormData = (dataType) => {
+        return (e)=>{
+            this.setState({[dataType]: e.target.value})
+        }
+    }
+    
+    // 表单提交的回调
+    handleSubmit = (event) => {
+        event.preventDefault(); // 阻止表单提交默认行为（跳转页面）
+        const {username, password} = this.state;
+        alert(`你输入的用户名是：${username}，你输入的密码是：${password}`);
+    }
+    render() {
+        return (
+            <form action="http://www.atguigu.com" onSubmit={this.handleSubmit}>
+                {/*onChange 调用的是 this.saveFormData的返回值且返回值必须为回调函数 作为 onChange 的回调 */}
+                用户名：<input onChange={this.saveFormData('username')} type="text" name="username"/>
+                密码：<input onChange={this.saveFormData('password')} type="password" name="password"/>
+                <button>登录</button>
+            </form>
+        )
+    }
+}
+// 渲染组件到页面
+ReactDOM.render(<Login/>, document.getElementById('test'))
+```
+
+```jsx
+/************* 非柯里化 ***************/
+// 创建登录表单组件
+class Login extends React.Component {
+    state = {
+        username: '',
+        password: ''
+    }
+    // 保存表单数据到状态中 （非柯里化）
+    saveFormData = (dataType,e) => {
+            this.setState({[dataType]: e.target.value})
+    }
+    
+    // 表单提交的回调
+    handleSubmit = (event) => {
+        event.preventDefault(); // 阻止表单提交默认行为（跳转页面）
+        const {username, password} = this.state;
+        alert(`你输入的用户名是：${username}，你输入的密码是：${password}`);
+    }
+    render() {
+        return (
+            <form action="http://www.atguigu.com" onSubmit={this.handleSubmit}>
+                {/*给onChange 一个回调函数 作为 onChange 的回调，当react调用回调时会调用里面的saveFormData，将参数传过去 */}
+                用户名：<input onChange={(event)=>this.saveFormData('username',event)} type="text" name="username"/>
+                密码：<input onChange={(event)=>this.saveFormData('password',event)} type="password" name="password"/>
+                <button>登录</button>
+            </form>
+        )
+    }
+}
+// 渲染组件到页面
+ReactDOM.render(<Login/>, document.getElementById('test'))
+```
+
+### 16.组件的生命周期
+
+-  **组件生命周期**
+- 
+
+```jsx
+// 创建一个类组件
+// 生命周期回调函数 《====》 生命周期钩子函数 《====》 生命周期函数 《====》 生命周期钩子
+class Life extends React.Component {
+    state = {opacity: 1}
+    death = () => {
+        // 卸载组件
+        ReactDOM.unmountComponentAtNode(document.getElementById('test'))
+    }
+    // 组件将要挂载
+    componentWillMount(){
+        console.log('componentWillMount');
+    }
+    // 组件挂载完毕
+    componentDidMount(){
+        this.timer = setInterval(() => {
+            // 获取原来的状态
+            let {opacity} = this.state
+            opacity -= 0.1
+            if(opacity <= 0){
+                opacity = 1
+            }
+            // 更新状态
+            this.setState({opacity})
+        },200)
+        console.log('componentDidMount');
+    }
+    // 控制组件更新的“阀门”
+    shouldComponentUpdate(){
+        console.log('shouldComponentUpdate');
+        return true
+    }
+    // 组件将要更新
+
+    componentWillUpdate(){
+        console.log('componentWillUpdate');
+    }
+    // 组件更新完毕
+    componentDidUpdate(){
+        console.log('componentDidUpdate');
+    }
+
+    // 组件将要卸载
+    componentWillUnmount(){
+        console.log('componentWillUnmount');
+    }
+    
+    // render 调用时机：
+    // 1. 初始化渲染 2. 状态更新之后
+    render(){
+        console.log('render');
+        return (
+            <div>
+                <h2>React学不会怎么办？</h2>
+                <button onClick={this.death}>不活了</button>
+            </div>
+        )
+    }
+    
+}
+// 渲染组件到页面
+ReactDOM.render(<Life/>,document.getElementById('test'))
+```
+-   **2.生命周期(旧)**
+-   ***初始化阶段：由ReactDOM.render()触发---初次渲染***
+-    1.constructor() // 构造器
+-    2.componentWillMount() // 即将挂载
+-    3.render() // 渲染
+-    4.componentDidMount() =====> 常用 // 挂载之后
+        -   一般在这个钩子中做一些初始化的事，例如：开启定时器、发送网络请求、订阅消息
+-   ***更新阶段：由组件内部this.setSate()或父组件重新render触发***
+-    1.shouldComponentUpdate() // 控制组件更新的“阀门”
+-    2.componentWillUpdate() // 组件将要更新
+-    3.render() =====> 必须使用的一个 // 渲染
+-    4.componentDidUpdate() // 组件更新完毕
+-   ***卸载组件：由ReactDOM.unmountComponentAtNode()触发***
+-    1.componentWillUnmount() =====> 常用  // 组件将要卸载
+        -   一般在这个钩子中做一些收尾的事，例如：关闭定时器、取消订阅消息
+- 
+-  <img src="/web/react-life.png">
+
+```jsx
+/*********** 组件初始化创建生命周期的执行 到setState修改状态值 及 强制更新的生命周期 看上图流程************/
+class Count extends React.Component{
+    // 构造器
+    constructor(props){
+        console.log('Count---constructor');
+        super(props)
+        this.state = {count:0}
+    }
+    // 组件将要挂载
+    componentWillMount() {
+        console.log('Count---componentWillMount');
+    }
+    // 组件挂载完毕
+    componentDidMount() {
+        console.log('Count---componentDidMount');
+    }
+    // 组件更新阀门
+    shouldComponentUpdate(nextProps, nextState, nextContext) {
+        console.log('Count---shouldComponentUpdate');
+        return true;
+    }
+     // 组件将要更新
+    componentWillUpdate() {
+        console.log('Count---componentWillUpdate');
+    }
+    // 组件更新完毕
+    componentDidUpdate() {
+        console.log('Count---componentDidUpdate');
+    }
+    // 组件将要卸载
+    componentWillUnmount() {
+        console.log('Count---componentWillUnmount');
+    }
+
+     // 加1按钮的回调
+    add = ()=>{
+        const {count} = this.state
+        this.setState({count:count+1})
+    }
+    // 强制更新按钮的回调
+    force = ()=>{
+        this.forceUpdate()
+    }
+    render(){
+        console.log('Count---render');
+        const {count} = this.state
+        return(
+            <div>
+                <h2>当前求和为：{count}</h2>
+                <button onClick={this.add}>点我+1</button>
+                <button onClick={this.force}>不更改任何状态中的数据，强制更新一下</button>
+            </div>
+        )
+    }
+}
+ReactDOM.render(<Count count={100}/>,document.getElementById('test'))
+```
+```jsx
+/*********** 父组件render触发子组件更新 ************/
+class A extends React.Component{
+    state={carName:'奔驰'}
+    changeCar=()=>{
+        this.setState({carName:'奥拓'})
+    }
+    render(){
+        return(
+            <div>
+                <div>我是A组件</div>
+                <button onClick={this.changeCar}>换车</button>
+                <B carName={this.state.carName}/>
+            </div>
+        )
+    }
+}
+class B extends React.Component{
+    // 组件将要接收新的props（初始化第一次传递的props不会被调用）
+    componentWillReceiveProps(props){
+        console.log('B---componentWillReceiveProps',props);
+    }
+    // 组件是否应该更新
+     shouldComponentUpdate(){
+          console.log('B---shouldComponentUpdate');
+          return true
+     }
+     // 组件将要更新
+     componentWillUpdate(){
+          console.log('B---componentWillUpdate');
+     }
+     // 组件更新完毕
+     componentDidUpdate(){
+          console.log('B---componentDidUpdate');
+     }
+    render(){
+        return(
+            <div>我是B组件，接收到的车是：{this.props.carName}</div>
+        )
+    }
+}
+ReactDOM.render(<A/>,document.getElementById('test'))
+```
+
+-  **3.生命周期（新）**
+-  <img src="/web/react-life-new.png">
