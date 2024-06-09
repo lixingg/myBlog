@@ -1055,7 +1055,7 @@ ReactDOM.render(<Login/>, document.getElementById('test'))
 
 ### 16.组件的生命周期
 
--  **组件生命周期**
+-  **1.组件生命周期使用**
 - 
 
 ```jsx
@@ -1243,3 +1243,371 @@ ReactDOM.render(<A/>,document.getElementById('test'))
 
 -  **3.生命周期（新）**
 -  <img src="/web/react-life-new.png">
+-   **4.生命周期的三个阶段（新）**
+-   ***初始化阶段：由ReactDOM.render()触发---初次渲染***
+-   1.constructor // 构造器
+-   2.getDerivedStateFromProps // 
+-   3.render // 
+-   4.componentDidMount
+-   ***更新阶段：由组件内部this.setSate()或父组件重新render触发***
+-   1.getDerivedStateFromProps
+-   2.shouldComponentUpdate
+-   3.render
+-   4.getSnapshotBeforeUpdate
+-   5.componentDidUpdate
+-   ***卸载组件：由ReactDOM.unmountComponentAtNode()触发***
+-   1.componentWillUnmount
+
+```jsx
+// 创建组件
+class Count extends React.Component{
+    /**
+     * 1.初始化阶段：由ReactDOM.render()触发---初次渲染
+     *     1.constructor
+     *     2.getDerivedStateFromProps （一般不用）
+     *     3.render
+     *     4.componentDidMount ======> 常用
+     *          一般做初始化操作，例如：开启定时器、发送网络请求、订阅消息
+     * 2.更新阶段：由组件内部this.setSate()或父组件重新render触发
+     *     1.getDerivedStateFromProps
+     *     2.shouldComponentUpdate  
+     *     3.render
+     *     4.getSnapshotBeforeUpdate （一般不用）
+     *     5.componentDidUpdate
+     * 3.卸载组件：由ReactDOM.unmountComponentAtNode()触发
+     *     1.componentWillUnmount =====> 常用
+     *          一般做收尾工作，例如：关闭定时器、取消订阅消息
+     * */
+    
+    // 构造器
+     constructor(props){
+         console.log('Count---constructor');
+         super(props);
+         // 初始化状态
+         this.state = {count:0}
+     }
+     // 加1按钮的回调
+     add = ()=>{
+         // 获取原装态
+         const {count} = this.state
+          // 更新状态
+         this.setState({count:count+1})
+     }
+     //  使用 static 注册事件 从props中衍生state 
+     //  getDerivedStateFromProps 会在调用 render 方法之前调用，并且在初始挂载及后续更新时都会被调用。它
+     //  应该返回一个对象来更新 state，如果返回 null 则不更新任何内容。
+     //  如果返回是 porps 
+     //  那么 state 将会被覆盖 触发setState方法 不会触发render方法
+     static getDerivedStateFromProps(props,state){
+         console.log('Count---getDerivedStateFromProps',props,state);
+         return null
+     }
+     // 
+     componentDidMount(){
+         console.log('Count---componentDidMount');
+     }
+     
+     shouldComponentUpdate(){
+         console.log('Count---shouldComponentUpdate');
+         return true
+     }
+     
+     getSnapshotBeforeUpdate(){
+         console.log('Count---getSnapshotBeforeUpdate');
+         return 'hahha'
+     }
+     
+     componentDidUpdate(preProps,preState,snapshotValue) {
+         console.log('Count---componentDidUpdate', preProps, preState, snapshotValue);
+     }
+     
+     componentWillUnmount() {
+         console.log('Count---componentWillUnmount');
+     }
+     
+     render() {
+         console.log('Count---render');
+         return (<div>
+             <h2>当前求和为{this.state.count} </h2>
+             <button onClick={this.add}>加</button>
+             <button onClick={this.death}>卸载组件</button>
+             <button onClick={this.force}>不更改任何状态中的数据，强制更新一下</button>
+         </div>)
+     }
+}
+
+// 渲染组件到页面
+ReactDOM.render(<Count/>,document.getElementById('test'))
+```
+
+```jsx
+/*********** getSnapshotBeforeUpdate演示 **************/
+
+class NewList extends React.Component{
+    state={newArr:[]}
+     
+     componentDidMount(){
+         setInterval(()=>{
+             const {newArr} = this.state
+           const news = "新闻" + (newArr.length + 1)
+             this.setState({newArr:[news,...newArr]})
+         },1000)
+     }
+     // 获取组件更新前的快照
+     getSnapshotBeforeUpdate(oldProps, oldState) { // oldProps, oldState 表示更新前的props和state
+         console.log('Count---getSnapshotBeforeUpdate');
+         return  this.refs.list.scrollHeight;
+     }
+     // 更新完成后的操作
+     // previousProps 表示更新前的props
+     // previousState 表示更新前的state
+     // snapshot 表示 getSnapshotBeforeUpdate 返回的快照值
+     componentDidUpdate(previousProps, previousState, snapshot) {
+        console.log('Count---componentDidUpdate', previousProps, previousState, snapshot);
+// 获取现在的滚动高度 - 快照 就是 当前的滚动高度 - 更新前的快照
+         this.refs.list.scrollTop += this.refs.list.scrollHeight - snapshot;}
+
+     render() {
+         return (<div className="list" ref="list">
+             {
+                 this.state.newArr.map((item, index) => {
+                     return <div className="news" key={index}>{item}</div>
+                 })
+             }
+         </div>)
+     }
+}
+
+// 渲染组件到页面
+ReactDOM.render(<NewList/>,document.getElementById('test'))
+```
+
+-  **4.重要的钩子**
+  -  ***1.render 初始化渲染或更新渲染调用***
+  -  ***2.componentDidMount：开启监听，发送ajax请求***
+  -  ***3.componentWillUnmount：做一些收尾工作，如：清除定时器***
+
+-  **5.即将废弃的钩子**
+-   ***1.componentWillMount：组件挂载前调用***
+-   ***2.componentWillReceiveProps：props发生变化时调用***
+-   ***3.componentWillUpdate：更新渲染调用***
+-   ***现在使用会出现警告，下个大版本需要加上UNSAFE_前缀才能使用，以后可能会被彻底废弃，不建议使用**
+
+### 17.Diffing 算法
+
+#### 1.验证Diffing算法
+```jsx
+// 只有span 里面的内容发生了改变 其他的节点都复用了 没有改变
+class Time extends React.Component{
+    state={date:new Date()}
+     
+    componentDidMount(){
+        this.timer=setInterval(()=>{
+            this.setState({
+                date:new Date()
+            })
+        },1000)
+    }
+    componentWillUnmount(){
+        clearInterval(this.timer)
+    }
+    render(){
+        return(
+            <div>
+                <h1>Hello,World!</h1>
+                 {/*输入内容不变*/}
+                <input type="text"/>
+                 <span>
+                        {/*输入内容在变*/}
+                      现在是：{this.state.date.toTimeString()}
+                      {/*输入内容不变*/}
+                      <input type="text"/>
+                 </span>
+            </div>
+        )
+    }
+}
+
+//渲染组件到页面
+ReactDOM.render(<Time/>,document.getElementById('test'))
+```
+#### 2.key的作用
+```jsx
+/**
+ * 经典面试题
+ * 1.react/vue中的key有什么作用？（key的内部原理是什么）
+ * 2.为什么遍历列表时，key最好不要用index?
+ *  
+ * 1.虚拟DOM中key的作用：
+ *      1.简单的说：key是虚拟DOM对象的标识，在更新显示时key起着极其重要的作用。
+ *      2.详细的说：当状态中的数据发生变化时，react会根据【新数据】生成【新的虚拟DOM】,
+ *          随后React进行【新虚拟DOM】与【旧虚拟DOM】的diff比较，比较规则如下：
+ *              a.旧虚拟DOM中找到了与新虚拟DOM相同的key：
+ *                  (1).若虚拟DOM中内容没变,直接使用之前的真实DOM！   
+ *                  (2).若虚拟DOM中内容变了,则生成新的真实DOM，随后替换掉页面中之前的真实DOM。
+ *              b.旧虚拟DOM中未找到与新虚拟DOM相同的key
+ *                  根据数据创建新的真实DOM，随后渲染到到页面。
+ * 2.用index作为key可能会引发的问题：
+ *      1.若对数据进行：逆序添加、逆序删除等破坏顺序操作:
+ *          会产生没有必要的真实DOM更新 ==> 界面效果没问题,但效率低。
+ *      2.如果结构中还包含输入类的DOM：
+ *          会产生错误DOM更新 ==> 界面有问题。
+ * 3.开发中如何选择key?:
+ *      1.最好使用每条数据的唯一标识作为key,比如id、手机号、身份证号、学号等唯一值。
+ *      2.如果确定只是简单的展示数据，用index也是可以的。
+ */
+
+/**--------------------------------------------------**/
+
+/**
+ * 慢动作回放 ------- 使用index作为key 
+ * 
+ * 1.初始数据：
+ *      const data = [
+ *          {id:'001',name:'小张',age:18},
+ *          {id:'002',name:'小李',age:19}
+ *      ]
+ * 2.初始的虚拟DOM：
+ *      <div id="test">
+ *          <div>小张---18---<button>删除</button></div>
+ *          <div>小李---19---<button>删除</button></div>
+ *      </div>
+ * 3.更新数据：
+ *      const data = [
+ *          {id:'001',name:'小张',age:18}
+ *          {id:'002',name:'小李',age:19}
+ *          {id:'003',name:'小王',age:20}
+ *      ]
+ * 4.更新后的虚拟DOM：
+ *      <div id="test">
+ *          <div>小张---18---<button>删除</button></div>
+ *          <div>小李---19---<button>删除</button></div>
+ *          <div>小王---20---<button>删除</button></div>
+ *      </div>
+ * 5.对比更新前后的虚拟DOM：
+ *      (1).初始数据时，<div>的key为001、002，
+ *          更新后的数据时，<div>的key为001、003，
+ *          此时，我们可以发现key为002的<div>被新虚拟DOM覆盖了。
+ *      (2).初始数据时，<div>的key为001、002，
+ *          更新后的数据时，<div>的key为001、002，
+ *          此时，我们可以发现key为003的<div>被新虚拟DOM覆盖了。
+ *      (3).原因：
+ *          (1).初始数据时，<div>的key为001、002，
+ *              更新后的数据时，<div>的key为001、003，
+ *              此时，我们发现key为002的<div>的元素被新虚拟DOM覆盖了。
+
+ * 慢动作回放 ------- 使用id作为key
+ * 1.初始的虚拟DOM：
+ *      <div id="test">
+ *          <div key="001">小张---18---<button>删除</button></div>
+ *          <div key="002">小李---19---<button>删除</button></div>
+ *          <div key="003">小王---20---<button>删除</button></div>
+ *      </div>
+ * 2.更新后的虚拟DOM：
+ *      <div id="test">
+ *          <div key="001">小张---18---<button>删除</button></div>
+ *          <div key="003">小王---20---<button>删除</button></div>
+ *          <div key="004">小赵---21---<button>删除</button></div>
+ *      </div>
+ * 3.初始的虚拟DOM的key为001、002、003，
+ *      更新后的虚拟DOM的key为001、003、004，
+ *      此时，我们发现key为002的<div>的元素被新虚拟DOM覆盖了。
+ * 4.原因：
+ *      (1).初始的虚拟DOM的key为001、002、003，
+ *          更新后的虚拟DOM的key为001、003、004，
+ *          此时，我们发现key为002的<div>的元素被新虚拟DOM覆盖了。
+ */
+
+class Person extends React.Component{
+
+    state = {
+        persons:[
+            {id:'001',name:'小张',age:18},
+            {id:'002',name:'小李',age:19},
+            {id:'003',name:'小王',age:20}
+        ]
+    }
+
+    //删除操作
+    deletePerson = (index) => {
+        //获取原数组
+        const {persons} = this.state
+        //删除
+        persons.splice(index,1)
+        //更新状态
+        this.setState({persons})
+    }
+
+    // 慢动作回放
+    addPerson = () => {
+        const {persons} = this.state
+        const person = {id:'004',name:'小刘',age:20}
+        persons.unshift(person)
+        this.setState({persons})    
+    }
+
+    render(){
+        return(
+            <div>
+                <h2>人员列表</h2>
+                <button onClick={this.addPerson}>添加小刘</button>
+                <ul>
+                    {
+                        this.state.persons.map((personObj,index)=>{
+                            return (
+                                <li key={index}>
+                                    {personObj.name}---{personObj.age}
+                                    <input type="text"/>
+                                    <button onClick={()=>{this.deletePerson(index)}}>删除</button>
+                                </li>
+                            )
+                        })
+                    }
+                </ul>
+            </div>
+        )
+    }
+}
+
+ReactDOM.render(<PersonList/>,document.getElementById('test'))
+```
+
+### 18.React应用（基于React脚手架）
+
+#### 1.使用 create-react-app 创建项目
+```text
+第一种方法：
+
+全局安装React脚手架
+
+npm install -g create-react-app
+
+创建项目
+
+create-react-app my-app
+
+进入项目文件夹
+
+cd my-app
+
+启动项目
+
+npm start
+```
+```text
+第二种方法：
+
+使用 npx 安装
+
+npx create-react-app my-app
+
+进入项目文件夹
+
+cd my-app
+
+启动项目 
+
+npm start
+```
+
+### 2.
