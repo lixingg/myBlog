@@ -1610,4 +1610,6 @@ cd my-app
 npm start
 ```
 
-### 2.
+### 2.React 脚手架项目解构
+-  **node_modules**：存放项目依赖的包
+-  **public**：一般用于存放静态资源，比如图片、CSS、JavaScript等

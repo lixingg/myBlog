@@ -40,7 +40,7 @@ export default defineConfig({
                     // {text: 'Ajax', link: '/pages/web/ajax'},
                     // {text: 'typescript', link: '/pages/web/typescript'},
                     // {text: 'VUE', link: '/pages/web/vue'},
-                    // {text: 'React', link: '/pages/web/react'},
+                    {text: 'React', link: '/pages/web/react'},
                     // {text: 'React-native', link: '/pages/web/react-native'},
                     // {text: 'uni-app', link: '/pages/web/uni-app'},
                     // {text: 'vite', link: '/pages/web/vite'},
