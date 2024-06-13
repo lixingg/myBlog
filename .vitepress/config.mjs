@@ -45,6 +45,7 @@ export default defineConfig({
                     // {text: 'uni-app', link: '/pages/web/uni-app'},
                     // {text: 'vite', link: '/pages/web/vite'},
                     // {text: 'Echarts', link: '/pages/web/Echarts'},
+                    {text: '依赖包', link: '/pages/web/dependencies'},
                     {text: '技术中心', link: '/pages/web/'},
 
                 ]

@@ -1612,4 +1612,78 @@ npm start
 
 ### 2.React 脚手架项目解构
 -  **node_modules**：存放项目依赖的包
--  **public**：一般用于存放静态资源，比如图片、CSS、JavaScript等
+-  **public ------ 静态资源文件**：
+  - &emsp;&emsp; **favicon.ico**：页签图标
+  - &emsp;&emsp; **index.html**：主页面
+  - &emsp;&emsp; **logo192.png**：logo图
+  - &emsp;&emsp; **logo512.png**：logo图
+  - &emsp;&emsp; **manifest.json**：应用加壳的配置文件
+  - &emsp;&emsp; **robots.txt**：爬虫协议文件
+-  **src ------ 源码文件**：
+  - &emsp;&emsp; **App.css**：App组件的样式
+  - &emsp;&emsp; **App.js**：App组件
+  - &emsp;&emsp; **App.test.js**：用于给App做测试
+  - &emsp;&emsp; **index.css**：为根组件配置样式
+  - &emsp;&emsp; **index.js**：入口文件
+  - &emsp;&emsp; **logo.svg**：logo图
+  - &emsp;&emsp; **reportWebVitals.js**：页面性能分析文件（需要 web-vitals库的支持）
+  - &emsp;&emsp; **setupTests.js**：jest测试的配置文件（需要 jest-dom库的支持）
+
+-  **.gitignore**：git版本管制忽略的配置
+-  **package.json**：应用包配置文件
+-  **package-lock.json**：包版本控制文件
+-  **README.md**：应用描述说明的readme文件
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <!--   %PUBLIC_URL% 代表public文件夹的路径    -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico"/>
+    <!--       开启理想视口，用于做移动端网页的适配-->
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!--       用于配置浏览器页签 + 地址栏的颜色（仅支持安卓手机浏览器）-->
+    <meta name="theme-color" content="#000000"/>
+    <meta
+            name="description"
+            content="Web site created using create-react-app"
+    />
+    <!--       用于指定网页添加到手机主屏幕后的图标（适用于ios）-->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png"/>
+    <!-- 应用加壳时的配置文件 （H5app）-->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json"/>
+    <title>React App</title>
+</head>
+<body>
+<!--若浏览器不支持js则展示标签中的内容-->
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<!-- 项目容器 根节点-->
+<div id="root"></div>
+</body>
+</html>
+```
+
+### 3.创建组件
+-  **webstorm快捷方式**
+- 
+  -  &emsp;&emsp;**创建类组件**： rcc
+  -  &emsp;&emsp;**创建函数组件**： rcf
+ 
+-  **vscode快捷方式 ----- 需要安装插件（ES7 React/Redux/GraphQL/React-Native snippets）**
+-
+  -  &emsp;&emsp;**创建类组件**： rcc
+  -  &emsp;&emsp;**创建函数组件**： rfc
+
+### 4.功能界面的组件化编码流程
+
+-  **1.拆分组件：拆分界面抽取组件**
+-  **2.实现静态组件：使用组件实现静态页面**
+-  **3.实现动态组件：**
+- 
+  - 1.动态显示初始化数据
+    - 1.数据类型
+    - 2.数据名称
+    - 3.保存在哪个组件
+  - 2.交互（从绑定事件监听开始）
+ 
