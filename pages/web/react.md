@@ -1610,7 +1610,7 @@ cd my-app
 npm start
 ```
 
-### 2.React 脚手架项目解构
+#### 2.React 脚手架项目解构
 -  **node_modules**：存放项目依赖的包
 -  **public ------ 静态资源文件**：
   - &emsp;&emsp; **favicon.ico**：页签图标
@@ -1664,7 +1664,7 @@ npm start
 </html>
 ```
 
-### 3.创建组件
+#### 3.创建组件
 -  **webstorm快捷方式**
 - 
   -  &emsp;&emsp;**创建类组件**： rcc
@@ -1675,7 +1675,7 @@ npm start
   -  &emsp;&emsp;**创建类组件**： rcc
   -  &emsp;&emsp;**创建函数组件**： rfc
 
-### 4.功能界面的组件化编码流程
+#### 4.功能界面的组件化编码流程
 
 -  **1.拆分组件：拆分界面抽取组件**
 -  **2.实现静态组件：使用组件实现静态页面**
@@ -1686,4 +1686,218 @@ npm start
     - 2.数据名称
     - 3.保存在哪个组件
   - 2.交互（从绑定事件监听开始）
- 
+
+#### 5.组件拆分及使用
+
+-  1.拆分组件、实现静态组件，注意：className不能写成class ,style={{}}不能写成style={}
+-  2.动态初始化列表，将数据放在哪个组件的state中？
+- 
+  - 1.某个组件使用：放在自身的state中
+  - 2.某些组件使用：放在他们共同的父组件state中（官方称：状态提升）
+-  3.关于父子之间通信：
+- 
+  - 1.【父组件】给【子组件】传递数据：通过props传递
+  - 2.【子组件】给【父组件】传递数据：通过props传递，要求父提前给子传递一个函数
+-  4.注意defaultChecked 和 checked的区别，类似的还有：defaultValue 和 value
+-  5.状态在哪里，操作状态的代码就应该写在哪里
+
+### 19.React 脚手架配置代理
+#### 1.方法一：
+-  在package.json中配置代理 
+  - 优点：配置简单，前端请求资源时可以不加任何前缀。
+  - 缺点：不能配置多个代理
+  - 工作方式：上述方式配置代理，当请求了3000不存在的资源时，那么该请求会转发给5000服务器 （优先匹配前端资源）
+```json lines
+{
+  "name": "react_staging",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.7.2",
+    "nanoid": "^5.0.7",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:4000" // 配置代理 （要求只能是字符串 且只能配置一个代理 局限性很大一般不在这里配置）
+}
+```
+
+#### 2.方法二：
+-  在src文件夹下创建setupProxy.js （src/setupProxy.js）并配置代理。
+    (先下载 [http-proxy-middleware](https://www.npmjs.com/package/http-proxy-middleware) 插件 不然页面打不开)(推荐)
+  -  有点：可以配置多个代理，可以灵活的控制请求是否走代理
+  -  缺点：配置繁琐，前端请求资源时，必须加前缀 （/api/xxx）
+```bash
+npm install --save-dev http-proxy-middleware
+```
+```js
+// 老版本写法
+// const proxy = require('http-proxy-middleware'); 
+/*module.exports = function(app) {
+  app.use(
+          createProxyMiddleware('/api',{
+            target: 'http://localhost:4000', // 设置你想要请求的接口的地址
+            changeOrigin: true,
+            pathRewrite: {
+              '^/api': ''
+            }
+          }),
+          createProxyMiddleware('/api1',{
+            target: 'http://localhost:4001', // 设置你想要请求的接口的地址
+            changeOrigin: true,
+            pathRewrite: {
+              '^/api1': ''
+            }
+          })
+  )
+};*/
+
+// 新版本写法
+const { createProxyMiddleware } = require('http-proxy-middleware'); 
+module.exports = function(app) {
+  app.use(
+          // 这里的 /api 是你的应用在代理到目标服务器之前的前缀
+          // 例如，如果你的应用是 /api/users，那么这里的 /api 就是你的应用的前缀
+          // 遇见 /api 开头的请求，就会触发该代理配置
+          '/api',
+          createProxyMiddleware( {
+            // 请求转发给谁
+            target: 'http://localhost:5000', 
+            // 控制服务器收到请求头中Host字段的值 （默认 false ,一般我们给他改成true）
+            // true 时 Host字段的值会被修改为目标服务器的主机名 （例如：localhost:5000）
+            // false 时 Host字段的值不会被修改 （例如：localhost:3000）
+            changeOrigin: true,
+            //重写请求路径（去除请求前缀，保证交给后台服务器的是正常请求地址）
+            pathRewrite: {'^/api': ''} 
+          })
+  )
+  app.use(
+          '/api1',
+          createProxyMiddleware( {
+            target: 'http://localhost:5001',
+            changeOrigin: true,
+            pathRewrite: {'^/api1': ''}
+          })
+  )
+};
+```
+
+-  3.使用axios发送请求
+```jsx
+import React, {Component} from 'react';
+import axios from "axios";
+class Index extends Component {
+  sendMessage=()=>{
+    // 先去3000 服务器下寻找接口 如果没有再通过代理转发4000端口请求
+    axios.get("http://localhost:3000/api/user").then(res=>{ 
+      console.log(res);
+    })
+            .catch(err=>{
+              console.log(err);
+            })
+            .finally(()=>{
+              console.log("请求完成");
+            })
+  }
+  render() {
+    return (
+            <div>
+              <button onClick={this.sendMessage}>发送请求</button>
+            </div>
+    );
+  }
+}
+
+export default Index;
+```
+
+### 20、消息订阅与发布机制
+-  1.工具库 PubSubJS （适用于任意组件通信）
+-  2.安装
+```bash
+npm install pubsub-js --save
+```
+-  3.使用
+```jsx
+// A组件 先订阅消息
+import PubSub from 'pubsub-js'
+
+let subId = PubSub.subscribe('delete', function(msg, data) { // 订阅消息
+  console.log(msg, data)
+})
+
+
+PubSub.unsubscribe(subId) // 取消订阅 要在组件销毁前取消订阅（componentWillUnmount）
+```
+```jsx
+// B组件 再发布消息
+import PubSub from 'pubsub-js'
+
+PubSub.publish('delete', data) // 发布消息
+
+```
+
+
+### 21、fetch 发送网络请求 （关注分离的设计思想）
+-  注意：除了 ajax (XMLHttpRequest(封装的请求 jquery、axios、zepto))之外，还可以使用浏览器（window）自带函数fetch发送网络请求。
+-  fetch：原生函数，不再使用 XMLHttpRequest 对象发送请求。
+-  fetch：兼容性不高（老版本浏览器不支持），使用率的较低，了解即可。
+```js
+// 发送网络请求 --- 使用fetch发送
+fetch('http://localhost:3000/api/user').then(res=>{
+  return res.json()
+}).then(res=>{
+  console.log(res);
+}).catch(err=>{
+  console.log(err);
+})
+
+// 使用 async await 优化请求
+const getData = async ()=>{
+    try{
+      const res = await fetch('http://localhost:3000/api/user')
+      const data = await res.json()
+      console.log(data);  
+    }catch (e) {
+      console.log(e);
+    }
+}
+
+```
+
+
+
+
+
+
+

@@ -39,12 +39,18 @@ export default defineConfig({
                     // {text: 'JQuery', link: '/pages/web/jquery'},
                     // {text: 'Ajax', link: '/pages/web/ajax'},
                     // {text: 'typescript', link: '/pages/web/typescript'},
-                    // {text: 'VUE', link: '/pages/web/vue'},
+                    {text: 'VUE', link: '/pages/web/vue'},
                     {text: 'React', link: '/pages/web/react'},
                     // {text: 'React-native', link: '/pages/web/react-native'},
                     // {text: 'uni-app', link: '/pages/web/uni-app'},
                     // {text: 'vite', link: '/pages/web/vite'},
                     // {text: 'Echarts', link: '/pages/web/Echarts'},
+                    // {text: 'Flutter', link: '/pages/web/flutter'},
+                    // {text: 'Dart', link: '/pages/web/Dart'},
+                    // {text: 'Android', link: '/pages/web/android'},
+                    // {text: 'Kotlin', link: '/pages/web/Kotlin'},
+                    // {text: 'IOS', link: '/pages/web/IOS'},
+                    // {text: 'HarmonyOS', link: '/pages/web/HarmonyOS'},
                     {text: '依赖包', link: '/pages/web/dependencies'},
                     {text: '技术中心', link: '/pages/web/'},
 
@@ -119,8 +125,8 @@ export default defineConfig({
                 link: 'https://blog.loverzz.cn'
             }
         ],
-        /*   footer: {
-             copyright: "Copyright © 2023-present lixin"
+/*           footer: {
+             copyright: "Copyright © 2022-present lixin"
            },*/
         // 设置搜索框的样式
         search: {

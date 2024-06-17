@@ -1,6 +1,6 @@
 ## Vue 专栏
 
-### diff 算法
+### 1、diff 算法
 
 - 1.主流diff依赖：snabbdom 、 virtual-dom
 - 2.搭建环境

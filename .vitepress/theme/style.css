@@ -204,6 +204,18 @@
     }
 }
 
+/*@media (min-width: 768px) {*/
+/*    .VPHome[data-v-441e4bfa] {*/
+/*        margin-bottom: 0px;*/
+/*    }*/
+/*}*/
+.VPFooter {
+    padding: 10px !important;
+}
+ .VPHome {
+     margin-bottom: 0px !important;
+ }
+
 h3{
     color: #bd34fe;
 }
