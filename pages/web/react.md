@@ -1867,7 +1867,6 @@ PubSub.publish('delete', data) // 发布消息
 
 ```
 
-
 ### 21、fetch 发送网络请求 （关注分离的设计思想）
 -  注意：除了 ajax (XMLHttpRequest(封装的请求 jquery、axios、zepto))之外，还可以使用浏览器（window）自带函数fetch发送网络请求。
 -  fetch：原生函数，不再使用 XMLHttpRequest 对象发送请求。
@@ -1895,9 +1894,444 @@ const getData = async ()=>{
 
 ```
 
+### 22、React 路由
+#### 1、对SPA（单页面应用）的理解，以及SPA的优缺点
+-  单页面应用（single page web application，SPA）
+-  单页面应用：整个应用只有一个完整的页面。
+-  点击页面中的链接不会刷新页面，只会做页面的局部更新。
+-  数据需要通过 ajax 请求获取，并在前端异步展现。
+
+#### 2. 路由的理解
+-  **1. 什么是路由**
+  - 1.一个路由就是一个映射关系（key:value）
+  - 2.key为路径，value可能是function或component
+-  **2. 路由分类**
+  - ***1.后端路由***
+    -  1.理解：value 是 function,用来处理客户端提交的请求。
+    -  2.注册路由：router.get(path,function(req,res))
+    -  3.工作过程：当node接收到一个请求时，根据请求路径找到匹配的路由，调用路由中的函数来处理请求，返回响应数据。
+  - ***2.前端路由***
+    -  1.浏览器端路由，value是component，用于展示页面内容。
+    -  2.注册路由：\<Route path="/test" component={Test} />
+    -  3.工作过程：当浏览器的路径变成/test时，当前路由组件就会变为Test组件。
+
+#### 3. React-Router-dom 
+-  **1. 理解**
+  -  1.一个基于React的前端路由库
+  -  2.包含：多个路由组件、路由链接组件
+-  **2. 相关API**
+  -   ***1. 内置组件***
+  - 
+    - 1. \<BrowserRouter>
+    - 2. \<HashRouter>
+    - 3. \<Route>
+    - 4. \<Redirect>
+    - 5. \<Link>
+    - 6. \<NavLink>
+    - 7. \<Switch>
+  -   ***2. 其他***
+  - 
+    - 1. withRouter 对象
+    - 2. match 对象
+    - 3. history 对象
+  
+-  **3.安装：**
+```bash
+npm i react-router-dom
+```
+-  **4.基本使用：**
+ -  ***1. 明确好界面中的导航区、展示区***
+ -  ***2. 导航区的a标签改为Link标签***
+ - 
+   -  \<Link to="/xxxx">Demo\</Link>
+ -  ***3. 展示区写Route标签进行路径的匹配***
+ - 
+   - \<Route path="/xxxx" component={Demo} />
+ -  ***4. \<App/> 的最外层包裹一个 \<BrowserRouter /> 或 \<HashRouter />***
+```jsx
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
+export default function App (){
+    return (
+              <div>
+                {/*  react-router 6.0版本不再支持activeClassName写法 ，需要使用className动态样式写法 */}
+                <NavLink activeClassName={'自定义高亮颜色类'} to="/">首页</NavLink>
+                <NavLink activeClassName={'自定义高亮颜色类'} to="/list">列表页</NavLink>
+
+                <Route path="/" component={Home} />
+                <Route path="/list" component={List} />
+              </div>
+    )
+}
+
+```
+```jsx
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom'
+export default function App (){
+    const getActiveClass =({isActive})=>{
+         return isActive ? '自定义高亮颜色类' : ''
+     }
+    return (
+              <div>
+                {/*  className动态样式写法 */}
+                <NavLink className={getActiveClass} to="/">首页</NavLink>
+                <NavLink className={getActiveClass} to="/list">列表页</NavLink>
+
+                <Route path="/" component={Home} />
+                <Route path="/list" component={List} />
+              </div>
+    )
+}
+```
 
 
+```jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+);
+```
 
+-  **5. 路由组件和一般组件**
+ -  ***1. 写法不同：***
+   -  一般组件：\<Demo/>
+   -  路由组件：\<Route path="/demo" component={Demo} />
+ -  ***2. 存放位置不同：***
+   -  一般组件：components
+   -  路由组件：pages
+ -  ***3. 接收到的props不同：***
+   -  一般组件：写组件标签时传递了什么，就能收到什么
+   -  路由组件：接收到三个固定的属性
+       -  history
+       - 
+         -  go: ƒ go(n)
+         -  goBack: ƒ goBack()
+         -  goForward: ƒ goForward()
+         -  push: ƒ push(path, state)
+         -  replace: ƒ replace(path, state)
+       -  location
+       - 
+         -  pathname: "/about"
+         -  search: ""
+         -  state: undefined
+       -  match
+       - 
+         -  params: {}
+         -  path: "/about"
+         -  url: "/about"
 
+-  **6. NavLink 与封装 NavLink**
+  -  ***1.NavLink可以实现路由链接的高亮，通过activeClassName指定样式名***（react-router 6.0版本以后不再支持这种写法）
+  -  ***2.标签体内容是一个特殊的标签属性***
+  -  ***3.通过this.props.children可以获取标签体内容***
+```jsx
+// 封装NavLink
+import {NavLink} from "react-router-dom"
+class MyNavLink extends Component {
+   getActiveClass =({isActive})=>{
+        return isActive ? 'navLink activeNavLink' : 'navLink'
+    }
+    render() {
+        return (
+            <NavLink  className={this.getActiveClass} {...this.props} />
+        );
+    }
+}
 
+export default MyNavLink;
+```
+
+-  **7. Switch的使用**
+  -  ***1.通常情况下，path和component是一一对应的关系***
+  -  ***2.Switch可以提高路由匹配效率（单一匹配）***(当路由path匹配到时，Switch会停止匹配)
+```jsx
+// Switch react-router 6.0版本不在支持 
+import React, {Component} from 'react';
+import Nav from "./Nav"
+import { Route, Switch} from "react-router-dom"
+class Layout extends Component {
+    render() {
+        return (
+            <div>
+                <Nav />
+                <Switch>
+                    <Route path="/home" element={<h1>Home</h1>} />
+                    {/*用 Switch 组件包裹只渲染 第一个匹配到的about组件 ，如果不包裹 全部匹配一边 影响效率*/}
+                    <Route path="/about" element={<h1>About</h1>} /> 
+                    <Route path="/about" element={<h1>About1</h1>} />
+                </Switch>
+            </div>
+        );
+    }
+}
+
+export default Layout;
+```
+```jsx
+// react-router 6.0版本使用Routes 取代 Switch
+import React, {Component} from 'react';
+import Nav from "./Nav"
+import {Routes, Route, Switch} from "react-router-dom"
+class Layout extends Component {
+    render() {
+        return (
+            <div>
+                <Nav />
+                <Routes>
+                    <Route path="/home" element={<h1>Home</h1>} />
+                    <Route path="/about" element={<h1>About</h1>} />
+                    <Route path="/about" element={<h1>About1</h1>} />
+                </Routes>
+            </div>
+        );
+    }
+}
+
+export default Layout;
+```
+
+-  **8.解决多级路径刷新页面样式丢失问题**
+- 
+  - ***1.public/index.html 中 引入样式时不写 ./ 写 / 即可解决（常用）***
+      -   \<link href="/css/index.css"/>
+  - ***2.public/index.html 中 引入样式时不写 ./ 写 %PUBLIC_URL% 即可解决（常用 只适用于React脚手架搭建的项目）***
+      -   \<link href="%PUBLIC_URL%/css/index.css"/>
+  - ***3.使用HashRouter 路由模式 即可解决（浏览器默认hash路由 # 后面的路径忽略，不作为请求路径）***
+```text
+ <HashRouter>
+    <Routes>
+      <Route path="/home" element={<h1>Home</h1>}
+      <Route path="/about" element={<h1>About</h1>}
+    </Routes>
+</HashRouter>
+```
+
+-  **9.路由的严格匹配与模糊匹配**
+- 
+  - ***1.默认使用模糊匹配（【输入的路径】必须包含要【匹配的路径】，且顺序要一致）***
+  -  \<MyNavLink to="/home/a/b">home\</MyNavLink>
+  -  \<Route path="/home" component={About} />
+  - ***2.开启严格匹配（开启严格匹配后，使用路由路径必须一模一样，否则匹配不到）：***
+  -  \<MyNavLink to="/home" end>home\</MyNavLink>
+  -  \<Route exact path="/home" component={About} />
+  - ***3.严格匹配不要随便开启，需要再开，有些时候开启会导致无法继续匹配二级路由***
+
+-  **10.Redirect 的使用**
+- 
+  - ***1.一般写在所有路由注册的最下方，当所有路由都无法匹配时，跳转到Redirect指定的路由***
+  - ***2.具体编码：***
+```text
+<Switch>
+    <Route path="/about" component={About} />
+    <Route path="/home" component={Home} />
+    <Redirect to="/about" />
+</Switch>
+```
+
+-  **11.嵌套路由**
+- 
+  - ***1.注册子路由时要写上父路由的path值***
+  -  一级路由\<Route path="/about" component={About} />
+  -  二级路由\<Route path="/about/team" component={Team} />
+  - ***2.路由的匹配是按照注册路由的顺序进行的 ，开启严格匹配，点击二级路由将无法将无法匹配上级路由，导致匹配失败不展示***
+  -  一级路由\<Route path="/about" component={About} />
+  -  二级路由\<Route path="/about/team" component={Team} />
+  -  ***3.路由的严格匹配与模糊匹配***
+  -  一级导航\<MyNavLink to="/about">about\</MyNavLink>
+  -  一级路由\<Route path="/about" component={About} />
+  -  二级导航\<MyNavLink to="/about/team">team\</MyNavLink>
+  -  二级路由\<Route path="/about/team" component={Team} />
+
+-  **12.向路由组件传递参数**
+- 
+  - ***1.params参数***
+  -  路由链接（携带参数）：\<MyNavLink to="/home/message/detail/**001**">message detail\</MyNavLink>
+  -  注册路由（声明接收）：\<Route path="/home/message/detail/**:id**" component={Detail} />
+  -  接收参数 ：Detail组件中通过const{id} = this.props.match.params获取
+    
+  -  ***2.search参数***
+  -  路由链接（携带参数）：\<MyNavLink to="/home/message/detail?***id=002***">message detail\</MyNavLink>
+  -  注册路由（无需声明，正常注册即可）：\<Route path="/home/message/detail" component={Detail} />
+  -  接收参数 ：Detail组件中通过const{search} = this.props.location获取
+  -  备注：获取到的search是urlencoded编码字符串，需要借助querystring解析
+  ```js
+  import qs from 'querystring'
+  const {search} = this.props.location
+  const {id} = qs.parse(search.slice(1))
+  ```
+  
+  -  ***3.state参数***
+```text
+   路由链接（携带参数）： <MyNavLink to={{path:'/home/message/detail',state:{id:'001'}}}>message detail</MyNavLink>
+   注册路由（无需声明，正常注册即可）：<Route path="/home/message/detail" component={Detail} />
+   接收参数 ：Detail组件中通过 const{ id } = this.props.location.state获取
+   备注：刷新也可以保留住参数
+```
+
+-  **13.push与replace**
+- 
+  -  push：压栈模式，**触发路由组件的重新渲染**
+  -  replace：替换模式，**不会触发路由组件的重新渲染**
+
+-  **14.编程式路由导航**
+- 
+  -  借助this.props.history对象上的API对操作(只有路由组件才能使用，非路由组件借助withRouter方法)
+  -  具体方法：
+  - this.props.history.push() // 跳转到指定页面，并想历史记录中添加一个记录
+  - this.props.history.replace() // 跳转到指定页面，**替换掉当前history记录**
+  - this.props.history.goBack() // 回退到上一个页面
+  - this.props.history.goForward() // 前进到下一个页面
+  - this.props.history.go() // 参数为数字，表示前进或后退多少步，参数为负数表示后退多少步
+  ```jsx
+  //   编程式导航 + params
+  <button onClick={() => this.props.history.push('/home/message/detail/002')}>push</button>
+  <button onClick={() => this.props.history.replace('/home/message/detail/002')}>replace</button>
+  //   编程式导航 + search
+  <button onClick={() => this.props.history.push('/home/message/detail?id=003')}>push</button>
+  <button onClick={() => this.props.history.replace('/home/message/detail?id=003')}>replace</button>
+  //   编程式导航 + state
+  <button onClick={() => this.props.history.push('/home/message/detail',{id:'004'})}>push</button>
+  <button onClick={() => this.props.history.replace('/home/message/detail',{id:'004'})}>replace</button>
+  //   编程式导航 前进
+  <button onClick={() => this.props.history.go(1)}>前进</button>
+    <button onClick={() => this.props.history.goForward()}>前进</button>
+
+  //   编程式导航 后退
+  <button onClick={() => this.props.history.go(-1)}>后退</button>
+  <button onClick={() => this.props.history.goBack()}>后退</button>
+
+  ```
+  
+-  **15.withRouter 的使用**
+-   withRouter 是一个 HOC，它可以让一般组件具有路由组件所具有的 props，如 history、location 和 match
+-   withRouter 的作用就是包装一般组件，将路由组件所具有的三个属性（history、location 和 match）传入一般组件中
+-   withRouter 的返回值是一个新组件
+```jsx
+import { withRouter } from 'react-router-dom'
+class Header extends Component {
+  render() {
+    return (
+      <div>
+        <h1>我是头部</h1>
+        <a href="https://www.baidu.com">百度</a>
+      </div>
+    )
+  }
+}
+export default withRouter(Header)   
+```
+
+-  **16.BrowserRouter 与 HashRouter 的区别**
+-   ***1.底层原理不一样***
+- 
+  -   BrowserRouter 使用的是 H5 提供的 history API，不兼容 IE9 及以下版本。
+  -   HashRouter 使用的是 URL 中的 哈希值。
+-   **2.url 表现形式不一样**
+- 
+  -   BrowserRouter 的路径中没有 #，例如：localhost:3000/demo/test
+  -   HashRouter 的路径包含 #，例如：localhost:3000/#/demo/test
+-   **3.刷新后对路由 state 参数的影响**
+- 
+  -   BrowserRouter 没有任何影响，因为 state 保存在 history 对象中。
+  -   HashRouter 刷新后会导致路由 state 参数的丢失！！！
+-   **4.备注**
+- 
+  -   HashRouter 可以用于解决一些路径错误相关的问题。
+
+    
+### 23、antd的按需引入 + 自定义主题
+-  **1.安装依赖**
+
+```bash
+npm i react-app-rewired customize-cra babel-plugin-import less less-loader -D
+```
+
+-  **2.修改 package.json**
+```json lines
+{
+  //...
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  //...
+}
+```
+
+-  **3.根目录下创建 config-overrides.js**
+```js
+// 配置具体的修改规则
+const { override,fixBabelImports, addLessLoader } = require('customize-cra');
+
+module.exports = override(
+    // 按需加载样式
+      fixBabelImports ('import',{
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+        style: true,
+      }),
+      // 也可以自定义主题
+      addLessLoader({
+          lessOptions: {
+              javascriptEnabled: true,
+              modifyVars: {'@primary-color': '#1DA57A'},
+          }
+                    }),
+
+);
+```
+
+-  **4.备注：不用在组件里亲自引入样式了，即：import 'antd/dist/antd.css' 应该删掉**
+
+### 24、Redux
+
+#### 1.学习文档
+-  [Redux 中文文档](https://www.redux.org.cn/)
+
+#### 1.Redux是什么
+-  1.redux 是一个专门用于做状态管理的JS库（不是react插件库）
+-  2.它可以用在react, angular, vue等项目中，但基本与react配合使用
+-  3.作用：集中式管理react应用中多个组件共享的状态
+
+#### 2.什么情况下需要使用Redux
+-  1.某个组件的状态，需要让其他组件可以随时拿到（共享）
+-  2.一个组件需要改变全局状态（唯一改变状态的方式）
+-  3.一个组件需要改变另一个组件的状态
+-  4.总体原则：能不用就不用，如果不用比较吃力才考虑使用
+
+#### 3.Redux工作流程
+<img src="/web/redux.png">
+
+#### 4.Redux的三大核心概念
+-  **1.Action：**
+  - 1.动作对象
+  - 2.包含2个属性
+    - 1.type：标识属性，值为字符串，唯一，必要属性
+    - 2.data：数据属性，值类型任意，可选属性
+  - 3.例子：{type:'ADD_STUDENT',data:{name:'tom',age:18}}
+
+-  **2.Reducer：**
+  - 1.用于初始化状态、加工状态
+  - 2.加工时，根据旧的state和action，产生新的state的纯函数
+
+-  **3.Store：**
+  - 1.将state,action,reducer联系在一起的对象
+  - 2.如何得到此对象?
+    - 1.import {createStore} from 'redux'
+    - 2.import reducer from './reducers'
+    - 3.const store = createStore(reducer)
+
+  - 3.此对象的功能?
+    - 1.getState():得到state
+    - 2.dispatch(action):分发action,触发reducer调用,产生新的state
+    - 3.subscribe(listener):注册监听,当产生了新的state时,自动调用
