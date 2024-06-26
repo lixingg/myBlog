@@ -2335,3 +2335,151 @@ module.exports = override(
     - 1.getState():得到state
     - 2.dispatch(action):分发action,触发reducer调用,产生新的state
     - 3.subscribe(listener):注册监听,当产生了新的state时,自动调用
+
+#### 5.基本使用
+-  **1.安装：**
+```bash
+redux 核心库
+npm install --save redux
+redux 开启异步任务库
+npm install --save redux-thunk
+```
+
+-  **2.创建reducer：**
+```js
+/**
+ * 该文件是用于创建一个为Count组件服务的reducer，reducer的本质就是一个函数。
+ * reducer有两个作用：初始化状态，加工状态
+ * reducer被第一次调用时，是store自动触发的，
+ *        传递的 preState 是undefined
+ *        传递的 action 是 {type:'@@REDUX/INIT_a.2.0'}
+ * 该函数会接到两个参数，分别为：之前的状态（preState）和动作对象（action）
+ * 动作对象中包含type（动作的类型）和data（动作的数据）
+ * */
+// 初始化状态
+const initState = 0;
+export default function countReducer(preState=initState,action){
+    // 从action对象中获取type和data
+    const {type,data} = action;
+    // 判断type的值，如果是加，则返回数字+1
+    switch (type){
+        case 'increment':
+            console.log('increment',preState)
+            return preState*1 + data*1;
+        case 'subtract':
+            return preState - data;
+        default:
+            return preState;
+    }
+}
+```
+-  **3.创建action.js**
+```js
+/**
+ * 该文件专门为Count组件生成action对象
+ * */
+// 引入常量
+import {INCREMENT, DECREMENT} from './constant'
+// 同步action,就是指action的值为Object类型d的一般对象
+export const createIncrementAction = data => ({type: INCREMENT, data})
+export const createDecrementAction = data => ({type: DECREMENT, data})
+// 异步action,就是指action的值为函数，异步action中一般都会调用同步action，
+// 备注：异步action不是必须要用的,完全可以自己等待异步任务的结果，再去分发同步action。
+export const createIncrementAsyncAction = (data, time) => {
+    return (dispatch) => {
+        // 异步操作
+        setTimeout(() => {
+            // 调用同步action
+            dispatch(createIncrementAction(data))
+        }, time)
+    }
+}
+```
+
+- **4.创建constant.js**
+```js
+/**
+ * 该模块是用于定义action的type常量，目的只有一个
+ * 方便管理，防止写错
+ * */
+export const INCREMENT = 'increment'
+export const DECREMENT = 'decrement'
+```
+
+-  **3.创建store：**
+```js
+/**
+ * 该文件专门用于暴露一个store对象，整个应用只有一个store对象
+ * */
+// 引入createStore,专门用来创建redux中最为核心的store对象
+import {createStore} from "redux"
+// 引入redux-thunk，用于支持异步action
+import thunk from "redux-thunk"
+// 引入为count组件服务的reducer
+import countReducer from "./count_reducer"
+// 记得要暴露store对象 （使用中间件applyMiddleware注入redux-thunk 用于redux支持返回值为函数的调用）
+export default createStore(countReducer,applyMiddleware(thunk))
+```
+
+-  **4.在组件中使用store：**
+```jsx
+// 引入store
+import store from './redux/store'
+// 引入redux中提供的专门用于操作状态的action
+import {createIncrementAction,createIncrementAsyncAction} from "./redux/count_action"
+
+// 组件中使用store
+class Count extends Component {
+    
+    // 加1按钮的回调
+    increment = () => {
+        const {value} = this.selectNumber;
+        // 通知store 去修改数据
+        store.dispatch(createIncrementAction(value*1));
+    }
+    // 减1按钮的回调
+    subtract = () => {
+        const {value} = this.selectNumber;
+        // 通知store 去修改数据
+        store.dispatch({type:'subtract',data:value*1});
+    }
+    incrementAsync=() => {
+        const {value} = this.selectNumber;
+        store.dispatch(createIncrementAsyncAction(value*1,500));
+    }
+    render() {
+        const {history,store} = this.props;
+        // 获取store中的数据
+        const {count} = store.getState();
+        return (
+            <div>
+                <h1>当前求和为：{count}</h1>
+                <button onClick={e => this.increment(e)}>+1</button>
+                <button onClick={e => this.subtract(e)}>-1</button>
+                <button onClick={this.incrementAsync}>异步+1</button>
+            </div>
+        )
+    }
+}
+```
+-  **5.全局检测store状态改变，触发页面更新渲染：**
+```js
+// 在src/index.js
+/**
+ * 在index.js中检测store状态的改变，一旦发生改变，重新渲染页面 <App />
+ * 备注：redux只负责管理状态，至于状态的改变驱动着页面的展示，要靠我们自己写
+ * */
+import store from './redux/store'
+
+ReactDOM.render(<App store={store}/>, document.getElementById('root'));
+
+// 检测store状态的改变
+store.subscribe(() => {
+    ReactDOM.render(<App store={store}/>, document.getElementById('root'));
+})
+```
+
+### 25、React-Redux
+<img src="/web/react-redux.png">
+
+
