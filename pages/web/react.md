@@ -2413,8 +2413,10 @@ export const DECREMENT = 'decrement'
  * */
 // 引入createStore,专门用来创建redux中最为核心的store对象
 import {createStore} from "redux"
-// 引入redux-thunk，用于支持异步action
-import thunk from "redux-thunk"
+// 旧版引入redux-thunk，用于支持异步action
+// import thunk from "redux-thunk"
+// 新版引入方式
+import {thunk} from "redux-thunk"
 // 引入为count组件服务的reducer
 import countReducer from "./count_reducer"
 // 记得要暴露store对象 （使用中间件applyMiddleware注入redux-thunk 用于redux支持返回值为函数的调用）
@@ -2480,6 +2482,276 @@ store.subscribe(() => {
 ```
 
 ### 25、React-Redux
+
 <img src="/web/react-redux.png">
 
+#### 2.React-Redux的基本使用
+```text
+1.明确两个概念：
+    1.UI组件：不能使用任何redux的api，只负责页面的呈现、交互等。
+    2.容器组件：负责和redux通信，将结果交给UI组件。
+2.如何创建一个容器组件————靠react-redux的connect函数
+    connect(mapStateToProps,mapDispatchToProps)(UI组件)
+    - mapStateToProps：映射状态，返回值是一个对象
+    - mapDispatchToProps：映射操作状态的方法，返回值是一个对象
+3.备注1：容器组件中的store是靠props传进去的，而不是在容器组件中直接引入
+4.备注2：mapDispatchToProps也可以是一个对象
+```
 
+- **1.安装：**
+```bash
+npm install react-redux --save
+```
+- **2.创建
+    - 容器组件：
+    ```js
+  // 引入react-redux
+    import {connect} from 'react-redux'
+  // 引入action_creators
+    import {addGUN,removeGUN} from '../redux/action_creators'
+  // 引入UI组件
+    import CountUI from '../components/Count'
+    // 映射状态回调 state => props
+    const mapStateToProps = (state) => {
+    // 返回映射状态
+        return {num:state}
+    }
+    // 映射操作状态的方法回调 dispatch => props
+    const mapDispatchToProps = (dispatch) => { 
+        return {
+             // 操作状态的方法
+            addGUN:() => dispatch(addGUN()),
+            removeGUN:() => dispatch(removeGUN())
+        }
+    }
+    // connect函数调用，将容器组件和UI组件进行连接
+    export default connect(mapStateToProps,mapDispatchToProps)(CountUI)
+  
+  // mapDispatchToProps 简写对象形式
+    export default connect(
+      mapStateToProps,
+      {
+      addGUN:addGUN,
+      removeGUN:removeGUN
+      }
+        )(CountUI)
+    ```
+    - UI组件：
+    ```js
+  // 组件中不能包含任何redux的api，只负责页面的呈现、交互等。
+    import React, { Component } from 'react'
+    
+    class Count extends Component {
+        render() { 
+            return (
+                <div>
+                    <h1>{this.props.num}</h1>
+                    <button onClick={this.props.addGUN}>+</button>
+                    <button onClick={this.props.removeGUN}>-</button>
+                </div>
+            )
+        }
+    }
+  ```
+  -  使用容器组件
+  ```jsx
+  // 引入容器组件
+    import Count from './Count'
+    import store from "./redux/store"
+    // 渲染容器组件
+    class A extends Component { 
+            render() { 
+                return (
+                    <div>
+                        {/* 容器组件使用store*/}
+                        <Count store={store}/>
+                    </div>
+                )
+            }
+        }
+    export default A
+  ```
+  
+#### 3.react-redux 优化
+  - 1.容器组件和UI组件整合成一个文件 
+  - 2.无需自己给容器传递store，给\<App/>包裹一个\<Provider store={store}>即可。
+    ```jsx
+    import { Provider } from 'react-redux'
+    
+    ReactDOM.render(
+    <Provider store={store}>
+    <App />
+    </Provider>, document.getElementById('root'))
+    ```
+  - 3.使用了react-redux后也不用再自己检测redux中状态的改变了，容器组件可以自动完成这个工作。
+    ```jsx
+    // 不用再写这样方式检测状态改变 更新视图 
+    import store from './redux/store'
+    
+    store.subscribe(() => {
+    ReactDOM.render(
+    <Provider store={store}>
+    <App />
+    </Provider>, document.getElementById('root'))
+    })
+    ```
+  - 4.mapDispatchToProps也可以简单的写成一个对象。
+  - 5.一个组件要和redux“打交道”要经过哪几步？
+  - 
+    - 1.定义好UI组件——不暴露
+    - 2.引入connect生成一个容器组件，并暴露，写法如下：
+    ```js
+    connect(
+        state => ({key:value}), //映射状态
+        {key:xxxxxAction} //映射操作状态的方法
+    )(UI组件)
+    ```
+    - 3.在UI组件中通过this.props.xxxxxxx读取和操作状态
+```jsx
+// 定义一个Count 容器组件和UI组件整合成一个文件 (一般这种文件放在containers文件夹中  container/Count)
+    import React, { Component } from 'react'
+    import { connect } from 'react-redux'
+    import { addGUN, removeGUN } from './redux/action'
+// Count的UI组件
+    class Count extends Component {
+        render() { 
+            return (
+                <div>
+                    <h1>当前求和为：{this.props.sum}</h1>
+                    <button onClick={this.props.addGUN}>+</button>
+                    <button onClick={this.props.removeGUN}>-</button>
+                </div>
+            )
+        }
+    }
+    // 把Count组件和redux中的状态连接起来
+    // 1.connect()() 返回的是一个容器组件
+    // 2.容器组件包裹UI组件
+    export default connect(
+        state => ({ sum: state }), //映射状态
+        { addGUN, removeGUN } //映射操作状态的方法
+    )(Count)
+```
+
+#### 4.react-redux数据共享
+  - 1.定义一个Person组件，和Count组件通过Redux共享数据
+  - 2.为Person组件编写：reducer、action，配置constant常量
+```js
+// reducer
+import {ADD_PERSON} from "../constant"
+const initState =[
+    {
+        id:'001',
+        name:'张三',
+        age:18
+    }
+]
+export default function PersonReducer (preState=initState,action){
+    const {type,data} = action
+    switch (type){
+        case ADD_PERSON:
+            return [data,...preState]
+        default:
+            return preState;
+    }
+
+
+}
+```
+```js
+// action
+import {ADD_PERSON} from "../constant"
+
+export const createAddPersonAction = (person) => ({
+    type: ADD_PERSON,
+    data: person
+})
+```
+```js
+// constant
+export const ADD_PERSON = 'add_person'
+```
+  - 3.重点：Person的reducer和Count的Reducer要使用combineReducers进行合并，合并后的总reducer才能被store使用
+```js
+// store
+/**
+ * 该文件专门用于暴露一个store对象，整个应用只有一个store对象
+ * */
+// 引入createStore,专门用来创建redux中最为核心的store对象
+import {legacy_createStore as createStore,applyMiddleware,combineReducers} from "redux"
+// 引入redux-thunk，用于支持异步action
+import {thunk} from "redux-thunk"
+// 引入为count组件服务的reducer
+import countReducer from "./reducers/count"
+// 引入为person组件服务的reducer
+import personReducer from "./reducers/person"
+// 汇总所有的reducer变为一个总的reducer
+const allReducer=combineReducers({
+    count:countReducer,
+    personList:personReducer
+})
+export default createStore(allReducer,applyMiddleware(thunk))
+```
+  - 4.交给store的是总reducer，最后注意在组件中取出状态的时候，记得“取到位”
+```js
+import React, {Component} from 'react';
+import {nanoid} from "nanoid"
+import {connect} from "react-redux";
+import {createAddPersonAction}from "../../redux/actions/person";
+class Person extends Component {
+    getPerson=()=>{
+        const name = this.nameNode.value
+        const age = this.ageNode.value
+        const person={
+            name,
+            age,
+            id:nanoid()
+        }
+        this.props.addPerson(person)
+        this.nameNode.value=''
+        this.ageNode.value=''
+        console.log(person)
+    }
+    render() {
+        const {personList,count} = this.props
+        return (
+            <div>
+                <h1>人员列表{count}</h1>
+             <h1>我是Person组件</h1>
+                <input ref={c=>this.nameNode=c} placeholder="请输入名字" />
+                <input ref={c=>this.ageNode=c} placeholder="请输入年龄"/>
+                <button onClick={this.getPerson}>添加</button>
+                <ul>
+                    {
+                        personList.map(person=>{
+                            return <li key={person.id}>{person.name}-----{person.age}</li>
+                        })
+                    }
+                </ul>
+            </div>
+        );
+    }
+}
+
+
+export default connect(
+    state=>({
+        // "personList"是组件中props的属性名  ，state.personList 对应reducers中personList的值（即：汇总reducers时对象内的属性名）
+        personList:state.personList, 
+        // 在Person组件中共享count 数据
+        count:state.count
+    }),
+
+    {addPerson:createAddPersonAction}
+)(Person)
+```
+
+#### 5.纯函数
+```text
+1. 一类特别的函数：只要是同样的输入（实参），必定得到同样的输出（返回值）。
+2. 必须遵守以下一些约束：
+    - 不得改写参数数据；
+    - 不能调用系统IO等外部接口（不会产生任何副作用，例如：网络请求，输入h和输出设备）；
+    - 不能调用Date.now()或者Math.random()等不纯的方法，因为每次会得到不一样的结果。
+3.react的redux函数必须是纯函数
+```
