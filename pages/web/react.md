@@ -2590,6 +2590,7 @@ npm install react-redux --save
     
     store.subscribe(() => {
     ReactDOM.render(
+    /* 此处需要用Provider包裹App组件，目的是让App所有的后代容器组件都能接收到store */
     <Provider store={store}>
     <App />
     </Provider>, document.getElementById('root'))
@@ -2754,4 +2755,61 @@ export default connect(
     - 不能调用系统IO等外部接口（不会产生任何副作用，例如：网络请求，输入h和输出设备）；
     - 不能调用Date.now()或者Math.random()等不纯的方法，因为每次会得到不一样的结果。
 3.react的redux函数必须是纯函数
+```
+
+#### 6.redux开发者工具的使用
+-  1.浏览器安装插件 [Redux DevTools](https://blog.loverzz.cn/web/reduxdevtools-3.1.6.xpi)
+-  2.下载完成后，点击chrome右上角的插件图标，选择加载已解压的扩展程序，选择redux-devtools文件夹(解压后的文件)
+-  3.项目中安装 redux-devtools-extension
+```bash
+npm install --save-dev redux-devtools-extension
+```
+```javascript
+// store.js文件使用
+import {composeWithDevTools} from 'redux-devtools-extension'
+
+// 创建store
+const store = createStore(allReducers,composeWithDevTools(applyMiddleware(thunk)))
+```
+
+#### 7.react-redux书写优化
+-  1.所有变量名字要规范，尽量触发对象的简写形式
+-  2.reducers文件夹中，编写index.js文件专门用于汇总并暴露所有的reducer
+
+### 26、扩展
+
+#### 1.setState
+-  **setState更新状态的2种写法**
+```text
+1. setState(stateChange, [callback])------对象式的setState
+    1.stateChange为状态改变对象(该对象可以体现出状态的更改)
+    2.callback是可选的回调函数，它在状态更新完毕、界面也更新后(render调用后)才被调用
+2. setState(updater, [callback])------函数式的setState
+    1.updater为返回stateChange对象的函数。
+    2.updater可以接收到state和props。
+    3.callback是可选的回调函数，它在状态更新、界面也更新后(render调用后)才被调用。
+    
+```
+-  **总结：**
+   -  1.对象式的setState是函数式的setState的简写方式(语法糖)
+   -  2.使用原则：
+   - 
+     - 1.如果新状态不依赖于原状态 ===> 使用对象方式
+     - 2.如果新状态依赖于原状态 ===> 使用函数方式
+     - 3.如果需要在setState()执行后获取最新的状态数据，要在第二个callback函数中读取
+
+#### 2.lazyLoad
+
+-  **路由组件的lazyLoad**
+```text
+// 1.通过React.lazy()函数配合import()函数动态加载路由组件 ===> 路由组件代码会被分开打包
+const Login = lazy(() => import('@/pages/Login'))
+
+// 2.通过<Suspense>指定在加载得到路由打包文件前显示一个自定义loading界面
+<Suspense fallback={<h1>loading.....</h1>}>
+    <Switch>
+        <Route path="/xxx" component={Xxxx}/>
+        <Redirect to="/login"/>
+    </Switch>
+</Suspense>
 ```
