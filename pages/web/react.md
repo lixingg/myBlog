@@ -3141,7 +3141,7 @@ const Login = lazy(() => import('@/pages/Login'))
     (3). 作用:保存标签对象,功能与React.createRef()一样
 ```
 
-- **6.Fragment**
+#### 4.Fragment
 
 ```text
 使用：只接收一个key属性 <Fragment key={xxx}>，不是遍历key可以不写
@@ -3159,7 +3159,7 @@ const Login = lazy(() => import('@/pages/Login'))
     可以不用必须的有一个真实的DOM根标签了
 ```
 
-- **7.Context**
+#### 5.Context
 
 ```text
 理解：
@@ -3192,8 +3192,9 @@ const Login = lazy(() => import('@/pages/Login'))
     在应用开发中一般不用context, 一般都用它的封装react插件（react-redux)
 ```
 
-- **8.组件优化**
+#### 6.组件优化
 -
+
 - ***1.Component的2个问题***
 
 ```text
@@ -3229,8 +3230,9 @@ Component中的shouldComponentUpdate()总是返回true
 项目中一般使用PureComponent来优化。
 ``` 
 
-- **9.render props**
+#### 7.render props
 -
+
 - ***1.如何向组件内部动态传入带内容的结构（标签）***
 
 ```text
@@ -3260,8 +3262,9 @@ React中:
     C组件： 读取A组件传入的数据显示, {this.props.data}
 ```
 
--  **8.错误边界**
+#### 8.错误边界
 - 
+
 - ***1.理解***
 
 ```text
@@ -3269,13 +3272,12 @@ React中:
 ```
 
 - ***2.特点***
+- 只能捕获***后代组件生命周期产生的错误***，不能捕获自己组件产生的错误和其他组件在合成事件、定时器中产生的错误
 
-```text
-    只能捕获后代组件生命周期产生的错误，不能捕获自己组件产生的错误和其他组件在合成事件、定时器中产生的错误
-```
 
 - ***3.使用方式***
--  getDerivedStateFromError配合componentDidCatch
+- getDerivedStateFromError配合componentDidCatch
+
 ```text
 // 生命周期函数，一旦后台组件报错，就会触发
 static getDerivedStateFromError(error) {
@@ -3290,3 +3292,162 @@ componentDidCatch(error, info) {
     console.log(error, info);
 }
 ```
+
+```jsx
+// 父组件
+import React, {Component} from 'react';
+import CompChild from "./CompChild";
+
+class BoundaryDemo extends Component {
+    // 当Parent组件的子组件抛出错误时，会触发getDerivedStateFromError调用，并携带错误信息
+    // 该方法接收抛出的错误作为参数，并返回一个对象来更新state
+    state = {
+        hasError: ''
+    }
+
+    static getDerivedStateFromError(error) {
+        // 更新 state 使下一次渲染能够显示降级后的 UI
+        console.log(error)
+        return {hasError: error};
+    }
+
+    componentDidCatch(error, errorInfo) {
+        // 你同样可以将错误日志上报给服务器
+        console.log('日志上报给服务器:', error, errorInfo);
+    }
+
+    render() {
+        return (
+            <div>
+                <h3>父组件</h3>
+                {this.state.hasError ? <div>当前网络不稳定，稍后重试</div> : <CompChild/>}
+            </div>
+        );
+    }
+}
+
+export default BoundaryDemo;
+```
+
+```jsx
+// 子组件
+import React, {Component} from 'react';
+
+class CompChild extends Component {
+    state = {
+        // users:[
+        //     {id:'001',name:'张三',age:20},
+        //     {id:'002',name:'李四',age:21},
+        //     {id:'003',name:'王五',age:22}
+        // ]
+        users: 'adc'
+    }
+
+    render() {
+        return (
+            <div>
+                {this.state.users.map(item => {
+                    return <div key={item.id}>{item.name}---{item.age}</div>
+                })}
+            </div>
+        );
+    }
+}
+
+export default CompChild;
+```
+
+#### 9.组件通信方式总结
+
+- **组件间的关系**
+    - 父子组件
+    - 兄弟组件（非嵌套组件）
+    - 祖孙组件（跨级组件）
+- **几种通信方式**
+
+```text
+    （1）props：
+        (1) children props
+        (2) render props
+    （2）消息订阅与发布模式：pubs-sub、event等等
+    （3）集中式管理：redux、dva等等
+    （4）conText：生产者/消费者
+```
+
+- **比较好的搭配方式**
+
+```text
+    父子组件：props
+    兄弟组件：消息订阅-发布，集中式g管理
+    祖孙组件（跨级组件）：消息订阅与发布模式、集中式管理、conText（开发用的少，封装插件用的多）
+```
+
+### 27、React Router 6
+
+#### 1.概述
+
+- **1.React Router以三个不同的包发布到npm上，它们分别为：**
+
+```text
+1.react-router:路由的核心库，提供了很多的：组件、钩子。
+2.react-router-dom:包含react-router的所有内容，并添加了一些专门用于DOM的组件，例如<BrowserRouter>、<HashRouter>等。
+3.react-router-native:包含react-router的所有内容，并添加了一些专门用于React Native的API，例如<NativeRouter>等。
+```
+
+- **2.与React Router 5.x版本相比，改变了什么？**
+
+```text
+1.内置组件的变化：移除 <Switch/>,新增 <Routes/>等。
+2.语法的变化：component={About} 变为 element={<About/>}等。
+3.新增多个hook:
+    useParams()、useNavigate()、useLocation()、useMatch()等。
+4.官方明确推荐函数式组件了！
+...
+```
+
+#### 2.Component
+
+- **1.\<BrowserRouter>**
+    - 1.说明：\<BrowserRouter>用于包裹整个应用
+    - 2.示例代码：
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import {BrowserRouter} from "react-router-dom"
+// createRoot(container!) if you use TypeScript
+const root = ReactDOM.createRoot(document.getElementById("root"));
+
+root.render(
+    <BrowserRouter>
+        // 整体结构（通常为App组件）
+        <App/>
+    </BrowserRouter>
+)
+```
+
+- **2.\<HashRouter>**
+    - 1.说明：作用与\<BrowserRouter>一样，但\<HashRouter>修改的是URL的哈希值
+    - 备注：6.x版本中\<HashRouter>、\<BrowserRouter>的用法与5.x相同。
+
+- **3.\<Routes>与\<Route>**
+    - 1.v6版本中，移除了Switch组件，新增了Routes组件，并且Route组件也发生了变化。
+    - 2.\<Routes>和\<Route>要配合使用，且必须要用\<Routes>包裹\<Route>。
+    - 3.\<Route>相当于一个if语句，如果其路径与当前URL匹配，则呈现其对应的组件。
+    - 4.\<Route caseSensitive>属性用于指定：匹配时是否区分大小写（默认false)。
+    - 5.当URL发生变化时，\<Routes>都会查看其所有子\<Route>，并呈现与当前URL匹配的第一个\<Route>。
+    - 6.\<Route>也可以嵌套使用，且可配合useRoutes()配置“路由表”，但需要通过\<Route>组件来渲染其子路由。
+    - 7.示例代码：
+   ```text
+    <Routes>
+        // path属性用于定义路径，element属性用于定义当前路径所对应的组件
+        <Route path="/login" element={<Login/>}/>
+        // 用于定义嵌套路由，home是一级路由，对应的路径/home
+        <Route path="/home" element={<Home/>}>
+            // test1 和 test2 是二级路由，对应的路径分别是/home/test1 和 /home/test2
+            <Route path="test1" element={<Test1/>}/>
+            <Route path="test2" element={<Test2/>}/>
+        </Route>
+    </Routes>
+    ```
