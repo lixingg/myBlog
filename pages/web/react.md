@@ -3451,3 +3451,365 @@ root.render(
         </Route>
     </Routes>
     ```
+
+- **4.\<Link>**
+    - 1.作用：修改URL，且不发送网络请求（路由链接）。
+    - 2.注意：外侧需要用\<BrowserRouter>或\<HashRouter>包裹。
+    - 3.示例代码：
+    ```jsx
+        import {Link} from 'react-router-dom'
+        function Test(){
+            return(<div>
+                <Link to="/路径">按钮</Link>
+            </div>)
+        }
+    ```
+
+- **5.\<NavLink>**
+    - 1.作用：与\<Link>组件类似，且可实现导航高亮效果。
+    - 2.示例代码：
+    ```text
+     // 注意：NavLink 默认类名是active，下面是指定自定义的class
+     // 自定义样式
+        <NavLink to="/home" className={({isActive}) => isActive ? 'base 自定义类名' : 'base'}>
+            按钮
+        </NavLink>
+    // 默认情况下，当Home的子组件匹配成功，Home的导航也会高亮，当NavLink上添加了end属性后，若Home的子组件匹配成功，Home的导航不会高亮
+        <NavLink to="/home" end>
+            按钮
+        </NavLink>
+    ```
+
+- **6.\<Navigate>**
+    - 1.作用：只要\<Navigate>组件被渲染，就会修改路径，切换视图。
+    - 2.replace属性用于控制跳转模式（push或replace,默认为push）。
+    - 3.示例代码：
+  ```jsx
+  import React,{useState} from 'react'
+  import {Navigate} from 'react-router-dom'
+  export default function Home(){
+  const [sum,setSum] = useState(1)
+  return(<div>
+  <h2>Home组件</h2>
+  {/*        根据sum的值决定是否切换视图*/}
+  {sum === 1 ? <h4>sum的值为{sum}</h4> : <Navigate replace to="/about"/>}
+  <button onClick={() => setSum(2)} >修改sum的值为2</button>
+  </div>)
+  }
+  ```
+
+- **7.\<Outlet>**
+    - 1.当\<Route>产生嵌套时，\<Outlet>用于渲染子路由的视图。
+    - 2.示例代码：
+    ```js
+    // 根据路由表生成对应的路由规则
+    const element = useRoutes([
+        {
+            path: '/about',
+            element: <About/>
+        },
+         {
+            path: '/home',
+            element: <Home/>,
+            children:[
+                    {
+                    path: 'news',
+                    element: <News/>
+                    },
+                    {
+                    path: 'message',
+                    element: <Message/>
+                    }
+                ]
+        },
+        {
+            path: '/',
+            element: <Navigate to="/home"/>
+        }
+    ])
+    ```
+    ```jsx
+        // Home.jsx
+        import React from "react";
+        import {NavLink, Outlet } from "react-router-dom";
+        
+        export default function Home() {
+          return (
+            <div>
+              <h2>Home组件</h2>
+              <div>
+                <ul className="nav nav-tabs">
+                  <li>
+                    <NavLink className="list-group-item" to="/home/news">
+                      News
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className="list-group-item" to="/home/message">
+                      Message
+                    </NavLink>
+                  </li>
+                </ul>
+                <div>
+                  <Outlet />
+                </div>
+              </div>
+            </div>
+          );
+        }
+    ```
+
+#### 3.Hooks
+
+- **1.useRoutes**
+    - 作用：根据路由表，动态创建\<Routes>和\<Route>。
+    - 示例代码：
+
+      ```jsx
+      // 路由表配置：src/routes/index.js
+      import About from '../pages/About'
+      import Home from '../pages/Home'
+      import {Navigate} from"react-router-dom";
+      
+      export default[
+          {
+              path:'/about',
+              element:<About/>
+          },
+          {
+              path:'/home',
+              element:<Home/>
+          },
+          {
+              path:'/',
+              element:<Navigate to="/home"/>
+          }
+      ]
+      ```
+
+      ```jsx
+      // 在App.jsx中使用路由规则
+      import { useRoutes } from 'react-router-dom';
+      import routes from './routes';
+      
+      function App() {
+          const element = useRoutes(routes);
+          return (
+            <div className="App">
+              {element}
+            </div>
+          );
+        }
+      ```
+
+- **2.useNavigate**
+    - 作用：用于访问路由器，可以用来实现路由的跳转。
+    - 示例代码：
+
+        ```jsx
+        import React from"react";
+        import { useNavigate } from 'react-router-dom';
+      
+        function About() { 
+        const navigate = useNavigate();
+        const handle=()=>{
+          // 第一种使用方式：指定具体的路径
+          navigate('/login',{
+          replace:false,
+          state:{a:1,b:2}
+          });
+        // 第二种使用方式：传入数值进行前进和后退，类似于5.x中的history.go()方法
+         navigate(1);
+        }
+  
+          return (
+            <div>
+              <button onClick={handle}>跳转到login</button>
+            </div>
+          );
+        }    
+        ```
+
+- **3.useParams**
+    - 作用：返回当前匹配路由的params参数，类似于5.x中的match.params。
+    - 示例代码：
+
+        ```jsx
+        import React from"react";
+        import { useParams } from 'react-router-dom';
+        
+        export default function Detail() { 
+          // 获取URL中携带的params参数
+          const {id} = useParams();
+          return (
+            <div>
+              <h2>Detail</h2>
+              <p>{id}</p>
+            </div>
+          );
+        }
+        ```
+      ```jsx
+      import React from"react";
+      import { Routes,Route } from 'react-router-dom';
+      import Detail from './Detail';
+      export default function App (){
+          return (
+            <div>
+              <Routes>
+      {/*定义params动态参数（占位）*/}
+                <Route path="/detail/:id" element={<Detail/>}/>
+              </Routes>
+            </div>)
+      }
+      ```
+
+
+- **4.useSearchParams**
+    - 作用：用于读取和修改当前位置的URL中的查询参数。
+    - 返回一个包含两个值的数组，内容分别为：当前的search参数，更新search参数的函数。
+    - 示例代码：
+
+        ```jsx
+        import React from"react";
+        import { useSearchParams } from 'react-router-dom';
+        
+        export default function Detail() { 
+          // 获取URL中携带的params参数
+          const [searchParams, setSearchParams] = useSearchParams();
+          return (
+            <div>
+              <h2>Detail</h2>
+      {/*获取属性值*/}
+              <p>{searchParams.get('id')}</p>
+      {/*修改search属性值*/}
+              <button onClick={() => {
+                  //第一种写法：字符串参数
+                  setSearchParams('id=123&name=abc');
+                   /*第二种写法： 对象参数*/
+                   setSearchParams({id:123,name:'abc'});
+              }}>修改id</button>
+            </div>
+          );
+        }
+        ```
+- **5.useLocation**
+    - 作用：返回当前的location对象，对比5.x中的路由组件的props.location属性。
+    - 示例代码：
+
+        ```jsx
+        import React from"react";
+        import { useLocation } from 'react-router-dom';
+      
+        export default function Detail() { 
+          const location = useLocation();
+          console.log(location);
+          // 返回一个location 对象
+              /*
+              {
+               hash:'',
+               key:'ah9ncdff',
+               pathname: "/detail",
+               search:"?id=123&name=abc",
+               state: {
+               id: 123,
+               name: 'abc'
+               }
+              }
+               */
+          return (
+            <div>
+              <h2>Detail</h2>
+              <p>{location.pathname}</p>
+            </div>
+          );
+        }
+        ```
+
+- **6.useMatch**
+    - 作用：返回当前的match对象，对比5.x中的路由组件的props.match属性。
+    - 示例代码：
+
+      ```jsx
+      import React from "react";
+      import {useMatch} from 'react-router-dom';
+      
+      export default function Detail() {
+          const match = useMatch('/detail/:id');
+          console.log(match);
+      // 返回一个match 对象
+      /*
+      {
+        params:{id:123},
+        path:'/detail/:id',
+        url:'/detail/123',
+        pattern:{
+            path:'/detail/:id',
+            caseSensitive:false,
+            end:true
+        }
+      }
+      */
+      
+          return (
+            <div>
+              <h2>Detail</h2>
+            </div>)
+      }
+      ```
+-  **7.useInRouterContext**
+  -   作用：如果组件在\<Router>的上下文中呈现，则返回true，否则返回为false(被\<BrowserRouter>或\<HashRouter>组件包裹返回为true)。
+
+- **8.useNavigationType**
+  - 作用：返回当前的导航类型(用户是如何来到当前页面的）。
+  - 返回值：
+    - POP：用户点击了浏览器后退按钮。
+    - PUSH：用户点击了浏览器前进按钮。
+    - REPLACE：用户点击了浏览器刷新按钮。
+  - 备注：POP是指在浏览器中直接打开了这个路由组件（刷新页面）
+
+- **9.useOutlet**
+  - 作用：返回当前路由组件的子路由组件。
+  - 示例代码：
+
+    ```jsx
+    import React from "react";
+    import {useOutlet} from 'react-router-dom';
+    
+    export default function Detail() {
+        const outlet = useOutlet();
+    // console.log(outlet); 
+    // 如果嵌套路由没有挂载，则 outlet 为 null
+    // 如果嵌套路由挂载了，则 outlet 为 嵌套路由对象
+        return (
+          <div>
+            <h2>Detail</h2>
+            {outlet}
+          </div>)
+    }
+    ```
+
+- **10.useResolvedPath**
+  - 作用：给定一个URL值，解析其中的：path、search、hash属性，并返回一个对象。
+  - 示例代码：
+
+    ```jsx
+    import React from "react";
+    import {useResolvedPath} from 'react-router-dom';
+    
+    export default function Detail() {
+        const resolvedPath = useResolvedPath('/home/news');
+        console.log(resolvedPath);
+        /*
+        {
+            pathname: "/home/news",
+            search: "",
+            hash: "",
+        }
+        */
+        return (
+          <div>
+            <h2>Detail</h2>
+          </div>)
+    }
+    ```
