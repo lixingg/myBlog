@@ -2085,20 +2085,212 @@
   ```
   
 -  #### 21.可视化图表
--  1.json数据格式 
+-  1.JSON数据格式 
 
 - ```python
-  # 1.json是一种轻量级的数据交互格式，可以按照json指定的格式去组织和封装数据
-    # 1.json数据格式是键值对的形式，例如：{" name ": " 小明 "}、[{" name ": " 小明 "},{" name ": "小红 "}] 
-  # 2.json本质上是一个带有特定格式的字符串
-  # 3.python数据和json数据之间的转换
+  # 1.JSON是一种轻量级的数据交互格式，可以按照JSON指定的格式去组织和封装数据
+    # 1.JSON数据格式是键值对的形式，例如：{" name ": " 小明 "}、[{" name ": " 小明 "},{" name ": "小红 "}] 
+  # 2.JSON本质上是一个带有特定格式的字符串
+  # 3.python数据和JSON数据之间的转换
     # import json
-    # json.dumps(python数据,ensure_ascii=False) 将python数据转换为json数据
+    # json.dumps(python数据,ensure_ascii=False) 将python数据转换为JSON数据
     # ensure_ascii默认是True，代表将所有的中文转换为unicode编码，如果设置为False，代表将所有的中文转换为中文
-    # json.loads(json数据) 将json数据转换为python数据
+    # json.loads(json数据) 将JSON数据转换为python数据
     # 例如：
         json_str = '{" name ": " 小明 "}'
         python_data = [{"name ": " 小明 "},{"name ": " 小红 "}]
         json_data = json.dumps(python_data,ensure_ascii=False)
         json_data = json.loads(json_str)
   ```
+  
+-  2.[pyecharts](https://pyecharts.org/#/zh-cn/)模块（使用案例可参考[官方画廊](https://gallery.pyecharts.org/)）
+
+- ```python
+  # 1.pyecharts模块是python中一个可视化图表的模块，可以方便的绘制出柱状图、折线图、饼图、散点图等
+    # 1.安装pyecharts模块：
+        pip install pyecharts
+    # 2.导入pyecharts模块：
+        # 全部导入
+        import pyecharts
+        # 按需导入
+        from pyecharts.charts import Line
+    # 3.使用pyecharts模块绘制图表：
+        # 1.创建一个图表对象：
+        chart = pyecharts.Bar()
+        # 2.添加x轴数据：
+        chart.add_xaxis(["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"])
+        # 3.添加y轴数据：
+        chart.add_yaxis("商家A",[5,20,36,10,75,90])
+        # 4.设置图表的标题：
+        chart.set_title("商家销售统计")
+        # 5.设置图表的图例：
+        chart.set_global_opts(title_opts=opts.TitleOpts(title="商家销售统计"))
+        # 6.保存图表到文件：
+        chart.render("bar_chart.html")
+        # 7.生成了一个bar_chart.html文件，可以在浏览器中打开查看图表
+    # 4.pyecharts配置选项
+        # 1.全局配置选项 （set_global_opts，更多配置查看官方文档）
+            # 导入配置项：
+            from pyecharts.options import TitleOpts, LegendOpts, ToolboxOpts
+            # 1.设置图表的标题：
+            chart.set_global_opts(title_opts=TitleOpts(title="商家销售统计")) 
+            # 2.设置图表的图例：
+            chart.set_global_opts(legend_opts=LegendOpts(orient="vertical", pos_left="2%", pos_top="15%"))
+        # 2.系列配置选项 （更多配置查看官方文档）
+            # 1.设置系列名称：
+            chart.set_series_opts(label_opts=opts.LabelOpts(formatter="{b}: {c}"))
+            # 2.设置系列颜色：
+            chart.set_series_opts(linestyle_opts=opts.LineStyleOpts(color="#CD0000"))
+  ```
+  
+-  3.pyecharts地图 
+-  ```python
+   # 1.导入pyecharts模块：
+    from pyecharts import Map
+    # 2.创建地图对象：
+    map = Map()
+    # 3.添加数据：
+    map.add("商家A",[("北京",100),("上海",200),("深圳",300)],
+        maptype="china",
+        is_visualmap=True,
+        visual_range=[0,500],
+        visual_text_color="#fff"
+    )
+    # 4.设置配置选项：
+    map.set_global_opts(
+        title_opts=opts.TitleOpts(title="商家销售统计"),
+        legend_opts=opts.LegendOpts(is_show=False)
+    )
+    # 5.保存图表：
+    map.render("map_chart.html")
+    # 6.打开图表：
+    # 打开浏览器，输入http://localhost:8000/map_chart.html
+    # 注意：如果无法打开，请检查pyecharts是否安装成功
+   ``` 
+   
+- #### 22.对象
+- 1.类的定义和使用
+- ```python
+  # 类的定义：
+    # class 是关键字，表示要定义类
+    # 类的属性，即定义在类中的变量（成员变量）
+    # 类的行为，即定义在类中的函数（成员方法）
+  # 语法：
+    # class 类名:
+        # 类的属性
+        # 属性名 = 属性值
+        # 类的方法
+        # def 方法名(self,参数列表):
+            # 方法体
+  # 类的实例化（创建类对象的语法）
+    # 对象名 = 类名()
+  # 例如：
+    class Student:
+        name = "张三"
+        age = 18
+        def say_hello(self):
+            print("你好，我是" + self.name)
+    # 创建一个学生对象
+    stu = Student()
+    # 调用对象的方法
+    stu.say_hello()
+    # 访问对象的属性
+    print(stu.name)
+    print(stu.age)
+  
+  # self作用：
+    # self 表示类对象本身的意思。
+    # 只有通过self,成员方法才能访问类的成员变量
+    # 在类的方法中，第一个参数必须是 self，而 self 只是参数名，你也可以使用其他参数名，但是约定俗成使用self。
+    # self出现在形参数列表中，但不占用参数位置，传参的时候可以忽略它。
+  ```
+  
+- 2.构造方法
+- ```python
+  # Python类可以使用：__init__()方法,称之为构造方法
+  # 构造方法的作用：
+    # 1.完成对象的初始化
+    # 2.为对象的成员变量赋初值
+  # 语法：
+    # def __init__(self,参数列表):
+        # 方法体
+  # 例如：
+    class Student:
+        def __init__(self,name,age):
+            self.name = name
+            self.age = age
+    # 创建一个学生对象
+    stu = Student("张三",18)
+    # 访问对象的属性
+    print(stu.name)
+    print(stu.age)
+  ```
+  
+- 3.内置方法（魔术方法） 
+- ```python
+  # 对象的方法名前面加上两个下划线__，就变成了内置方法，也称为魔术方法
+  # 作用：
+    # 1.对象和类相关的操作
+    # 2.运算符重载
+  
+  # 1.__str__字符串方法
+    # 作用：
+      # 1.打印对象时，默认输出对象的内存地址
+      # 2.可以自定义输出内容
+    # 语法：
+      # def __str__(self):
+          # 方法体
+    # 例如：
+      class Student:
+          def __init__(self,name,age):
+              self.name = name
+              self.age = age
+          def __str__(self):
+              return "学生姓名：" + self.name + "，年龄：" + str(self.age)
+      # 创建一个学生对象
+      stu = Student("张三",18)
+      # 打印对象
+      print(stu)
+  
+  # 2.__len__长度方法
+    # 作用：
+      # 1.用于计算对象的长度
+    # 语法：
+      # def __len__(self):
+          # 方法体
+    # 例如：
+      class Student:
+          def __init__(self,name,age):
+              self.name = name
+              self.age = age
+          def __str__(self):
+              return "学生姓名：" + self.name + "，年龄：" + str(self.age)
+          def __len__(self):
+              return len(self.name)
+      # 创建一个学生对象
+      stu = Student("张三",18)
+      # 打印对象
+      print(len(stu))
+  
+  # 3.__lt__比较方法
+     # 作用：
+       # 1.用于比较两个对象的大小
+     # 语法：
+       # def __lt__(self,other):
+           # 方法体
+     # 例如：
+       class Student:
+           def __init__(self,name,age):
+               self.name = name
+               self.age = age
+           def __str__(self):
+               return "学生姓名：" + self.name + "，年龄：" + str(self.age)
+           def __lt__(self,other):
+               return self.age < other.age
+       # 创建两个学生对象
+       stu1 = Student("张三",18)
+       stu2 = Student("李四",20)
+       # 比较两个学生对象
+       print(stu1 < stu2)
+  ```
+
