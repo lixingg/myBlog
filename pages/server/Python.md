@@ -2274,7 +2274,7 @@
   
   # 3.__lt__比较方法
      # 作用：
-       # 1.用于比较两个对象的大小
+       # 1.用于比较两个对象的大小（不含相等）
      # 语法：
        # def __lt__(self,other):
            # 方法体
@@ -2292,5 +2292,312 @@
        stu2 = Student("李四",20)
        # 比较两个学生对象
        print(stu1 < stu2)
+  
+  # 4.__le__比较方法 
+     # 作用：
+       #  1.用于比较两个对象的大小（含相等） 
+     # 语法：
+       # def __le__(self,other):
+           # 方法体
+     # 例如：
+       class Student:
+           def __init__(self,name,age):
+               self.name = name
+               self.age = age
+           def __str__(self):
+               return "学生姓名：" + self.name + "，年龄：" + str(self.age)
+           def __le__(self,other):
+               return self.age <= other.age
+       # 创建两个学生对象
+       stu1 = Student("张三",18)
+       stu2 = Student("李四",20)
+       # 比较两个学生对象
+       print(stu1 <= stu2)
+  
+  # 5.__eq__比较方法 
+     # 作用：
+       # 1.用于比较两个对象是否相等
+     # 语法：
+       # def __eq__(self,other):
+           # 方法体
+     # 例如：
+       class Student:
+           def __init__(self,name,age):
+               self.name = name
+               self.age = age
+           def __str__(self):
+               return "学生姓名：" + self.name + "，年龄：" + str(self.age)
+           def __eq__(self,other):
+               return self.age == other.age
+       # 创建两个学生对象
+       stu1 = Student("张三",18)
+       stu2 = Student("李四",20)
+       # 比较两个学生对象
+       print(stu1 == stu2)
+  ```
+
+- 4.封装
+- ```python
+  # 1.什么是封装
+    # 封装就是将属性和方法封装到一个类中
+  # 2.什么是私有成员
+    # 在类中提供仅供内部使用的属性和方法，而不对外开放（类对象无法使用）
+    # 私有成员就是以两个下划线开头(__)的成员
+  # 3.私有成员的访问限制
+    # 类对象无法访问私有成员
+    # 类中的其他成员可以访问私有成员
+  # 4.语法：
+    # 私有成员的定义
+      # def __方法名(self,参数):
+          # 方法体
+      # __变量名 = None
+    # 例如：
+      class Student:
+          def __init__(self,name,age):
+              self.__name = name
+              self.__age = age
+          def __sing(self):
+              print("私有方法")
+      # 创建学生对象
+      stu = Student("张三",18)
+      # 访问私有成员
+      print(stu.__name) # 报错
+      print(stu.__age) # 报错
+      stu.__sing() # 报错
+  ```
+
+- 5.继承
+- ```python
+  # 继承的基础语法：
+  # 1.什么是继承   
+    # 继承就是子类继承父类的属性和方法
+  # 2.单继承语法：
+    # 定义父类
+      # class 父类名:
+          # 方法体
+    # 定义子类
+      # class 子类名(父类名):
+          # 方法体
+    # 例如：
+      class Animal:
+          def __init__(self,name):
+              self.name = name
+          def eat(self):
+              print(self.name + "正在吃东西")
+      class Dog(Animal):
+          def bark(self):
+              print(self.name + "正在汪汪叫")
+      # 创建狗对象
+      dog = Dog("旺财")
+      dog.eat() # 旺财正在吃东西
+      dog.bark() # 旺财正在汪汪叫
+  
+  # 3.多继承语法：
+    # 定义父类1
+      # class 父类名1:
+          # 方法体
+    # 定义父类2
+      # class 父类名2:
+          # 方法体
+    # 定义子类
+      # class 子类名(父类名1,父类名2,...):
+          # 方法体
+    # 例如：
+      class A:
+          def sing(self):
+              print("sing")
+  
+          def foo(self):
+              print("A")
+      class B:
+          def run(self):
+              print("run")
+  
+          def foo(self):
+              print("B")
+      class C(A,B):
+          pass # 语法补全 类内不写任何内容
+      # 创建C对象
+      c = C()
+      c.sing() # sing
+      c.run() # run
+      c.foo() # A
+  
+  # 单继承和多继承
+    # 单继承：子类只继承一个父类
+    # 多继承：子类继承多个父类，按照顺序，从左到右依次继承
+    # 多继承中：如果父类有同名方法或属性，先继承的优先级高于后继承
+  # pass 关键字的作用
+    # pass是占位语句，用来保证函数（方法）或类定义的完整性，表示无内容，空的意思
+  
+  
+  # 复写和使用父类成员
+    # 1.什么是复写
+      # 子类中重新定义父类中同名的方法或属性
+    # 2.复写属性和方法 
+      # 子类中重新定义父类中同名的属性
+      # 子类中重新定义父类中同名的方法
+      # 例如：
+        class Animal:
+          def __init__(self,name):
+              self.name = name
+          def eat(self):
+              print(self.name + "正在吃东西")
+        class Dog(Animal):
+          def eat(self):
+              print(self.name + "正在吃骨头")
+        # 创建Dog对象
+        dog = Dog("旺财")
+        dog.eat() # 旺财正在吃骨头
+        # 创建Animal对象
+        animal = Animal("小狗")
+        animal.eat() # 小狗正在吃东西
+   # 3.调用父类同名成员
+    # 子类中调用父类中同名的属性和方法
+    # 方式1：
+      # 使用成员变量：父类名.成员变量名
+      # 使用成员方法：父类名.成员方法名(self)
+      # 例如： 
+        class Animal: 
+          def sing(self):
+              print("Animal is singing")
+  
+        class Dog(Animal):
+          def sing(self):
+             Animal.sing(self) # 调用父类同名方法
+  
+    # 方式2：
+      # 使用成员变量：super().成员变量名
+      # 使用成员方法：super().成员方法名(self)
+      # 例如：  
+        class Animal:
+            def sing(self):
+                print("Animal is singing")
+  
+        class Dog(Animal):
+            def sing(self):
+                super().sing()
+                print("Dog is singing")
+  
+  # 注意：只可以在子类内部调用父类的同名成员，子类的实体类对象调用默认是调用子类的复写的
+     
+  ```
+
+- 6.类型注解
+- ```python
+  # 1.什么是类型注解
+    # PyCharm等开发工具对代码做类型推断协助代码提示
+    # 类型注解不会影响程序的运行，但可以用来帮助开发者和编辑器检查代码的错误
+  # 2.语法：
+    # 语法1：变量:类型
+    # 语法2：在注释中，#type: 类型
+    # 例如：
+      def add(a: int, b: int) -> int:
+          return a + b
+  
+      x: int = 10
+      y: str = "Hello"
+  # 3.类型注解的种类
+    # 基本数据类型：int, float, bool, str,
+    # 基本容器类型：list, tuple, dict, set
+    # 特殊类型：Any（任意类型）, Union（联合类型）, Optional（可选类型）
+    # 例如：
+      # 1.参数类型注解及返回值类型注解
+      def add(a: int, b: int) -> int:
+          return a + b
+      # 2.基础数据类型注解
+      x: int = 10
+      y: str = "Hello"
+      # 特殊类型注解
+      z: Any = 10
+      z: Union[int, str] = 10
+      z: Optional[int] = 10
+      # 3.基础容器类型注解
+      a1: list = [1, 2, 3]
+      b1: tuple = (1, 2, 3)
+      c1: dict = {"a": 1, "b": 2}
+      d1: set = {1, 2, 3}
+      # 4.容器类型详细注解
+      d: Dict[str, int] = {"a": 1, "b": 2}
+      c: tuple[int, str] = (1, "2")
+      f: list[int] = [1, 2, 3]
+      g: set[int] = {1, 2, 3}
+      # 5.类对象类型注解
+      class Person:
+          def __init__(self, name: str, age: int):
+              self.name = name
+              self.age = age
+  
+      p1: Person = Person("Tom", 18)
+      # 6.在注释中进行类型注解
+      var_2 = "Hello"  # type: str
+      def func():
+          return 123  # type: int
+      var_3 = func() # type: init
+      # 7.联合类型
+      from typing import Union
+      var_4: list[Union[int, str]] = [1, "2"]
+      var_6: dict[Union[int, str], Union[int, str]] = {"a": 1, "b": "2"}
+      def func(a: Union[int, str], b: Union[int, str]) -> Union[int, str]:
+          return a + b
+      # 8.可选类型
+      from typing import Optional
+      var_5: Optional[int] = 10
+      # 
+
+  # 注意：
+    # 元组类型设置类型详情注解，需要将每一个元素都标记出来
+    # 字典类型设置类型详情注解，需要2个类型，第一个是key，第二个是value
+    # 类型注释只是提示性的，并非决定性的。数据类型和注解类型无法对应也不会导致报错
+  ```
+  
+- 7.多态
+- ```python
+   # 多态：指的是：多种状态，即完成某个行为时，使用不同的对象会得到不同的状态。
+   # 多态常作用在继承关系上：
+      # 比如 
+        # 函数（方法）形参声明接收父类对象
+        # 实际传入父类的子类对象进行工作
+
+      # 即：
+        # 以父类做定义声明
+        # 以子类做实际工作
+        # 用以获得同一行为，不同状态
+   # 抽象类（接口）
+     # 父类用来确定有哪些方法，具体的方法实现由子类自行决定，这种写法叫做抽象类（也可以称之为接口）
+     # 抽象类：含有抽象方法的类称之为抽象类
+     # 抽象方法：方法体是空实现的（pass)称之为抽象方法
+   
+   # 例如：
+      # 定义一个父类
+      class Animal: 
+          def __init__(self, name: str):
+              self.name = name
+          def eat(self):
+              pass
+      # 定义一个子类
+      class Dog(Animal):
+          def __init__(self, name: str):
+              super().__init__(name)
+          def eat(self):
+              print(f"{self.name} is eating")
+      # 定义一个子类
+      class Cat(Animal):
+          def __init__(self, name: str): 
+              super().__init__(name)
+          def eat(self):
+              print(f"{self.name} is eating")
+      # 创建一个Dog对象
+      dog = Dog("旺财")
+      # 创建一个Cat对象
+      cat = Cat("Tom")
+      # 调用Dog类和Cat类的方法
+      dog.eat()
+      cat.eat() 
+  
+   # 抽象类作用：
+     # 多用于做顶层设计（设计标准），以便子类做具体实现
+     # 也是对子类的一种软性约束，要求子类必须复写（实现）父类的一些方法
+     # 并配合多态使用，获得不同的工作状态。
   ```
 
