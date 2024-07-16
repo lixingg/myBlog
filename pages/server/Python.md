@@ -1,6 +1,6 @@
 # Python
 
-## Python 基础
+## Python 专栏
 
 ### 1、python 解释器的安装
 
@@ -1984,8 +1984,8 @@
         # 1.模块是Python中一个文件，可以包含函数、类、变量等。
         # 2.模块可以被其他模块导入和使用。
   ```
-    
-- 2.模块的导入 
+
+- 2.模块的导入
 
 - ```python
     # 1.模块的导入语法：
@@ -2029,8 +2029,8 @@
       # 3.通过"."来确定层级关系
       # 4.模块导入一般写在代码文件的开头位置
   ```
-  
-- 3.自定义模块 
+
+- 3.自定义模块
 
 - ```python
     # 1.自定义模块的定义
@@ -2048,16 +2048,16 @@
         # 4.在文件中使用__all__=['test1'] 来控制 from 模块名 import *导入功能哪些可以导入。
         # 5.不同模块，同名的功能，如果都被导入，那么后导入的会覆盖先导入的。
   ```
-  
+
 - #### 20.包
--  1.什么是包
+- 1.什么是包
 - ```python
     # 包是包含多个模块的文件夹，在包中有一个__init__.py文件，
     # 该文件是必须存在的，否则，Python就把这个目录当成普通目录，而不是一个包。
     # __init__.py可以是空文件，也可以有Python代码，因为__init__.py本身就是一个模块，而它的模块名就是包名。
   ```
-  
-- 2.包的创建 
+
+- 2.包的创建
 
 - ```python
   # 1.步骤：
@@ -2071,7 +2071,7 @@
     # [New] -> [Python Package] -> 输入包名称 -> 点击[OK] -> 新建功能模块（有联系的模块）
     # 注意：新建包后，包内部会自动创建__init__.py文件，这个文件控制着包的导入行为（通过 __all__ 控制哪些可以导入）。
   ```
-  
+
 - 3.第三方包
 
 - ```python
@@ -2083,9 +2083,9 @@
       # 3.使用pip命令安装指定路径，例如：pip install D:\python_code\requests-2.24.0-py3-none-any.whl
       # 4.使用pip命令安装指定网站的文件，例如：pip install i https://pypi.tuna.tsinghua.edu.cn/simple/ requests
   ```
-  
+
 -  #### 21.可视化图表
--  1.JSON数据格式 
+- 1.JSON数据格式
 
 - ```python
   # 1.JSON是一种轻量级的数据交互格式，可以按照JSON指定的格式去组织和封装数据
@@ -2102,8 +2102,8 @@
         json_data = json.dumps(python_data,ensure_ascii=False)
         json_data = json.loads(json_str)
   ```
-  
--  2.[pyecharts](https://pyecharts.org/#/zh-cn/)模块（使用案例可参考[官方画廊](https://gallery.pyecharts.org/)）
+
+- 2.[pyecharts](https://pyecharts.org/#/zh-cn/)模块（使用案例可参考[官方画廊](https://gallery.pyecharts.org/)）
 
 - ```python
   # 1.pyecharts模块是python中一个可视化图表的模块，可以方便的绘制出柱状图、折线图、饼图、散点图等
@@ -2142,8 +2142,8 @@
             # 2.设置系列颜色：
             chart.set_series_opts(linestyle_opts=opts.LineStyleOpts(color="#CD0000"))
   ```
-  
--  3.pyecharts地图 
+
+- 3.pyecharts地图
 -  ```python
    # 1.导入pyecharts模块：
     from pyecharts import Map
@@ -2167,7 +2167,7 @@
     # 打开浏览器，输入http://localhost:8000/map_chart.html
     # 注意：如果无法打开，请检查pyecharts是否安装成功
    ``` 
-   
+
 - #### 22.对象
 - 1.类的定义和使用
 - ```python
@@ -2204,7 +2204,7 @@
     # 在类的方法中，第一个参数必须是 self，而 self 只是参数名，你也可以使用其他参数名，但是约定俗成使用self。
     # self出现在形参数列表中，但不占用参数位置，传参的时候可以忽略它。
   ```
-  
+
 - 2.构造方法
 - ```python
   # Python类可以使用：__init__()方法,称之为构造方法
@@ -2225,8 +2225,8 @@
     print(stu.name)
     print(stu.age)
   ```
-  
-- 3.内置方法（魔术方法） 
+
+- 3.内置方法（魔术方法）
 - ```python
   # 对象的方法名前面加上两个下划线__，就变成了内置方法，也称为魔术方法
   # 作用：
@@ -2550,7 +2550,7 @@
     # 字典类型设置类型详情注解，需要2个类型，第一个是key，第二个是value
     # 类型注释只是提示性的，并非决定性的。数据类型和注解类型无法对应也不会导致报错
   ```
-  
+
 - 7.多态
 - ```python
    # 多态：指的是：多种状态，即完成某个行为时，使用不同的对象会得到不同的状态。
@@ -2602,3 +2602,234 @@
   ```
 
 - #### 23.SQL
+- 1.MySQL数据库
+- ```python
+  # MySQL的安装
+  # 1.下载MySQL安装包 
+    # https://dev.mysql.com/downloads/mysql/
+    # https://www.mysql.com/
+  # 2.安装MySQL
+    # 选择自定义安装，选择安装路径，选择服务名，选择端口号，选择其他选项，选择安装
+  # 3.配置环境变量
+    # 在系统变量中新建MYSQL_HOME，值为MySQL的安装路径
+    # 在系统变量中新建Path，在Path中添加%MYSQL_HOME%\bin
+  # 4.启动MySQL服务
+    # 以管理员身份运行cmd，输入net start mysql启动MySQL服务
+  # 5.连接MySQL
+    # 以管理员身份运行cmd，输入mysql -uroot -p连接MySQL
+    # 输入密码，回车
+  # 6.退出MySQL
+    # 输入exit退出MySQL
+  ```
+
+- 2.MySQL图形化工具（DBeaver）
+- ```python
+  # 1.下载DBeaver
+    # https://dbeaver.io/download/  
+  # 2.安装DBeaver
+    # 选择自定义安装，选择安装路径，选择其他选项，选择安装
+  # 3.配置DBeaver
+    # 选择连接类型为MySQL
+    # 输入主机名，端口号，用户名，密码
+  # 4.连接MySQL
+    # 输入密码，回车
+  ```
+
+- 3.SQL语言基础
+- ```python
+  # 1.SQL语言分类
+    # 1.DDL（数据定义语言）
+      # 用来定义数据库对象：数据库，表，列等
+      # 关键字：create,drop,alter等
+    # 2.DML（数据操作语言）
+      # 用来对数据库中表的记录进行增删改
+      # 关键字：insert,delete,update等
+    # 3.DQL（数据查询语言）
+      # 用来查询数据库中表的记录
+      # 关键字：select,where等
+    # 4.DCL（数据控制语言）
+      # 用来定义数据库的访问权限和安全级别，及创建用户
+      # 关键字：grant,revoke等
+  
+  # 2.SQL语法特征
+    # 1.大小写不敏感
+    # 2.SQL可以写在一行或者多行，最后以;号结尾
+    # 3.关键字不能被缩写
+    # 4.SQL可以写在单引号或者双引号中  
+  
+  # 3.SQL支持注释
+    # 1.单行注释：-- 注释内容（-- 后面一定要有一个空格）
+    # 2.单行注释：# 注释内容（# 后面可以没有空格，推荐加上）
+    # 3.多行注释：/* 注释内容 */
+  
+  # 4.DDL-库管理
+    # 1.查看数据库
+      # show databases;
+    # 2.使用数据库 
+      # use 库名;
+    # 3.创建数据库
+      # create database 库名[charset utf8];
+    # 4.删除数据库
+      # drop database 库名;
+    # 5.修改数据库
+      # alter database 库名 charset gbk;
+    # 6.查看当前使用的数据库
+      # select database();
+  
+  # 5.DDL-表管理
+    # 1.创建表
+      # create table 表名(
+        # 列名1 数据类型1,
+        # 列名2 数据类型2,
+        # ...
+      # );
+      # 数据类型：
+        # 整型：int(11) 11 表示显示的最大宽度，如果不够11位，则左边用0填充
+        # 浮点型：float(M,D) M 表示总位数，D 表示小数位数
+        # 字符串型：varchar(M) M 表示字符串的最大长度，如果插入的字符串的长度大于M，则从开头截断
+        # 日期型：date
+        # timestamp：时间戳
+    # 2.查看表结构
+      # desc 表名; 
+    # 3.查看表创建语句
+      # show create table 表名\G;
+    # 4.修改表
+      # alter table 表名 执行动作;
+        # 执行动作：
+          # 添加列：alter table 表名 add 列名 数据类型;
+          # 修改列：alter table 表名 modify 列名 数据类型;
+          # 删除列：alter table 表名 drop 列名;
+          # 修改列名：alter table 表名 change 旧列名 新列名 数据类型;
+          # 修改表名：alter table 表名 rename 新表名;
+    # 5.删除表
+      # drop table 表名;
+      # drop table if exists 表名;
+    # 6.复制表
+      # create table 表名 like 被复制的表名;
+    # 7.查看有哪些表
+      # show tables; 注意：需要先选择数据库，否则会报错
+      # show tables from 库名;
+
+  # 6.DML-增删改
+    # 1.插入数据
+      # insert into 表名(列名1,列名2,...) values(值1,值2,...)[,(值1,值2,...),(值1,值2,...)...];
+      # insert into 表名 values(值1,值2,...)[,(值1,值2,...),(值1,值2,...)...];
+    # 2.删除数据
+      # delete from 表名 where 条件;
+    # 3.修改数据
+      # update 表名 set 列名1=值1,列名2=值2,... where 条件;
+    #  注意： 字符串的值，出现在SQL语句中，必须使用单引号包裹，数值型的值可以不使用单引号
+
+  # 7.DQL-查询
+    # 1.基础查询
+      # select 列名1,列名2,...|* from 表名;
+    # 2.条件查询
+      # select 列名1,列名2,...|* from 表名 where 条件;
+      # 条件：
+        # 比较运算符：> < = != <> >= <=
+        # 逻辑运算符：and or not
+        # 模糊查询：like
+          # % 表示任意多个字符
+          # _ 表示任意单个字符
+        # 范围查询：in,not in
+        # 空判断：is null,is not null
+        # 优先级：小括号，not，比较运算符，逻辑运算符
+    # 3.分组聚合
+      # select 列名1,聚合函数... from 表名[where 条件] group by 列名1;
+      # 注意：group by 列名，表示按照哪一列进行分组，
+      # 聚合函数：将一列数据作为一个整体，进行纵向计算
+      # count(列|*)：计算个数
+      # max(列)：计算最大值
+      # min(列)：计算最小值
+      # sum(列)：计算总和
+      # avg(列)：计算平均值
+      # 注意：以上分组函数都忽略null值
+      # 注意：sum,avg一般用于处理数值型
+      # 注意：max,min,一般处理字符型
+      # 注意：count一般用于处理任何数据类型
+      # 注意：group by 中出现了哪个列，哪个列才能出现在select中的非聚合中
+    # 4.排序分页
+      # 语法：
+        # select 列名1,列名2,...|*|聚合函数 from 表名[where 条件] 
+        # group by 列名 （分组）
+        # order by 列名1 [asc|desc],列名2 [asc|desc],... （排序）
+        # limit 起始索引[,每页的条目数]; （分页）
+      # 注意：排序和分页可以单独使用，也可以一起使用
+      # 注意：where、group by、order by、limit均可按需求省略，
+      # 注意：select 和 from 是必须写的
+      # 注意:执行顺序 
+        # from -> where -> group by -> select -> order by -> limit
+  ```
+  
+- 4.python操作MySQL基础
+  - ```python
+    # 在python中使用第三方库pymysql操作MySQL
+      # 1.安装pymysql
+        # pip install pymysql
+      # 2.导入pymysql
+        # from pymysql import Connection
+      # 3.建立连接
+        # conn = Connection(
+                           # host='主机名',
+                           # port=端口号,
+                           # user='用户名',
+                           # password='密码',
+                           # autocommit=True, 是否自动提交数据库
+                           # charset='utf8')
+      # 4.建立游标
+        # cursor = conn.cursor()
+      # 5.选择数据库
+        # cursor.execute('use 数据库名')
+      # 6.执行SQL语句
+        # cursor.execute(sql语句)
+      # 7.获取结果（元组套元组）
+        # result = cursor.fetchall()
+      # 8.确认插入信息（执行插入或者修改表内容时需要执行的方法，将数据提交到数据库中，autocommit设置为True,则不需要手动提交事务）
+        # conn.commit()
+      # 9.关闭游标
+        # cursor.close()
+      # 10.关闭连接
+        # conn.close()
+      # 11.注意：
+        # 1.SQL语句中的字符串需要使用引号引起来
+        # 2.SQL语句中的变量需要使用%s占位
+        # 3.SQL语句中的变量需要使用%r打印
+    ```
+    
+- #### 24.PySpark
+- 1.Spark 
+- ```python
+  # Spark 是什么
+    # Apache Spark是用于大规模数据（large-scale data）处理的统一分析引擎。
+    # 简单说：Spark是一款分布式计算框架，用于调度成百上千的服务器集群，计算TB、PB乃至EB级别的海量数据。
+  ```
+  
+- 2.PySpark
+- ```python
+  # Spark对python的支持重点体现在，python的第三方库：pyspark之上
+  # 大数据方向：python -> Hadoop -> Spark -> Hive
+  # 1.pyspark库的安装
+    # pip install pyspark
+    # pip install -i https://pypi.tuna.tsinghua.edu.cn/simple pyspark
+  
+  # 2.构建PySpark执行环境入口对象
+    # 想要使用pyspark库完成数据处理，首先需要构建PySpark执行环境入口对象
+    # PySpark的执行环境入口对象是：类 SparkContext 的类对象
+    # 导包
+      # from pyspark import SparkContext, SparkConf
+    # 创建SparkConf类对象 
+      # conf = SparkConf().setMaster("local[*]").setAppName("test_spark_app")
+    # 基于SparkConf类对象创建SparkContext类对象
+      # sc = SparkContext(conf=conf)
+    # 打印PySpark的运行版本
+      # print(sc.version)
+    # 停止SparkContext类对象的运行（停止PySpark的程序）
+      # sc.stop()
+  
+  # 3.PySpark的编程模型
+    # SparkContext类对象，是PySpark编程中一切功能的入口
+    # PySpark的编程模型，主要分为三大步骤：
+      # 1.数据输入：通过SparkContext类对象的成员方法完成数据的读取操作，读取后得到RDD类对象
+      # 2.数据处理：通过RDD类对象的成员方法完成数据的处理操作
+      # 3.数据输出：将处理完成后的RDD对象，调用各种成员方法完成写出文件、转换为list等操作
+  ```
