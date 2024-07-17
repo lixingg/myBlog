@@ -2760,10 +2760,10 @@
       # 注意:执行顺序 
         # from -> where -> group by -> select -> order by -> limit
   ```
-  
+
 - 4.python操作MySQL基础
-  - ```python
-    # 在python中使用第三方库pymysql操作MySQL
+    - ```python
+  # 在python中使用第三方库pymysql操作MySQL
       # 1.安装pymysql
         # pip install pymysql
       # 2.导入pymysql
@@ -2795,15 +2795,15 @@
         # 2.SQL语句中的变量需要使用%s占位
         # 3.SQL语句中的变量需要使用%r打印
     ```
-    
+
 - #### 24.PySpark
-- 1.Spark 
+- 1.Spark
 - ```python
   # Spark 是什么
     # Apache Spark是用于大规模数据（large-scale data）处理的统一分析引擎。
     # 简单说：Spark是一款分布式计算框架，用于调度成百上千的服务器集群，计算TB、PB乃至EB级别的海量数据。
   ```
-  
+
 - 2.PySpark
 - ```python
   # Spark对python的支持重点体现在，python的第三方库：pyspark之上
@@ -2832,4 +2832,19 @@
       # 1.数据输入：通过SparkContext类对象的成员方法完成数据的读取操作，读取后得到RDD类对象
       # 2.数据处理：通过RDD类对象的成员方法完成数据的处理操作
       # 3.数据输出：将处理完成后的RDD对象，调用各种成员方法完成写出文件、转换为list等操作
+    ```
+- 3.注意： 如果windows系统 ，运行的时候报错了未配置
+  [HADOOP_HOME](https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz)
+  ,点击下载配置环境（建议使用迅雷下载会快的很！！！）
+- ```python
+   # 1.下载完成后找个合适的位置进行解压
+   # 2.在环境变量中设置 
+       # HADOOP_HOME = D:\bigdata\hadoop-3.4.0 （路径是你存放 hadoop-3.4.0文件的真实路径）
+       # PATH = %HADOOP_HOME%\bin;%HADOOP_HOME%\sbin;
+   # 3.在cmd中输入hadoop version 测试是否配置成功
   ```
+- 嘿嘿~ 运行pycharm代码是不是还在报错了？ 不要慌，稳住我们能赢！下载这两个文件:
+  [hadoop.dll 和 winutils.exe](https://gitee.com/lixindekongjian/hadoop-file.git)，
+  将这两个文件放在 D:\bigdata\hadoop-3.4.0\bin 目录下，然后将`hadoop.dll`文件复制一份放在
+  C:\Windows\System32 目录下，重启电脑就行了
+
