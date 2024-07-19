@@ -2834,17 +2834,321 @@
       # 3.数据输出：将处理完成后的RDD对象，调用各种成员方法完成写出文件、转换为list等操作
     ```
 - 3.注意： 如果windows系统 ，运行的时候报错了未配置
-  [HADOOP_HOME](https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz)
+  [HADOOP_HOME](http://archive.apache.org/dist/hadoop/common/hadoop-3.0.0/hadoop-3.0.0.tar.gz)
   ,点击下载配置环境（建议使用迅雷下载会快的很！！！）
 - ```python
    # 1.下载完成后找个合适的位置进行解压
    # 2.在环境变量中设置 
-       # HADOOP_HOME = D:\bigdata\hadoop-3.4.0 （路径是你存放 hadoop-3.4.0文件的真实路径）
+       # HADOOP_HOME = D:\bigdata\hadoop-3.0.0 （路径是你存放 hadoop-3.0.0文件的真实路径）
        # PATH = %HADOOP_HOME%\bin;%HADOOP_HOME%\sbin;
    # 3.在cmd中输入hadoop version 测试是否配置成功
   ```
 - 嘿嘿~ 运行pycharm代码是不是还在报错了？ 不要慌，稳住我们能赢！下载这两个文件:
-  [hadoop.dll 和 winutils.exe](https://gitee.com/lixindekongjian/hadoop-file.git)，
-  将这两个文件放在 D:\bigdata\hadoop-3.4.0\bin 目录下，然后将`hadoop.dll`文件复制一份放在
+  [hadoop.dll 和 winutils.exe](https://gitee.com/lixindekongjian/hadoop.git)，
+  将这两个文件放在 D:\bigdata\hadoop-3.0.0\bin 目录下，然后将`hadoop.dll`文件复制一份放在
   C:\Windows\System32 目录下，重启电脑就行了
+
+- 4.数据输入
+- ```python
+   # 1.PySpark支持多种数据输入，在输入完成后，都会得到一个RDD（弹性分布式数据集 Resilient Distributed Dataset）类对象
+   # 2.PySpark针对数据的处理，都是以RDD类对象作为载体，即：
+     # 数据存储在RDD内
+     # 各类数据的计算方法，也都是RDD的成员方法
+     # RDD的数据计算方法，返回值依旧是RDD对象
+  # 3.PySpark支持通过SparkContext对象的parallelize成员方法，将 list、tuple、set.dict、str转换为PySpark的RDD类对象
+     # 例如：
+     from pyspark import SparkContext,SparkConf
+     conf = SparkConf().setMaster("local").setAppName("test")
+     sc = SparkContext(conf = conf)
+     rdd1 = sc.parallelize(["a","b","c"]) # 将list转换为RDD
+     rdd2 = sc.parallelize(("a","b","c")) # 将tuple转换为RDD
+     rdd3 = sc.parallelize({"a":1,"b":2,"c":3}) # 将dict转换为RDD
+     rdd4 = sc.parallelize("abc") # 将str转换为RDD
+     rdd5 = sc.parallelize({"a","b","c"}) # 将set转换为RDD
+     print(rdd1.collect())  # 输出：['a', 'b', 'c']
+     print(rdd2.collect())  # 输出：['a', 'b', 'c']
+     print(rdd3.collect())  # 输出：['a', 'b', 'c']
+     print(rdd4.collect())  # 输出：['a', 'b', 'c']
+     print(rdd5.collect())  # 输出：['a', 'b', 'c']
+     sc.stop()
+  # 4.读取文件数据，将文件内容转换为RDD对象
+     # 4.1.PySpark支持通过SparkContext对象的textFile成员方法，将文件转换为PySpark的RDD
+       # 例如：
+       rdd = sc.textFile("D:\\bigdata\\spark\\data\\input\\1.txt")
+       print(rdd.collect())
+     # 4.2.PySpark支持通过SparkContext对象的wholeTextFiles成员方法，将多个文件转换为PySpark的RDD 
+       # 例如：
+       rdd = sc.wholeTextFiles("D:\\bigdata\\spark\\data\\input\\")
+       print(rdd.collect())
+     # 4.3.PySpark支持通过SparkContext对象的sequenceFile成员方法，将文件转换为PySpark的RDD
+       # 例如：
+       rdd = sc.sequenceFile("D:\\bigdata\\spark\\data\\input\\1.txt")
+       print(rdd.collect())
+     # 4.4.PySpark支持通过SparkContext对象的objectFile成员方法，将文件转换为PySpark的RDD
+       # 例如：
+       rdd = sc.objectFile("D:\\bigdata\\spark\\data\\input\\1.txt")
+       print(rdd.collect())
+     # 4.5.PySpark支持通过SparkContext对象的hadoopFile成员方法，将文件转换为PySpark的RDD
+       # 例如：
+       rdd = sc.hadoopFile("D:\\bigdata\\spark\\data\\input\\1.txt")
+       print(rdd.collect())
+     # 4.6.PySpark支持通过SparkContext对象的pickleFile成员方法，将文件转换为PySpark的RDD
+       # 例如：
+       rdd = sc.pickleFile("D:\\bigdata\\spark\\data\\input\\1.txt")
+       print(rdd.collect())
+     # 4.7.PySpark支持通过SparkContext对象的newAPIHadoopFile成员方法，将文件转换为PySpark的RDD
+       # 例如：
+       rdd = sc.newAPIHadoopFile("D:\\bigdata\\spark\\data\\input\\1.txt")
+       print(rdd.collect())
+     # 4.8.PySpark支持通过SparkContext对象的binaryFiles成员方法，将文件转换为PySpark的RDD
+       # 例如：
+       rdd = sc.binaryFiles("D:\\bigdata\\spark\\data\\input\\")
+       print(rdd.collect())
+  # 注意：
+    # 字符串会被拆分出1个个的字符，存入RDD对象
+    # 字典仅有key会被存入RDD对象
+  ```
+  
+- 5.数据计算
+- ```python
+  # 1.map方法（成员方法，也叫算子）
+    # 功能：map算子，是将RDD的数据一条条处理（处理的逻辑基于map算子中接收的处理函数，可以用lambda表达式快速编写），返回新的RDD
+    # 语法：
+  
+      # rdd.map(func)
+        # func: f(T) -> U
+          # (T)->U 表示方法的定义
+          # ()表示传入参数， (T) 表示传入1个参数，() 表示没有传入参数
+          # T 是泛型的代称，在这里表示任意类型
+          # U 也是泛型的代称，在这里表示任意类型
+          # U 表示返回值
+          # (T)->U :这是一个方法，这个方法接收一个参数，参数类型不限，返回一个返回值，返回值类型不限
+          # (A)->A :这是一个方法，这个方法接收一个参数，参数类型不限，返回一个返回值，返回值类型和传入参数类型一致
+  
+    # 例如: 
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建一个RDD对象
+      rdd = sc.parallelize([1,2,3,4,5])
+      # 使用map算子，将RDD中的每个元素乘以2
+      rdd_map = rdd.map(lambda x: x*2)
+      print(rdd_map.collect())
+      # 链式调用
+       # 对于返回值是新RDD的算子，可以通过链式调用的方式多次调用算子
+      rdd_map.map(lambda x: x*2).collect()
+  
+  # 2.flatMap方法（成员方法，也叫算子）
+    # 功能：对RDD执行map操作，然后进行解除嵌套操作（扁平化处理）。
+    # 语法：
+      # rdd.flatMap(func) # func 等同于map
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe" 
+      # 创建一个RDD对象
+      rdd = sc.parallelize(["hello world", "hello spark", "hello hadoop"]) 
+      # 使用flatMap算子，将RDD中的每个元素进行分割
+      rdd_map = rdd.map(lambda x: x.split(" "))
+      print(rdd_map.collect())
+      rdd_flatMap = rdd.flatMap(lambda x: x.split(" "))
+      print(rdd_flatMap.collect())
+      # 打印结果
+      # map： [['hello', 'world'], ['hello', 'spark'], ['hello', 'hadoop']]
+      # flatmap：['hello', 'world', 'hello', 'spark', 'hello', 'hadoop']
+  
+  # 3.reduceByKey方法（成员方法，也叫算子）
+    # 功能：针对KV型（二元元组）RDD,自动按照key分组，然后根据你提供的聚合逻辑，完成组内数据(value)的聚合操作。 
+    # 语法：
+      # rdd.reduceByKey(func)
+        # func:(v,v)->v
+        # 接受2个参数（类型要一致），返回一个返回值，类型和传入要一致
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建一个RDD对象
+      rdd = sc.parallelize([("hello", 1), ("hello", 2), ("spark", 3),
+                                  ("spark", 4), ("hadoop", 5), ("hadoop", 6)])
+      # 使用reduceByKey算子，将RDD中的每个元素按照key进行分组，然后根据你提供的聚合逻辑，完成组内
+      # 数据(value)的聚合操作
+      rdd_reduceByKey = rdd.reduceByKey(lambda x, y: x + y)
+      print(rdd_reduceByKey.collect())
+      # 打印结果： [('hello', 3), ('spark', 7), ('hadoop', 11)]
+    # 注意：
+      # 1.reduceByKey中接收的函数，只负责聚合，不理会分组
+      # 2.分组是自动by key 来分组的
+  
+  # 4.filter方法
+    # 功能：对RDD中的每个元素进行过滤，返回过滤后的元素
+    # 语法：
+      # rdd.filter(func)
+        # func:(v)->bool
+        # 返回一个布尔值，返回True的元素保留，返回False的元素丢弃
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建conf对象 
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      # 创建context对象
+      sc = SparkContext(conf=conf)
+      # 创建一个RDD对象
+      rdd = sc.parallelize([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+      # 使用filter算子，对RDD中的每个元素进行过滤，返回过滤后的元素
+      rdd_filter = rdd.filter(lambda x: x % 2 == 0)
+      print(rdd_filter.collect())
+      # 打印结果：[2, 4, 6, 8, 10]
+  
+  # 5.distinct方法
+    # 功能：对RDD中的每个元素进行去重操作
+    # 语法：
+      # rdd.distinct() # 无参数
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建conf对象
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      # 创建context对象
+      sc = SparkContext(conf=conf)
+      # 创建一个RDD对象
+      rdd = sc.parallelize([1, 2, 3, 4, 4, 4, 5, 6, 7, 8]) 
+      # 使用distinct算子，对RDD中的每个元素进行去重操作
+      rdd_distinct = rdd.distinct()
+      print(rdd_distinct.collect())
+      # 打印结果：[1, 2, 3, 4, 5, 6, 7, 8]
+  
+  # 6.sortBy方法
+    # 功能：对RDD中的元素进行排序操作
+    # 语法：
+      # rdd.sortBy(func, ascending=True,numPartitions=1) 
+        # func:(T)->U 告知按照rdd中的哪个数据进行排序，比如 lambda x: x[1] 表示按照rdd中的第二个数据进行排序 
+        # ascending=True/False 表示升序/降序排序
+        # numPartitions=1 表示用多少分区数排序，默认为1 
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建conf对象
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      # 创建context对象
+      sc = SparkContext(conf=conf) 
+      # 创建一个RDD对象
+      rdd = sc.parallelize([(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')])
+      # 使用sortBy算子，对RDD中的元素进行排序操作
+      rdd_sortBy = rdd.sortBy(lambda x: x[0], ascending=True)
+      print(rdd_sortBy.collect())
+      # 打印结果：[(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')]
+  ```
+  
+- 6.数据输出
+- ```python
+  # 1.collect方法 
+    # 功能：将RDD各个分区的数据统一收集到Driver中，形成一个list对象
+    # 语法：
+      # rdd.collect() 
+      # 返回值是一个list
+    # 例如： 
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建conf对象
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      # 创建context对象
+      sc = SparkContext(conf=conf)
+      # 创建一个RDD对象
+      rdd = sc.parallelize([(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')])
+      # 使用collect算子，将RDD中的数据收集到Driver中
+      rdd_collect = rdd.collect()
+      print(rdd_collect)
+      # 打印结果：[(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')]
+  
+  # 2.reduce方法
+    # 功能：对RDD数据集按照你传入的逻辑进行聚合
+    # 语法：
+      # rdd.reduce(func)
+      # func:(T,T) -> T
+      # 2个参数传入 1个返回值 返回值和参数要求类型一致
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建conf对象
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      # 创建context对象
+      sc = SparkContext(conf=conf)
+      # 创建一个RDD对象
+      rdd = sc.parallelize([1, 2, 3, 4, 5])
+      # 使用reduce算子，对RDD中的数据按照传入的逻辑进行聚合
+      rdd_reduce = rdd.reduce(lambda x, y: x + y)
+      print(rdd_reduce)
+      # 打印结果：15
+  
+  # 3.take方法
+    # 功能：获取RDD中的前n个数据，组合成list返回
+    # 语法：
+      # rdd.take(n)
+      # 参数：n表示获取前n个数据
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建conf对象
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      # 创建context对象
+      sc = SparkContext(conf=conf)
+      # 创建一个RDD对象
+      rdd = sc.parallelize([1, 2, 3, 4, 5])
+      # 使用take算子，获取RDD中的前3个数据
+      rdd_take = rdd.take(3)
+      print(rdd_take)
+      # 打印结果：[1, 2, 3]
+  
+  # 4.count方法
+    # 功能：获取RDD中数据的个数
+    # 语法：
+      # rdd.count()
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      # 创建conf对象
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      # 创建context对象
+      sc = SparkContext(conf=conf)
+      # 创建一个RDD对象
+      rdd = sc.parallelize([1, 2, 3, 4, 5])
+      # 使用count算子，获取RDD中数据的个数
+      rdd_count = rdd.count()
+      print(rdd_count)
+      # 打印结果：5
+  
+  # 5.saveAsTextFile方法
+    # 功能：将RDD中的数据保存到本地文件中,支持本地写出，hdfs等文件系统
+    # 语法： 
+      # rdd.saveAsTextFile(path)
+      # 参数：path表示保存的文件路径 
+    # 例如：
+      from pyspark import SparkContext, SparkConf
+      import os
+      os.environ['PYSPARK_PYTHON'] = "D:/Python/python3.8/python.exe"
+      os.environ['HADOOP_HOME'] = "D:/useSoftware/hadoop/hadoop-3.0.0"
+      # 创建conf对象
+      conf = SparkConf().setMaster("local[*]").setAppName("test_app")
+      conf.set("spark.default.parallelism", "1") # 写入一个分区文件
+      # 创建context对象
+      sc = SparkContext(conf=conf)
+      # 创建一个RDD对象
+      rdd = sc.parallelize([1, 2, 3, 4, 5])
+      # 使用saveAsTextFile算子，将RDD中的数据保存到本地文件中
+      rdd.saveAsTextFile("D:/test.txt")
+    # 修改rdd分区为1个
+      1.第一种方法：SparkConf对象设置属性全局并行度为1
+        conf.set("spark.default.parallelism", "1")
+      2.第二种方法：创建RDD的时候设置（parallelize方法传入numSlices参数为1）
+        rdd.parallelize([1, 2, 3, 4, 5],numSlices=1)
+         rdd.parallelize([1, 2, 3, 4, 5],1)
+  ```
+
 
