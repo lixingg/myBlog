@@ -2908,7 +2908,7 @@
     # 字符串会被拆分出1个个的字符，存入RDD对象
     # 字典仅有key会被存入RDD对象
   ```
-  
+
 - 5.数据计算
 - ```python
   # 1.map方法（成员方法，也叫算子）
@@ -3041,7 +3041,7 @@
       print(rdd_sortBy.collect())
       # 打印结果：[(1, 'a'), (2, 'b'), (3, 'c'), (4, 'd')]
   ```
-  
+
 - 6.数据输出
 - ```python
   # 1.collect方法 
@@ -3149,6 +3149,393 @@
       2.第二种方法：创建RDD的时候设置（parallelize方法传入numSlices参数为1）
         rdd.parallelize([1, 2, 3, 4, 5],numSlices=1)
          rdd.parallelize([1, 2, 3, 4, 5],1)
+  
+  # 注意：链式调用过多可以换行，使用'\'进行换行
+    # 例如：
+      rdd.saveAsTextFile("D:/test.txt").\
+          saveAsTextFile("D:/test1.txt").\
+          saveAsTextFile("D:/test2.txt")
+  ```
+
+- #### 25.高阶技巧
+
+- 1.闭包
+- ```python
+  # 闭包：闭包是一个函数，该函数定义在一个函数内部，并且该函数引用了外部函数的变量
+  # 闭包的作用：可以实现累加器的效果
+  # 例如：
+    # 定义一个外部函数
+    def outer_func(start):
+      # 定义一个内部函数
+      def inner_func(param):
+        nonlocal start # 需要使用nonlocal关键字修饰外部函数的变量，才可在内部函数中修改它
+        start += param
+        return start
+      return inner_func # 注意将内部函数返回出去
+    # 调用外部函数，并返回内部函数
+    result = outer_func(10)
+    # 调用内部函数，并传入参数
+    result(5)  # 结果为15
+    result(10) # 结果为25
+  # 注意：
+    # 优点： 
+      # 1. 无需定义全局变量即可实现通过函数，持续的访问、修改值
+      # 2. 闭包使用的变量所用在函数内，难以被错误的调用修改
+    # 缺点：
+      # 1.由于内部函数持续引用外部函数值，所以会导致这一部分内存空间不被释放，一直占用内存，导致内存泄漏。
+  ```
+
+- 2.装饰器
+- ```python
+  # 装饰器其实也是一种闭包，其功能就是在不破坏目标函数原有的代码和功能的前提下，为目标函数增加新的功能
+  # 例如： 
+    # 定义一个装饰器函数
+      def outer(fun):
+          # 定义闭包函数
+          def inner():
+            print("我睡觉了")
+            # 调用参数函数
+            fun()
+            print("我起床了")
+          # 将闭包函数返回
+          return inner
+  
+    # 定义一个目标函数
+      # 使用装饰器函数
+      @outer
+      def sleep():
+          import time
+          import random
+          print("睡眠中....")
+          time.sleep(random.randint(1, 5))
+
+      # 调用目标函数
+      sleep()
+  ```
+
+- 2.设计模式
+- ```python
+  # 设计模式是一种编程套路，可以极大的方便程序的开发，最常见、最经典的设计模式，就是面向对象，
+  # 除了面向对象以外，在编程中也有很多既定的套路可以方便我们开发，我们称之为设计模式，
+  # 例如：单例模式、工厂模式、建造者模式、责任链模式、状态模式、备忘录模式、解释器模式、访问者模式、观察者模式、
+  # 中介模式、模板模式、代理模式、装饰器模式、策略模式等等。
+  
+  # 1. 单例模式
+    # 定义：确保某一个类只有一个实例，并提供一个访问它的全局访问点，
+    # 适用场景：当一个类只有一个实例，而客户可以从一个众所周知的访问点访问它时。
+    # 例如：
+      class Singleton:
+          # 定义一个类变量，用于保存类的实例
+          _instance = None
+          # 定义一个类方法，用于获取类的实例
+          @classmethod
+          def get_instance(cls):
+              # 如果类的实例不存在，则创建一个实例
+              if not cls._instance:
+                  cls._instance = cls()
+              # 返回类的实例
+              return cls._instance
+      # 创建两个类的实例
+      s1 = Singleton.get_instance()
+      s2 = Singleton.get_instance()
+      # 判断两个实例是否相等
+      print(s1 == s2)  # 输出：True
+      
+  # 2. 工厂模式
+    # 定义：定义一个用于创建对象的接口，让子类决定实例化哪一个类
+    #      将对象的创建由使用原生类本身创建，转换到由特定的工厂方法来创建
+    # 好处：
+      # 1. 大批量创建对象的时候有统一的入口，易于代码维护
+      # 2. 当发生修改，仅修改工厂类的创建方法即可
+      # 3. 符合现实世界模式，即由工厂来制作产品（对象）
+    # 适用场景：当一个类不知道它所需要的对象的类的时候，或者当一个类希望由它的子类来指定它所创建的对象时
+    # 例如：
+      class Animal:
+          def __init__(self, name):
+              self.name = name
+      
+      class Dog(Animal):
+          def __init__(self, name):
+              super().__init__(name)
+              self.type = "dog"
+      
+      class Cat(Animal):
+          def __init__(self, name):
+              super().__init__(name)
+              self.type = "cat"
+      
+      # 定义一个工厂类，用于创建Animal类的子类
+      class AnimalFactory:
+          @staticmethod
+          def create_animal(type, name):
+              if type == "dog":
+                  return Dog(name)
+              elif type == "cat":
+                  return Cat(name)
+              else:
+                  return None
+      
+      # 使用工厂类创建Animal类的子类实例
+      dog = AnimalFactory.create_animal("dog", "Buddy")
+      cat = AnimalFactory.create_animal("cat", "Kitty")
+      print(dog.name, dog.type)  # 输出：Buddy dog
+      print(cat.name, cat.type)  # 输出：Kitty cat
+  ```
+
+- 3.多线程
+- ```python
+  # 进程：就是一个程序，运行在系统之上，那么便称之这个程序为一个运行进程，并分配进程ID方便系统管理
+  # 线程：线程是归属于进程的，一个进程可以开启多个线程，执行不同的工作，是进程的实际工作最小单位
+  # 操作系统中可以运行多个进程，即多任务运行
+  # 一个进程内可以运行多个线程，即多线程运行
+  # 注意点：
+    # 进程之间是内存隔离的，即不同的进程拥有各自的内存空间。
+    # 线程之间是内存共享的，线程是属于进程的，一个进程内多个线程之间是共享这个进程所拥有的内存空间的。
+  
+  # 并行执行：
+    # 并行执行指的是多个任务在同一时刻被多个CPU同时执行。
+    # 进程之间就是并行执行的，操作系统可以同时运行多个程序，这些程序都是在并行执行
+    # 除了进程外，线程其实也是可以并行执行的
+  
+  # 多线程编程：
+    # threading模块
+    # 导入模块
+    import threading
+    # 创建线程
+    # t = threading.Thread([group[,target[, name[, args[, kwargs]]]]])
+    # group:暂时无用，未来功能的预留参数
+    # target:执行的目标任务名
+    # name:线程名，一般不用设置
+    # args:给target传参，以元组的形式传入 
+    # kwargs:给target传参，以字典的形式传入
+    # 例如：
+    # 创建任务
+     def sing(msg):
+         print(f"我是通过args传入的参数：{msg}")
+     def dance(msg):
+         print(f"我是通过kwargs传入的参数：{msg}")
+     # 创建线程
+     t1 = threading.Thread(target=sing, args=("我是一个参数",))
+     t2 = threading.Thread(target=dance, kwargs={"msg":"我是一个参数"})
+    # 启动线程
+    # t.start()
+    # 等待线程结束
+    # t.join()
+    # 判断线程是否存活
+    # t.is_alive()
+    # 设置线程名
+    # t.setName(name)
+    # 获取线程名
+    # t.getName()
+    # 设置线程优先级
+    # t.setPriority(priority)
+    # 获取线程优先级
+    # t.getPriority()
+    # 判断线程是否是守护线程
+    # t.isDaemon()
+    # 设置线程是否是守护线程
+    # t.setDaemon(daemon)
+    # 判断线程是否是alive状态
+    # t.isAlive()
+    # 获取线程的运行状态
+    # t.exitcode
+    # 设置线程的运行状态
+    # t.setExitcode(exitcode)
+  ```
+
+- 4.网络编程
+- ```python
+  # socket
+    # socket（简称套接字）是进程之间的通信工具，进程之间想要进行网络通信需要socket
+    # socket负责进程之间的网络数据传输，好比数据搬运工
+  
+  # 客户端和服务端
+    # 2个进程之间通过Socket进行相互通讯，就必须有服务端和客户端
+    # Socket服务端：等待其它进程的连接、可接受发来的消息、可回复消息
+    # Socket客户端：主动连接服务端、可发送消息、可接收回复消息
+  
+  # Socket服务端编程
+    # 1.创建socket对象
+      # import socket
+      # server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  
+    # 2.绑定IP和端口
+      # server.bind((host, port)) # 注意传入的是元组
+  
+    # 3.开启监听
+      # server.listen(backlog)
+      # backlog为int整数，表示允许的连接数量，超出的会等待，可以不填，不填会自动设置一个合理值
+  
+    # 4.接收客户端的连接，获取连接对象
+      # conn, addr = server.accept()
+      # conn表示连接对象，addr表示客户端的IP和端口
+      # accept方法是阻塞方法，如果没有连接，会卡在当前这一行不向下执行代码
+      # accept返回的是一个二元元组，可以使用上述形式，用两个变量接收二元元组的两个元素
+  
+    # 5.客户端连接后，通过recv方法，接收客户端发送的消息
+      # while True:
+           # data = conn.recv(1024).decode("utf-8")
+           # recv方法的返回值是字节数据（Bytes），可以通过decode使用UTF-8解码成字符串
+           # recv方法的传参是buffsize,缓冲区大小，一般设置为1024即可
+           # if data == "exit":
+               # break
+           # print(f"接收到发送来的消息：{data}")
+      # 可以通过while True 无限循环来持续和客户端进行数据交互
+      # 可以通过判定客户端发来的特殊标记，如：exit，来退出无限循环
+  
+    # 6.通过conn（客户端当次连接对象）调用send方法可以回复消息
+      # while True:
+            # data = conn.recv(1024).decode("utf-8")
+            # if data == "exit":
+                # break
+            # print(f"接收到发送来的消息：{data}")
+            # conn.send(f"服务端回复：{data}".encode("utf-8"))
+  
+    # 7.关闭连接
+       # conn（客户端当次连接对象）和server对象调用close方法，关闭连接
+       # server.close()
+       # conn.close()
+  
+  # Socket客户端编程
+    # 1.创建socket对象
+      # import socket
+      # client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      # AF_INET表示使用IPv4地址，SOCK_STREAM表示使用面向流的TCP协议
+      # 创建socket对象后，会返回一个socket对象
+  
+    # 2.连接服务器
+      # client.connect((host, port))
+    
+    # 3.发送消息
+      # while True:
+          # msg = input("请输入要发送的消息：")
+          # if msg == "exit":
+              # break
+          # client.send(msg.encode("utf-8")) # 消息需要编码为字节数组（UTF-8编码）
+  
+    # 4.接收消息
+      # while True:
+          # data = client.recv(1024) # 1024是缓冲区大小，一般为1024即可
+          # print(f"接收到发送来的消息：{data.decode("utf-8")}") # 接收的消息需要通过UTF-8解码为字符串
+  
+   # 5.关闭连接
+       # client.close() # 最后通过close方法关闭连接
+  ```
+
+- 5.正则表达式
+- ```python
+  # 正则表达式：又称为规则表达式（Regular Expression），是使用单个字符串来描述、匹配某个句法规则的字符串，
+    # 常被用来检索、替换那些符合某个句法规则的文本。
+    # 简单地说：正则表达式就是使用：字符串定义规则，并通过规则去验证字符串是否匹配
+   
+  # 正则的三个基础方法
+    # Python正则表达式，使用re模块，并基于re模块中三个基础方法来做正则匹配。
+    # 分别是：match、search、findall 三个基础方法
+    # 1.re.match(匹配规则, 被匹配的字符串) 
+      # 从被匹配的字符串的起始位置开始匹配，匹配成功返回匹配对象（包含匹配的信息），匹配不成功返回空
+      # 从头开始匹配，匹配第一个命中项
+      # 例如：
+        # import re
+        # ret = re.match("1","123") 
+        # print(ret) # 输出：<_sre.SRE_Match object; span=(0, 1), match='1'>
+        # ret = re.match("2","123")
+        # print(ret) # 输出：None 1开头，2非1 所以无法匹配返回None
+  
+    # 2.re.search(匹配规则, 被匹配的字符串)
+      # 从被匹配的字符串的任意位置开始匹配，匹配成功返回匹配对象（包含匹配的信息），匹配不成功返回空
+      # 全局匹配，匹配第一个命中项
+      # 例如：
+        # import re
+        # ret = re.search("1","123")
+        # print(ret) # 输出：<_sre.SRE_Match object; span=(0, 1), match='1'>
+        # ret = re.search("2","123")
+        # print(ret) # 输出：<_sre.SRE_Match object; span=(1, 2), match='2'>
+  
+    # 3.re.findall(匹配规则, 被匹配的字符串)
+      # 匹配所有符合规则的字符串，并返回一个列表
+      # 全局匹配，匹配全部命中项
+      # 例如：
+        # import re
+        # ret = re.findall("1","123123123")
+        # print(ret) # 输出：[1, 1, 1, 1]
+        # ret = re.findall("2","123123123") 
+        # print(ret) # 输出：[2,2,2]
+  
+  # 元字符匹配
+    # 单字符匹配：
+      # .    匹配任意1个字符（除了\n），\.匹配点本身
+      # []   匹配[]中列举的字符
+      # \d   匹配数字，等价于[0-9] 
+      # \D   匹配非数字，等价于[^0-9]
+      # \s   匹配空白，即空格、tab键，等价于[ \t\n\x0b\f\r]
+      # \S   匹配非空白，等价于[^\s]
+      # \w   匹配数字、字母、下划线，等价于[A-Za-z0-9_] 
+      # \W   匹配非数字、字母、下划线，等价于[^A-Za-z0-9_]
+  
+      # 例如：
+        # import re
+        # ret = re.findall(r'\d',"rrr12d3r4w5ff")
+        # print(ret) # 输出：['1', '2', '3', '4', '5']
+        # 字符串的r标记，表示当前字符串是原始字符串，即字符串中出现的转义字符不发生转义
+  
+    # 数量匹配：
+      # *    匹配前一个规则的字符出现0至无数次，等价于{0,} 
+      # +    匹配前一个规则的字符出现1至无数次，等价于{1,}
+      # ?    匹配前一个规则的字符出现0或1次，等价于{0,1} 
+      # {m}  匹配前一个规则的字符出现m次 
+      # {m,} 匹配前一个规则的字符出现至少m次，等价于{m,}
+      # {m,n} 匹配前一个规则的字符出现m至n次，等价于{m,n}
+  
+    # 边界匹配：
+      # ^   以什么什么什么开头
+      # $   以什么什么什么结尾
+      # \b  匹配一个单词的边界，即在单词和空格间的位置
+      # \B  匹配非单词的边界
+  
+    # 分组匹配：
+      # |   匹配左右任意一个表达式
+      # ()  将括号中的字符作为一个分组
+  
+    # 例如：
+      # 1.匹配账号，只能由字母、数字组成，长度限制6到10位
+        # import re 
+        # ret = re.findall(r'[a-zA-Z0-9]{6,10}',"1234567890")
+        # print(ret) # 输出：['1234567890'] 
+      
+      # 2.匹配邮箱地址，只允许qq、163、gmail这三种邮箱 
+        # import re
+        # ret = re.findall(r'^[\w-]+(\.[\w-]+)*@(qq|163|gmail)(\.[\w-]+)+$',"1234567890@qq.com")
+        # print(ret) # 输出：['1234567890@qq.com']
+  ```
+  
+- 6.递归
+- ```python
+  # 递归：
+    # 递归函数：在函数内部调用函数本身
+    # 递归的结束条件：在递归函数中，当满足某个条件时，不再调用函数本身，而是返回一个结果，
+      # 递归的结束条件，一定要放在递归函数的内部，否则递归函数将无法结束，从而导致栈溢出。
+    # 递归的缺点：
+      # 递归调用栈可能会很长，占用大量的内存空间。
+    # 递归的优点：
+      # 递归可以简化代码，提高代码的可读性和可维护性。
+  
+    # 例如：
+      # 1.计算阶乘
+        # def factorial(n):
+          # if n == 0:
+            # return 1
+          # else:
+            # return n * factorial(n-1)
+        # print(factorial(5)) # 输出：120
+  
+    # 注意：
+      # 注意退出条件，否则容易变成无限递归
+      # 注意返回值的传递，确保从最内层，层层传递到最外层
+  
+    # os模块的3个方法：
+      # os.listdir(path) 返回指定路径下的所有文件和文件夹
+      # os.path.exists(path) 判断指定路径是否存在,存在为True,不存在为False
+      # os.path.isdir(path) 判断指定路径是否为文件夹,是返回True,不是返回False
   ```
 
 
