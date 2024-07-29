@@ -63,6 +63,7 @@ export default defineConfig({
                     {text: 'JAVA', link: '/pages/server/Java'},
                     {text: 'Python', link: '/pages/server/Python'},
                     {text: 'GO', link: '/pages/server/GO'},
+                    {text: 'AI', link: '/pages/server/AI'},
                     {text: '技术中心', link: '/pages/server/'},
                     // {text: '面试宝典', link: '/vue/vue2'}
                 ]
