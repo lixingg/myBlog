@@ -1,7 +1,7 @@
 ## AI人工智能
 ### 1.NumPy科学计算库
 #### 1.什么是NumPy
-```python
+```ipynb
 # NumPy（ Numerical Python） 是一个开源的Python科学计算库。提供多维数组对象，各种派生对象（如掩码数组和矩阵），
 # 这种工具可用来存储和处理大型矩阵，比Python自身的嵌套列表结构更有效率。支持大量的维度数组与矩阵运算，此外也针对数组运算
 # 提供大量的数学函数库，包括：数学、逻辑、形状操作、排序、选择、输入/输出、离散傅立叶变换、基本线性代数、基本统计运算、随机模拟等。
@@ -16,7 +16,7 @@
 ```
 #### 2.安装Python库
 - 1.第一种安装方式：
-- ```python
+- ```ipynb
   # pip install jupyter -i https://pypi.tuna.tsinghua.edu.cn/simple
   # pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple
   ```
@@ -25,7 +25,7 @@
 - 百度云盘链接: https://pan.baidu.com/s/16W9lDPCzesvhTJMC3_Evmg 提取码: xczb 
 - 注意：Add Path ！！！添加一下环境变量项勾选上
 - 启动终端
-- ```python
+- ```ipynb
   # window + r 打开命令窗
   # 输入命令：jupyter notebook
   # 在浏览器上显示对应的目录，windows默认路径是：C:\Users\用户名
@@ -35,7 +35,7 @@
 
 #### 3.基本操作
 - 1.NumPy数组创建
-- ```python
+- ```ipynb
   # 1.创建数组的最简单方法就是使用array函数,将python下的list转换为ndarray。
   # 例如：
     import numpy as np
@@ -115,7 +115,7 @@
   ```
   
 - 2.jupyter扩展插件（非必须安装插件，出现左侧展示效果）
-  - ```python
+  - ```ipynb
       pip install jupyter_contrib_nbextensions -i https://pypi.tuna.tsinghua.edu.cn/simple
       pip install jupyter_nbextensions_configurator -i https://pypi.tuna.tsinghua.edu.cn/simple
       jupyter contrib nbextension install --user
@@ -127,7 +127,7 @@
     ```
     
 - 3.数据查看
-  - ```python
+  - ```ipynb
     # 1.数组的轴数、维度
       import numpy as np
       arr1 = np.random.random(size=(3,4,5))
@@ -152,7 +152,7 @@
     ```
     
 - 4.文件IO操作
-- ```python
+- ```ipynb
   # 1.保存数组
     # save方法保存ndarray到一个npy文件，也可以使用savez将多个array保存到一个.npz文件中
       # 创建数据
@@ -190,7 +190,7 @@
 #### 4.数据类型
 
 - 1.ndarray的数据类型：
-- ```python
+- ```ipynb
   # int: int8、uint8、int16、uint16、int32、uint32、int64、uint64 （uint：无符号，没有负数，没有负号）
     # int8 表示范围：-2**8 - (2**8 -1) ==  -128 - 127（包含0所以取到127） 
     # uint8 表示范围：0 - 2**8 -1 == 0 - 255（包含0所以取到255）
@@ -199,7 +199,7 @@
   ```
   
 - 2.array创建时指定数据类型：
-- ```python
+- ```ipynb
   # 创建一个float64类型的数组
     import numpy as np 
     arr = np.array([1,2,3],dtype=np.float64)
@@ -207,7 +207,7 @@
   ```
   
 - 3.asarray转换时指定数据类型：
-- ```python
+- ```ipynb
     import numpy as np 
     # 创建一个列表
     arr = [1,2,3,4,5]
@@ -217,7 +217,7 @@
   ```
   
 - 4.数据类型转换astype：
-- ```python
+- ```ipynb
     import numpy as np
     # 创建一个float64类型的数组
     arr = np.array([1,2,3],dtype=np.float64)
@@ -229,7 +229,7 @@
 #### 5.数组运算
 
 - 1.加减乘除幂运算：  
-- ```python
+- ```ipynb
   import numpy as np
   # 创建两个数组
   arr = np.array([1,2,3])
@@ -247,7 +247,7 @@
   ```
   
 - 2.逻辑运算：
-- ```python
+- ```ipynb
   import numpy as np
   # 创建两个数组
   arr = np.array([1,2,3])
@@ -267,7 +267,7 @@
   ```
   
 - 3.数组与标量计算：
-- ```python
+- ```ipynb
   # 数组与标量的算术运算也会将标量值传播到各个元素
     import numpy as np
     # 创建一个数组
@@ -286,8 +286,8 @@
     print(arr**scalar) | print(arr**5)
   ```
   
-- 4.*=、/=、//=、%=、**=、+=、-=、<<=、>>=、&=、|=、^= 运算符：
-- ```python
+- 4.*=、//=、%=、**=、+=、-=、<<=、>>=、&=、|=、^= 运算符：
+- ```ipynb
   import numpy as np
   # 创建两个数组
   arr = np.array([1,2,3])
@@ -302,4 +302,87 @@
   print(arr/=arr1) | print(arr /= 5)
   # 幂赋值运算
   print(arr**=arr1) | print(arr **= 5)
+  #
   ```
+  
+#### 6.复制和视图
+- ```ipynb
+  # 在操作时，有时会将其数据复制到新数组中，有时不复制，
+  # 对于初学者来说，通常会混乱，有以下三种情况
+  ```
+  
+- 1.完全没有复制
+- ```ipynb
+  import numpy as np
+  # 创建一个数组
+  arr = np.random.randint(0,100,size=(4,5))
+  arr1 = arr
+  arr1 is arr # 返回为True, arr1 和 arr是两个不同名字对应同一个内存对象
+  arr1[0,0] = 1024 # 命运共同体
+  display(arr,arr1)
+  ```
+  
+- 2.查看或浅拷贝 
+- ```ipynb
+  import numpy as np
+  # 创建一个数组
+  arr = np.random.randint(0,100,size=(4,5))
+  arr1 = arr.view() # 浅拷贝 使用arr中的数据创建一个新数组对象
+  arr1 is arr # 返回为False, arr1 和 arr是两个不同名字对应同一个内存对象
+  arr1.base is arr # 返回为True, arr1的根数据和arr一样
+  arr1.flags.owndata # 返回为False, arr1中的数据不是其自己的
+  arr.flags.owndata # 返回为True, arr中的数据是其自己的
+  arr1[0,0] = 1024 # arr1 和 arr 数据都发生变化
+  display(arr,arr1)
+  ```
+  
+- 3.深拷贝
+- ```ipynb
+  import numpy as np
+  # 创建一个数组
+  arr = np.random.randint(0,100,size=(4,5))
+  arr1 = arr.copy() # 深拷贝 使用arr中的数据创建一个新数组对象
+  arr1 is arr # 返回为False, arr1 和 arr是两个不同名字对应不同内存对象 
+  arr1.base is arr # 返回为False, arr1和arr没有关联
+  arr1.flags.owndata # 返回为True, arr1中的数据是其自己的 
+  arr.flags.owndata # 返回为True, arr中的数据是其自己的
+  arr1[0,0] = 1024 # arr1  数据都发生变化 arr 数据不发生变化
+  display(arr,arr1)
+  
+  # copy应该在不再需要原来的数组情况下，切片后调用，例如：假设a是一个巨大的中间结果，而最终结果b仅包含
+  # 的一小部分a,则在b使用切片进行构造时应制作一个深拷贝
+  a = np.random.rand(1000)
+  b = a[10:20].copy() # 制作一个深拷贝
+  del a # 不再需要a,删除占大内存的a
+  b.shape # 返回(10,)
+  ```
+  
+#### 7.索引、切片和迭代
+- 1.基本索引和切片
+- ```ipynb
+  # numpy中数组切片是原始数组的视图，这意味着数据不会被复制，视图上任何数据的修改都会反映到原数组上
+    import numpy as np 
+    arr = np.array([0,1,2,3,4,5,6,7,8,9])
+    arr[5] # 索引 输出  5
+    arr[5:8] # 切片 输出 array([5 6 7])
+    arr[2::2] # 从索引2开始，步长为2 输出 array([2, 4, 6, 8])
+    arr[::3] # 不写索引默认从索引0开始，每3个中取一个 输出 array([0, 3, 6, 9])
+    arr[1:7:3] # 从索引1开始，到索引7结束，步长为3 输出 array([1, 4])
+    arr[::-1] # 步长为-1，表示逆序输出 array([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+    arr[::-2] # 步长为-2，表示逆序每2个取一个 输出 array([9, 7, 5, 3, 1])
+    arr[5:8] = 100 # 切片赋值 输出 array([0, 1, 2, 3, 4, 100, 100, 100, 7, 8, 9])
+    arr[5:8] = [100,200,300] # 切片赋值 输出 array([0, 1, 2, 3, 4, 100, 200, 300, 7, 8, 9])
+    temp = arr[5:8] # 切片赋值 输出 array([100, 200, 300])
+    temp[1] = 1024 
+    display(arr) # 输出 array([0, 1, 2, 3, 4, 100, 1024, 300, 7, 8, 9])
+    
+  # 对于二维数组或者高维数组，我们可以按照之前的知识来索引，当然也可以传入一个以逗号隔开的索引列表来选区单个或多个元素
+    
+    arr = np.array([[1,2,3],[4,5,6],[7,8,9]])
+    arr[0,-1] #索引 等同于 arr[0][-1] 输出 3
+    arr[0,2] # 索引 等同于 arr[0][2] 输出 3
+    arr[:2,-2:] # 切片 第一维和第二维都进行切片 等同于 arr[:2][:,1:] 输出 array([[2, 3], [5 6]])
+    arr[:2,1:] # 切片 1 == -2 一个是正序，另一个是倒叙，对应相同位置 输出 array([[2, 3], [5 6]])
+  ```
+  
+- 2.花式索引和索引技巧
