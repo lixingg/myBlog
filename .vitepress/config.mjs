@@ -42,6 +42,7 @@ export default defineConfig({
                     {text: 'VUE', link: '/pages/web/vue'},
                     {text: 'React', link: '/pages/web/react'},
                     {text: 'Electron', link: '/pages/web/electron'},
+                    {text: 'Canvas', link: '/pages/web/Canvas'},
                     // {text: 'React-native', link: '/pages/web/react-native'},
                     // {text: 'uni-app', link: '/pages/web/uni-app'},
                     // {text: 'vite', link: '/pages/web/vite'},

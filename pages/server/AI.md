@@ -1,7 +1,7 @@
 ## AI人工智能
 ### 1.NumPy科学计算库
 #### 1.什么是NumPy
-```ipynb
+```python
 # NumPy（ Numerical Python） 是一个开源的Python科学计算库。提供多维数组对象，各种派生对象（如掩码数组和矩阵），
 # 这种工具可用来存储和处理大型矩阵，比Python自身的嵌套列表结构更有效率。支持大量的维度数组与矩阵运算，此外也针对数组运算
 # 提供大量的数学函数库，包括：数学、逻辑、形状操作、排序、选择、输入/输出、离散傅立叶变换、基本线性代数、基本统计运算、随机模拟等。
@@ -16,7 +16,7 @@
 ```
 #### 2.安装Python库
 - 1.第一种安装方式：
-- ```ipynb
+- ```python
   # pip install jupyter -i https://pypi.tuna.tsinghua.edu.cn/simple
   # pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple
   ```
@@ -25,7 +25,7 @@
 - 百度云盘链接: https://pan.baidu.com/s/16W9lDPCzesvhTJMC3_Evmg 提取码: xczb 
 - 注意：Add Path ！！！添加一下环境变量项勾选上
 - 启动终端
-- ```ipynb
+- ```python
   # window + r 打开命令窗
   # 输入命令：jupyter notebook
   # 在浏览器上显示对应的目录，windows默认路径是：C:\Users\用户名
@@ -35,7 +35,7 @@
 
 #### 3.基本操作
 - 1.NumPy数组创建
-- ```ipynb
+- ```python
   # 1.创建数组的最简单方法就是使用array函数,将python下的list转换为ndarray。
   # 例如：
     import numpy as np
@@ -115,7 +115,7 @@
   ```
   
 - 2.jupyter扩展插件（非必须安装插件，出现左侧展示效果）
-  - ```ipynb
+  - ```python
       pip install jupyter_contrib_nbextensions -i https://pypi.tuna.tsinghua.edu.cn/simple
       pip install jupyter_nbextensions_configurator -i https://pypi.tuna.tsinghua.edu.cn/simple
       jupyter contrib nbextension install --user
@@ -127,7 +127,7 @@
     ```
     
 - 3.数据查看
-  - ```ipynb
+  - ```python
     # 1.数组的轴数、维度
       import numpy as np
       arr1 = np.random.random(size=(3,4,5))
@@ -152,7 +152,7 @@
     ```
     
 - 4.文件IO操作
-- ```ipynb
+- ```python
   # 1.保存数组
     # save方法保存ndarray到一个npy文件，也可以使用savez将多个array保存到一个.npz文件中
       # 创建数据
@@ -190,7 +190,7 @@
 #### 4.数据类型
 
 - 1.ndarray的数据类型：
-- ```ipynb
+- ```python
   # int: int8、uint8、int16、uint16、int32、uint32、int64、uint64 （uint：无符号，没有负数，没有负号）
     # int8 表示范围：-2**8 - (2**8 -1) ==  -128 - 127（包含0所以取到127） 
     # uint8 表示范围：0 - 2**8 -1 == 0 - 255（包含0所以取到255）
@@ -199,7 +199,7 @@
   ```
   
 - 2.array创建时指定数据类型：
-- ```ipynb
+- ```python
   # 创建一个float64类型的数组
     import numpy as np 
     arr = np.array([1,2,3],dtype=np.float64)
@@ -207,7 +207,7 @@
   ```
   
 - 3.asarray转换时指定数据类型：
-- ```ipynb
+- ```python
     import numpy as np 
     # 创建一个列表
     arr = [1,2,3,4,5]
@@ -217,7 +217,7 @@
   ```
   
 - 4.数据类型转换astype：
-- ```ipynb
+- ```python
     import numpy as np
     # 创建一个float64类型的数组
     arr = np.array([1,2,3],dtype=np.float64)
@@ -229,7 +229,7 @@
 #### 5.数组运算
 
 - 1.加减乘除幂运算：  
-- ```ipynb
+- ```python
   import numpy as np
   # 创建两个数组
   arr = np.array([1,2,3])
@@ -247,7 +247,7 @@
   ```
   
 - 2.逻辑运算：
-- ```ipynb
+- ```python
   import numpy as np
   # 创建两个数组
   arr = np.array([1,2,3])
@@ -267,7 +267,7 @@
   ```
   
 - 3.数组与标量计算：
-- ```ipynb
+- ```python
   # 数组与标量的算术运算也会将标量值传播到各个元素
     import numpy as np
     # 创建一个数组
@@ -287,7 +287,7 @@
   ```
   
 - 4.*=、//=、%=、**=、+=、-=、<<=、>>=、&=、|=、^= 运算符：
-- ```ipynb
+- ```python
   import numpy as np
   # 创建两个数组
   arr = np.array([1,2,3])
@@ -306,13 +306,13 @@
   ```
   
 #### 6.复制和视图
-- ```ipynb
+- ```python
   # 在操作时，有时会将其数据复制到新数组中，有时不复制，
   # 对于初学者来说，通常会混乱，有以下三种情况
   ```
   
 - 1.完全没有复制
-- ```ipynb
+- ```python
   import numpy as np
   # 创建一个数组
   arr = np.random.randint(0,100,size=(4,5))
@@ -323,7 +323,7 @@
   ```
   
 - 2.查看或浅拷贝 
-- ```ipynb
+- ```python
   import numpy as np
   # 创建一个数组
   arr = np.random.randint(0,100,size=(4,5))
@@ -337,7 +337,7 @@
   ```
   
 - 3.深拷贝
-- ```ipynb
+- ```python
   import numpy as np
   # 创建一个数组
   arr = np.random.randint(0,100,size=(4,5))
@@ -359,7 +359,7 @@
   
 #### 7.索引、切片和迭代
 - 1.基本索引和切片
-- ```ipynb
+- ```python
   # numpy中数组切片是原始数组的视图，这意味着数据不会被复制，视图上任何数据的修改都会反映到原数组上
     import numpy as np 
     arr = np.array([0,1,2,3,4,5,6,7,8,9])
