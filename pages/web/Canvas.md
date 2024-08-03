@@ -147,7 +147,7 @@
   ctx.stroke();
   ```
   
-- #### 10. 绘制圆弧
+- #### 10. arc 绘制圆弧
 - ```js
   // 绘制圆弧 arc(圆心x, 圆心y, 半径, 起始角度（角度*(Math.PI / 180)）, 结束角度（角度*(Math.PI / 180)）, 是否逆时针)
   // beginPath 在两个不相关图形之间需要告诉context,重新生成一个新的路径
@@ -158,4 +158,43 @@
   ctx.stroke();
   // closePath 配合beginPath 在什么时候开始，在什么时候闭合
   ctx.closePath();
+  ```
+  
+- #### 11. ellipse 绘制椭圆
+- ```js
+  // 绘制椭圆 
+  // ellipse(圆心x, 圆心y, 水平半径, 垂直半径,旋转角度（角度*(Math.PI / 180)）,起始角度（同旋转算法）, 结束角度（同起始算法）, 是否逆时针)
+  // beginPath 在两个不相关图形之间需要告诉context,重新生成一个新的路径
+  ctx.beginPath();
+  ctx.ellipse(100, 100, 50, 100, 0, 0, 30 * (Math.PI / 180), false);
+  ctx.stroke();
+  // 注意：closePath 放在绘制下面不会形成闭合，放在绘制上面会形成一个闭合图形
+  ctx.closePath();
+  ```
+  
+- #### 12. fill 填充图形
+- ```js
+  // 填充图形
+  // fill(图形)
+  // 在调用fill方法的时候，路径会自动连接起始点和终点形成闭合路径
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(100, 100);
+  ctx.lineTo(200, 0);
+  ctx.fill();
+  ctx.closePath();
+  ```
+  
+- #### 13. fillStyle 填充颜色
+- ```js
+  // 填充颜色
+  // fillStyle 设置填充颜色
+  // 设置填充颜色为渐变
+  // createLinearGradient(x1, y1, x2, y2) 创建线性渐变
+  // addColorStop(位置, 颜色) 添加颜色
+  // 设置填充颜色为径向渐变
+  // createRadialGradient(x1, y1, r1, x2, y2, r2) 创建径向渐变
+  // 设置填充颜色为图案
+  // createPattern(图片, 平铺方式) 创建图案
+  ctx.fillStyle = 'red';
   ```
