@@ -198,3 +198,17 @@
   // createPattern(图片, 平铺方式) 创建图案
   ctx.fillStyle = 'red';
   ```
+
+- #### 14. 添加阴影
+- ```js
+  // 添加阴影
+  // shadowOffsetX 阴影水平偏移量
+  // shadowOffsetY 阴影垂直偏移量
+  // shadowBlur 阴影模糊程度
+  // shadowColor 阴影颜色
+  ctx.shadowOffsetX = 10;
+  ctx.shadowOffsetY = 10;
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = 'red';
+  ```
+  
