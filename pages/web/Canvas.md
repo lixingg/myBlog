@@ -418,9 +418,10 @@
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ```
   
-- #### 32. requestAnimationFrame方法 
+- #### 32. requestAnimationFrame方法做动画 
 - ```js
   // requestAnimationFrame(回调函数)方法 
+  // 浏览器内置方法，仅限于浏览器使用
   // 参数： 回调函数
   // 返回值： 定时器ID
   // 作用： 设置定时器
@@ -428,5 +429,7 @@
   function loop(){
    requestAnimationFrame(loop);
   }
-  requestAnimationFrame(loop);
+  let id = requestAnimationFrame(loop);
+  // cancelAnimationFrame(定时器ID)方法清除动画
+  cancelAnimationFrame(id);
   ```
