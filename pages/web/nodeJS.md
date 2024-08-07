@@ -315,4 +315,97 @@
       // 5.视频录制
       // 当需要持久化存储数据的时候，应该想到文件写入
       ```
+      
+    - 8.readFile异步读取 
+    - ```js
+      // fs.readFile(path[,options],callback)方法是异步读取文件
+      // 参数1：必选参数，字符串，表示文件的路径。
+      // 参数2：可选参数，表示以什么编码格式来读取文件。
+      // 参数3：可选参数，回调函数，用于接收文件的内容。
+      // 返回值：undefind
+      // 1.导入fs模块
+      const fs = require('fs');
+      
+      // 2.调用fs.readFile()方法，异步读取文件
+      fs.readFile('./a.txt', function (err, data) { 
+        if (err) {
+          console.log(err);
+          return;
+        }
+      // data 读取类型是 Buffer
+        console.log(data.toString());
+      });
+      ```
+      
+    - 9.readFileSync同步读取
+    - ```js
+      // fs.readFileSync(path[,options])方法是同步读取文件
+      // 参数1：必选参数，字符串，表示文件的路径。
+      // 参数2：可选参数，表示以什么编码格式来读取文件。
+      // 返回值：返回一个字符串，表示文件的内容。
+      // 1.导入fs模块
+      const fs = require('fs');
+      
+      // 2.调用fs.readFileSync()方法，同步读取文件
+      const data = fs.readFileSync('./a.txt');
+      console.log(data.toString()); 
+      ```
+      
+    - 10.createReadStream流式读取
+    - ```js
+      // fs.createReadStream(path[,options])方法是创建可读流
+      // 参数1：必选参数，字符串，表示文件的路径。
+      // 参数2：可选参数，表示以什么编码格式来读取文件。
+      // 返回值：返回一个可读流对象。
+      // 1.导入fs模块
+      const fs = require('fs');
+      
+      // 2.创建可读流
+      const rs = fs.createReadStream('./a.txt', {
+        flags: 'r', // 文件操作模式
+        encoding: 'utf-8', // 字符编码
+        autoClose: true, // 自动关闭文件
+        start: 0, // 文件读取的起始位置
+        end: 9 // 文件读取的结束位置
+      });
+      
+      // 3.监听流的open事件
+      rs.on('open', function () {
+        console.log('文件被打开');
+      });
+      
+      // 4.监听流的close事件
+      rs.on('close', function () {
+        console.log('文件被关闭');
+      });
+      
+      // 5.读取文件内容
+      rs.on('data', function (chunk) {
+        console.log(chunk); // 分块读取,类型 Buffer
+        console.log(chunk.length) // 每块的大小
+      });
+      
+      // 6.监听流的error事件
+      rs.on('error', function (err) {
+        console.log(err);
+      });
+      // 7.监听流的end事件（可选）
+      rs.on('end', function () {
+        console.log('文件读取完成');
+      });
+      ```
+      
+    - 11.读取文件的应用场景
+    - ```js
+      // 1.电脑开机
+      // 2.程序运行
+      // 3.编辑器打开文件
+      // 4.查看图片
+      // 5.播放视频
+      // 6.播放音乐
+      // 7.git查看日志
+      // 8.上传文件
+      // 9.查看聊天记录
+      // 10. ......
+      ```
 
