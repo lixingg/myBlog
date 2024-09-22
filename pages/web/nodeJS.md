@@ -698,6 +698,98 @@
   - <img src="/web/http-response.png" alt="响应报文">
   - 10.响应行
   - <img src="/web/http-response-line.png" alt="响应行">
+
+  - 11.响应状态码   
+  - ```js
+    /**
+     * 1xx：表示请求已接收，继续处理。
+     * 2xx：表示请求成功。例如，200表示请求成功，201表示请求成功并创建了新的资源。
+     * 3xx：表示重定向。例如，301表示永久重定向，302表示临时重定向。
+     * 4xx：表示客户端错误。例如，400表示请求无效，401表示未授权，404表示资源未找到。
+     * 5xx：表示服务器错误。例如，500表示服务器内部错误，503表示服务器暂时无法处理请求。
+     **/    
+    ```
+  - [更多详情](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Status)
+  
+- #### 6.IP的分类
+- ```js
+  /**
+   * 本机回环IP地址：127.0.0.1 ~ 127.255.255.254，用于测试本机网络功能。
+   * 局域网IP地址：192.168.0.0 ~ 192.168.255.255，用于局域网内部通信。例如，192.168.1.1表示局域网内的一个IP地址。
+   * 公网IP地址：由ISP（互联网服务提供商）分配，用于互联网通信。例如，8.8.8.8表示Google的DNS服务器。
+  **/
+  ```
+- #### 7.端口的分类
+- ```js
+  /**
+   * 应用程序的数字标识符，用于区分不同的应用程序。
+   * 一台现代计算机有65536个端口，从0到65535。例如，HTTP使用端口80，HTTPS使用端口443，FTP使用端口21。
+   * 一个应用程序可以使用一个或多个端口。
+   * 端口作用：实现不同主机应用程序之间的通信。例如，浏览器使用端口80与Web服务器通信，FTP客户端使用端口21与FTP服务器通信。
+  **/
+  ```
+- #### 8.http模块
+- 1.创建http服务器
+  - ```js
+    // 引入http模块
+    const http = require('http');
+    // 创建http服务器
+    // 回调函数：当有请求到达时，会自动执行该回调函数
+    const server = http.createServer((request,response)=> {
+      response.end('hello world'); // 设置响应体
+     });
+    // 监听端口，启动服务
+    server.listen(3000,()=>{ 
+      console.log('server is running on port 3000');
+    });
+  
+    /**
+     * 注意事项：
+     * 1.启动服务器
+     *   控制台输入 node 创建的服务器文件.js // 访问http://localhost:3000
+     * 2.停止服务器
+     *   控制台输入 ctrl + c 或者 node 创建的服务器文件.js stop
+     * 3.响应体中有中文时，需要设置响应头
+     *  response.setHeader('Content-Type', 'text/html; charset=utf-8');
+     * 4.端口被占用
+     *  1.关闭占用端口的进程 
+     *  2.修改端口号
+     * 5.http协议默认端口是80。HTTP服务开发常用端口有：8090、8080、9000、3000等，HTTPS协议的默认端口是：443。
+     * 如果端口被其他程序占用，可以使用资源监视器找到占用端口的程序，然后使用任务管理器关闭对应的程序
+    **/
+    ```
+- 2.获取HTTP请求报文
+- ```js
+  /**
+   * 想要获取请求数据，需要通过request对象来获取
+   * request对象包含了客户端发送过来的所有信息，例如请求路径、请求头、请求体等
+   * request对象是一个可读流，可以通过on('data',callback)来获取请求体数据，通过on('end',callback)来监听请求体数据传输完成
+   * request.method：获取请求方法
+   * request.url：获取请求路径
+   * request.headers：获取请求头
+   * request.on('data',callback)：获取请求体数据
+   * request.on('end',callback)：监听请求体数据传输完成
+   * request.httpVersion：获取HTTP版本
+   * request.socket.remoteAddress：获取客户端IP地址
+   * request.socket.remotePort：获取客户端端口号
+   * request.socket.localAddress：获取服务器IP地址
+   * request.socket.localPort：获取服务器端口号
+   * require('url').parse(request.url,true)：解析请求路径，第二个参数为true时，将查询字符串解析为对象
+   * require('querystring').parse(require('url').parse(request.url,true).query)：将查询字符串解析为对象
+   
+   * 注意事项
+   * 1.request.url 只能获取路径以及查询字符串，无法获取 URL 中的域名以及协议的内容
+   * 2.request.headers 将请求信息转化成一个对象，并将属性名全部转化为小写，例如：Host -> host
+   * 3.关于路径：如果访问网站的时候，只填写了域名，没有填写路径，那么默认访问网站的根路径，根路径就是网站的首页
+   * 4.关于favicon: 这个请求是属于浏览器自动发送的请求
+  **/
+  ```
+  
+
+
+  
+  
+    
   
   
       
