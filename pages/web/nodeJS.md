@@ -736,6 +736,7 @@
     // 创建http服务器
     // 回调函数：当有请求到达时，会自动执行该回调函数
     const server = http.createServer((request,response)=> {
+      console.log(request.headers) // 请求头
       response.end('hello world'); // 设置响应体
      });
     // 监听端口，启动服务
@@ -784,6 +785,56 @@
    * 4.关于favicon: 这个请求是属于浏览器自动发送的请求
   **/
   ```
+- 3.获取HTTP请求体数据
+- ```js
+  const http = require('http');
+
+  const server = http.createServer((request,response)=>{
+    // console.log(request.headers)
+    // 创建一个变量用于接收传递的buffer数据
+    let body = ''
+    request.on('data',(chunk)=>{
+    // 每个chunk是一个buffer
+    console.log(chunk)
+    // 将buffer数据拼接
+    body += chunk
+    })
+    request.on('end',()=>{
+    // 获取请求体数据
+    console.log(body)
+    response.end('Hello World')
+    })
+
+  })
+
+  server.listen(9000,()=>{
+  console.log('Server is running on port 9000');
+  }) 
+  ```
+- 4.获取HTTP请求路径与查询字符串
+- ```js
+  const http = require('http');
+  // 导入url模块用于将请求路径解析为对象
+  const url = require('url');
+  const server = http.createServer((request,response)=>{
+    request.on('end',()=>{
+     // 获取请求路径与查询字符串的解析对象，设置true 则将查询字符串解析为对象
+     let res = url.parse(request.url,true)
+    // 获取请求路径
+    console.log(res.pathname)
+    // 获取查询参数
+    console.log(res.query.xxx)
+    response.end('Hello World')
+    })
+
+  })
+
+  server.listen(9000,()=>{
+  console.log('Server is running on port 9000');
+  }) 
+  ```
+- 5.获取HTTP请求头
+
   
 
 
