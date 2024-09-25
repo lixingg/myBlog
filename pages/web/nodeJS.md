@@ -813,6 +813,7 @@
   ```
 - 4.获取HTTP请求路径与查询字符串
 - ```js
+  // 方式一
   const http = require('http');
   // 导入url模块用于将请求路径解析为对象
   const url = require('url');
@@ -833,7 +834,23 @@
   console.log('Server is running on port 9000');
   }) 
   ```
-- 5.获取HTTP请求头
+- ```js
+  // 方式二
+  const http = require('http');
+  const server = http.createServer((request,response)=>{
+    // 实例化URL对象
+    let url = new URL(request.url,`http://${request.headers.host}`)
+    // 获取查询参数
+    console.log(url.searchParams.get('xxx'))
+    response.end('Hello World')
+  })
+
+  server.listen(9000,()=>{
+  console.log('Server is running on port 9000');
+  }) 
+  ```
+- 5.获取HTTP请求方法
+
 
   
 
