@@ -849,7 +849,181 @@
   console.log('Server is running on port 9000');
   }) 
   ```
-- 5.获取HTTP请求方法
+- 5.设置HTTP响应报文
+- ```js
+  /**
+   * 设置响应状态码        response.statusCode = 200
+   * 设置响应状态描述      response.statusMessage = 'OK'
+   * 设置响应头信息        response.setHeader('头名','头值') 
+   * 设置多个同名响应头信息  response.setHeader('头名',['头值1','头值2'])
+   * 设置响应体信息        response.write('响应体内容') response.end('响应体内容') (如果wirte设置响应体 end一般不在设置响应体)
+   **/
+  // write 和 end 的两种使用情况
+  // 1.write 和 end 的结合使用 响应体相对分散
+  response.write('hello')
+  response.write('world')
+  // 每一个请求，在处理的时候必须要执行 end 方法，否则请求无法结束，客户端无法获取到响应结果（有且只有一个end方法）
+  response.end() 
+  
+  // 2. 单独使用end 方法 响应体相对集中
+  // end 参数可以是字符串也可以是一个buffer
+  // let html = fs.writeFileSync('./index.html')
+  response.end('hello world') // response.end(html)
+  ```
+- 6.网页资源加载基本过程  
+- ```js
+  // 1.浏览器向服务器发送请求 
+  // 2.服务器接收到请求后，根据请求路径，查找对应的资源文件
+  // 3.服务器将资源文件的内容，作为响应体，返回给浏览器
+  // 4.浏览器接收到响应结果后，根据响应结果，解析响应体内容，并渲染到页面中
+  // 5.解析响应体过程中如果发现由外部资源链接，浏览器会再次向服务器发送请求获取外部资源，
+  //   整个解析过程中请求是并发的，不是等到上个请求结束才发送请求获取下个资源
+  ```
+- 7.静态资源和动态资源
+- ```js
+   /**
+    * 静态资源：浏览器直接请求服务器上的文件，服务器直接返回文件内容给浏览器 
+    * 动态资源：服务器接收到请求后，根据请求路径，查找对应的资源文件，然后对资源文件进行解析，将解析结果作为响应体返回给浏览器
+    * 静态资源：html、css、js、图片、视频、音频
+    * 动态资源：.php、.jsp、.asp、.aspx、.do、.action、.py、.rb、.lua、.pl、.cgi、.shtml、.htaccess...
+   **/
+  ```
+- 8.静态资源服务的搭建
+- ```js
+  // 导入http模块
+  const http = require('http')
+  // 导入fs模块
+  const fs = require('fs')
+  // 创建服务器
+  const server = http.createServer((request, response) => {
+  // 1.获取请求路径
+    let {pathname} = new URL(request.url, 'http://127.0.0.1')
+    // 2.根据请求路径，查找对应的资源文件
+    let filePath = __dirname+'/静态资源存放的目录' + pathname
+    // 3.读取资源文件的内容，将内容作为响应体返回给浏览器
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        // 读取文件失败
+        response.statusCode=404;
+        response.writeHead(404, {
+          'Content-Type': 'text/html;charset=utf-8'
+        })
+        response.end('404 Not Found')
+      } else {
+        // 读取文件成功
+        response.writeHead(200, {
+          'Content-Type': 'text/html;charset=utf-8'
+        })
+        response.end(data)
+      }
+    })
+  })
+  // 监听端口
+  server.listen(9000, () => {
+    console.log('服务器已启动，端口号为9000')
+  })
+  ```
+- 9.静态资源目录或网站根目录
+- ```js
+  // HTTP服务在哪个文件夹中寻找静态资源，那个文件夹就是静态资源目录，也称之为网站根目录
+  // 获取网站根目录 __dirname + '/静态资源存放目录'
+  const root = __dirname + '/page' 
+  ```
+- 10.网页中的URL
+- ```js
+  /**
+   * 网页中的URL主要分为两大类：相对路径与绝对路径
+   *
+   * 绝对路径（可靠）
+   * 绝对路径可靠性强，而且相对容易理解，在项目中运用较多
+   * 形式：                       特点：
+   * http://www.xxx.com/xxx      直接向目标资源发送请求，容易理解。网站的外链会用到此形式（完整路径）
+   * //www.xxx.com/xxx           与页面URL的协议拼接形成完整URL再发送请求。大型网站用的较多（省略协议）
+   * /xxx                        与页面URL的协议、域名、端口拼接形成完整URL再发送请求，中小型网站（省略协议域名端口）
+   *
+   * 相对路径（不可靠）
+   * 相对路径在发送请求时，需要与当前页面URL路径进行计算，得到完整的URL后，再发送请求，学习阶段用的较多
+   * 形式：                       最终URL：
+   * ./xxx/xxx1.css               http://localhost:9000/xxx/xxx1.css
+   * xxx/xxx2.html                http://localhost:9000/xxx/xxx2.html
+   * ../xxx/xxx3.js               http://localhost:9000/xxx/xxx3.js
+   * ../../xxx/xxx4.mp4           http://localhost:9000/xxx/xxx4.mp4
+   *
+   * 网页中使用URL的场景
+   * 包括但不限于以下场景
+   *   a标签的href属性
+   *   img标签的src属性
+   *   video、audio标签的src属性
+   *   script标签的src属性
+   *   link标签的href属性
+   *   form标签的action属性
+   *   iframe标签的src属性
+   *   AJAX请求的URL
+   *   ...
+  **/
+  ```
+- 11.设置MIME类型
+- ```js
+  /**
+   * MIME类型（媒体类型）
+   * MIME类型全称为：Multipurpose Internet Mail Extensions，即多用途互联网邮件扩展类型
+   * MIME类型是一种标准，用来表示文档、文件或字节流的性质和格式，使得同一个文件能够被多个应用程序处理
+   * MIME类型通常由两部分组成：主类型/子类型，中间由斜杠分隔
+   * mime 类型结构：[type]/[sub-type]
+   * 例如：text/html text/css image/jpeg application/json
+   * HTTP服务可以设置响应头 Content-Type 来表明响应体的MIME类型，浏览器会根据该类型决定如何处理资源
+   * 下面是常见文件对应的mime类型
+   *   文件类型            MIME类型
+   *   HTML文档            text/html
+   *   CSS样式表           text/css
+   *   JavaScript脚本      application/javascript
+   *   图片文件            image/jpeg image/png image/gif
+   *   JSON数据            application/json
+   *   PDF文件             application/pdf
+   *   Word文档            application/msword
+   *   Excel文件           application/vnd.ms-excel
+   *   PPT文件             application/vnd.ms-powerpoint
+   *   文本文件            text/plain
+   *   压缩文件            application/zip application/gzip
+   *   视频文件            video/mp4 video/ogg
+   *   音频文件            audio/mpeg audio/ogg
+   *   对于未知的资源类型，可以选择application/octet-stream，表示二进制数据，浏览器会下载该文件
+  **/
+  // 设置mime类型
+  // 导入path模块
+  const path = require('path');
+  // 导入http模块
+  const http = require('http');
+  // 导入fs模块
+  const fs = require('fs');
+  const mime = require('mime');
+  // 创建web服务器实例
+  const server = http.createServer((request, response) => {
+   let {pathname} = new URL(request.url, 'http://127.0.0.1');
+   // 获取根路径
+  let root = path.join(__dirname, 'public');
+  // 获取文件路径
+  let filePath = path.join(root, pathname);
+   // 获取文件后缀名
+   const extname = path.extname(filePath).slice(1);
+  const type = mime.getType(extname)
+   // 获取文件类型
+   console.log(extname);
+  console.log(mime);
+  
+  if(type){
+    response.setHeader('Content-Type', type);
+  }else{
+    response.setHeader('Content-Type', 'application/octet-stream');
+  }
+  });
+  // 不手动设置mime类型，浏览器会根据文件后缀名来自动设置mime类型
+  ```
+  
+  
+  
+  
+
 
 
   
