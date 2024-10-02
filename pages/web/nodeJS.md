@@ -999,6 +999,12 @@
   const mime = require('mime');
   // 创建web服务器实例
   const server = http.createServer((request, response) => {
+   // 判断请求方式是否正确
+   if (request.method !== 'GET') {
+    response.statusCode = 405;
+    response.end('Method Not Allowed');
+    return;
+   }
    let {pathname} = new URL(request.url, 'http://127.0.0.1');
    // 获取根路径
   let root = path.join(__dirname, 'public');
@@ -1009,16 +1015,161 @@
   const type = mime.getType(extname)
    // 获取文件类型
    console.log(extname);
-  console.log(mime);
-  
-  if(type){
-    response.setHeader('Content-Type', type);
+   console.log(mime);
+   fs.readFile('./index.html', (err, data) => {
+    if (err) {
+      // 错误状态处理
+      switch (err.code) {
+        case 'ENOENT':
+          // 文件不存在
+          response.statusCode = 404;
+          response.end('404 Not Found');
+          break;
+        case 'EPERM':
+          // 权限不足
+          response.statusCode = 403;
+          response.end('403 FORBIDDEN');
+          break;
+        case 'EACCES':
+          // 没有权限
+          response.statusCode = 403;
+          response.end('Forbidden');
+          break;
+        default:
+          // 服务器的内部错误
+          response.statusCode = 500;
+          response.end('Internal Server Error');
+          break;
+      }
+    }
+  });
+  if(type){ // text/html;charset=utf-8 解决返回中文乱码问题
+    // 这里设置 utf-8 编码，解决中文乱码问题的优先级高于html header中的meta标签设置的utf-8
+    // css js 在解析时默认使用浏览器解析字符集 utf-8 所以不用设置字符集
+    response.setHeader('Content-Type', type + ';charset=utf-8');
   }else{
     response.setHeader('Content-Type', 'application/octet-stream');
   }
   });
   // 不手动设置mime类型，浏览器会根据文件后缀名来自动设置mime类型
   ```
+- 12.GET 和 POST 请求
+- ```js
+  /**
+   * 使用场景:
+  
+   * GET请求的情况
+   * 在地址栏中直接输入url访问
+   * 点击a链接访问
+   * link标签引入css文件
+   * script标签引入js文件
+   * video audio标签引入媒体文件
+   * img标签引入图片文件
+   * form表单设置method为get提交(默认就是get请求,不区分大小写)
+   * ajax请求设置type为get
+  
+   * POST请求的情况
+   * form表单设置method为post提交(不区分大小写)
+   * ajax请求设置type为post
+  
+   * GET 和 POST 请求的区别
+   * GET 和 POST 是http协议中两种请求方式，主要区别在于：
+   *   1.作用：GET主要用来获取数据， POST主要用来提交数据(一般情况下，但不是绝对的，get请求也可以提交数据,post请求也可以获取数据)
+   *   2.参数位置：GET请求的参数放在url中，POST请求的参数放在请求体中(一般情况下，但不是绝对的get请求也可以放在请求体中,post请求也可以放在url中)
+   *   3.安全性：POST请求相对GET安全些，因为在浏览器中参数会暴露在地址栏
+   *   4.报文体积：GET请求的大小有限制，一般为2k，POST请求大小没有限制
+  **/
+  ```
+  
+- ### 5.模块化
+- #### 1. 模块化概念
+- ```js
+  /**
+   * 模块化与模块：
+   * 模块化是指将一个复杂的程序文件依据一定规则（规范）拆分成多个文件的过程称之为模块化。
+   * 其中拆分出的每个文件就是一个模块，模块的内部数据是私有的，不过模块可以暴露内部数据以便其他模块使用
+  
+   * 模块化项目：
+   * 编码时是按照模块一个一个编码的，整个项目就是一个模块化的项目。
+  
+   * 模块化优点：
+   * 模块化可以提高代码的可维护性、可读性和可复用性。
+  
+   * 模块化有多种实现方式，如CommonJS、AMD、CMD、ES6模块等。
+   * CommonJS是Node.js的模块化规范，使用require和module.exports来导入和导出模块。
+   * AMD和CMD是浏览器端的模块化规范，使用define和require来导入和导出模块。
+   * ES6模块是JavaScript的模块化规范，使用import和export来导入和导出模块。
+   
+  **/
+  ```
+- #### 2. CommonJS模块化
+- ```js
+  /**
+   * CommonJS模块化：
+   * CommonJS是Node.js的模块化规范，使用require和module.exports来导入和导出模块。
+   * require：用于导入模块，返回模块的导出对象。
+   * module.exports：用于导出模块，将模块的导出对象赋值给module.exports。
+   * module.exports和exports的区别：
+   * module.exports是 CommonJS模块的导出对象（任意数据），而exports是module.exports的一个引用 exports = module.exports = {} 。
+   * 在模块中，module.exports和exports指向同一个对象，但module.exports可以重新赋值，而exports不能 
+   *   module.exports = '123' 可以， exports = '123' 无效。
+   * 如果module.exports和exports同时存在，以module.exports为准。
+   * CommonJS模块化示例：
+   * 使用module.exports
+   * module.exports = {
+     * name: '张三',
+     * age: 18,
+     * sayHello: function() {
+     *   console.log('Hello, my name is ' + this.name + ', I am ' + this.age + ' years old.');
+     * }
+     * };
+  
+   * const person = require('./person');
+   * person.sayHello();
+   *
+   * 使用exports
+   * exports.name = '张三';
+   * exports.age = 18;
+   * exports.sayHello = function() {
+     * console.log('Hello, my name is ' + this.name + ', I am ' + this.age + ' years old.');
+     * };
+  
+   * const person = require('./person');
+   * person.sayHello();
+   *
+  **/ 
+  ```
+- #### 3.导入模块
+- ```js
+  /**
+   * 导入模块
+   * 在模块中使用require传入文件路径即可引入文件
+   * const test = require('./person.js');
+   * reuqire使用的一些注意事项：
+     * 1. 对于自己创建的模块，导入时路径建议写相对路径，且不能省略./和../。
+     * 2. js 和 json 文件导入时可以不写后缀，c/c++编写的node扩展文件也可以不写后缀，但是一般用不到
+     * 3. 如果导入其他类型的文件，会以js文件处理，如果导入的文件没有后缀，会依次尝试添加.js、.json、.node后缀，如果尝试了所有后缀都没有，会报错
+     * 4. 如果导入的路径是个文件夹（在包管理工具中用到），则会首先检测该文件夹下package.json文件中main属性对应的文件，
+     *    如果main属性不存在，或者package.json文件不存在，则默认会查找该文件夹下的index.js文件和index.json文件，
+     *    （js文件优先级高于json文件，同名时优先查找js文件）如果以上文件都不存在，则报错
+     * 5. 导入node.js内置模块时，直接require模块的名字即可，无需加./和../。
+     * 6. modules.exports 、exports 以及require 这些都是 CommonJS模块化规范中的内容，而node.js实现了CommonJS模块化规范
+  **/
+  
+  /**
+   * 导入模块基本流程
+   * 自定义模块的基本流程：
+   *    1.将相对路径转换为绝对路径，定位目标文件。
+   *    2.缓存检测。
+   *    3.读取目标文件代码。
+   *    4.将目标文件代码封装为一个函数并执行（自执行函数）。通过 arguments.callee.toString() 可以查看函数体。
+   *    5.缓存模块的值。
+   *    6.返回module.exports的值。
+  **/
+  ```
+  
+   
+
   
   
   
