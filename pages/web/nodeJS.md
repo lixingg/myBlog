@@ -1153,7 +1153,9 @@
      *    如果main属性不存在，或者package.json文件不存在，则默认会查找该文件夹下的index.js文件和index.json文件，
      *    （js文件优先级高于json文件，同名时优先查找js文件）如果以上文件都不存在，则报错
      * 5. 导入node.js内置模块时，直接require模块的名字即可，无需加./和../。
-     * 6. modules.exports 、exports 以及require 这些都是 CommonJS模块化规范中的内容，而node.js实现了CommonJS模块化规范
+     * 6. modules.exports 、exports 以及require 这些都是 CommonJS模块化规范中的内容。
+     *    而node.js实现了CommonJS模块化规范，两者的关系有点像JavaScript和ECMAScript的关系。
+     *   
   **/
   
   /**
@@ -1167,6 +1169,730 @@
    *    6.返回module.exports的值。
   **/
   ```
+  
+- ### 6.包管理工具
+- #### 1.包管理工具的介绍
+- ```js
+  /**
+   * 包管理工具的介绍
+   * 1.包（package）是多个模块的集合，Node.js的包类似于JavaScript的库或框架，如jQuery、Vue.js等。
+   * 2.包的规范：
+     *    1.包必须以文件夹的形式存在，文件夹名称就是包名称。
+     *    2.包的文件夹中必须包含 package.json 文件，package.json 文件中必须包含 name、version、main 三个属性。  
+     *      name 是包的名称，version 是包的版本，main 是包的入口文件。
+     *    3.包的文件夹中可以包含 README.md、LICENSE、bin 等文件。
+  **/
+  
+  /**
+   * 常用的包管理工具
+   * 1. npm（Node Package Manager）是 Node.js 的包管理工具，用于管理 Node.js 的包。
+   *    npm 的官方网站是 https://www.npmjs.com/。
+   *    npm 的官方文档是 https://docs.npmjs.com/。
+   * 2. yarn 是 Facebook 开发的包管理工具，用于管理 Node.js 的包。
+   *    yarn 的官方网站是 https://yarnpkg.com/。
+   *    yarn 的官方文档是 https://yarnpkg.com/en/docs/。
+   * 3. pnpm 是一个高效的包管理工具，用于管理 Node.js 的包。
+   *    pnpm 的官方网站是 https://pnpm.io/。
+   *    pnpm 的官方文档是 https://pnpm.io/en/docs/。
+   **/
+  ```
+- #### 2.npm 的使用
+- ```js
+  /**
+   * 1. npm 的安装
+   *    npm 是 Node.js 的包管理工具，因此安装 npm 的前提是已经安装了 Node.js。
+   *    在 Node.js 的安装过程中，npm 也会被自动安装。
+   *    可以通过以下命令来检查 npm 是否已经安装：
+   *      npm -v
+   *    如果 npm 已经安装，则会显示 npm 的版本号。
+  **/
+  /**
+   * 2. npm 的使用
+   *    npm 的使用非常简单，只需要在命令行中输入 npm 命令即可。
+   *    npm 的常用命令如下：
+   *      npm install：安装包。
+   *      npm uninstall：卸载包。
+   *      npm update：更新包。
+   *      npm list：列出已安装的包。 
+   *      npm run：运行脚本。
+   *    例如，要安装一个包，可以使用以下命令：
+   *      npm install express
+   *    这将会安装 express 包，并将其添加到项目的 package.json 文件的 dependencies 中。
+   *    如果要卸载一个包，可以使用以下命令：
+   *      npm uninstall express
+   *    这将会卸载 express 包，并将其从项目的 package.json 文件的 dependencies 中移除。
+   *    如果要更新一个包，可以使用以下命令：
+   *      npm update express
+   *    这将会更新 express 包到最新版本。
+   *    如果要列出已安装的包，可以使用以下命令：
+   *      npm list
+   *    这将会列出项目中已安装的所有包。
+   *    如果要运行脚本，可以使用以下命令：
+   *      npm run <script-name>
+   *    这将会运行项目中的脚本。
+   *    执行安装后会生成两个文件 一个是nodeModules文件夹 一个是package-lock.json文件
+   *    nodeModules文件夹存放的是安装的包
+   *    package-lock.js 锁定包的版本
+   *    所安装的包，我们称之为依赖包也简称依赖，
+   **/
+  /**
+   * 初始化项目
+   *    npm init 命令用于初始化项目，生成 package.json 文件。
+   *    在命令行中输入 npm init，然后按照提示输入相关信息，即可生成 package.json 文件。
+   *    如果不想手动输入信息，可以使用以下命令：
+   *      npm init -y
+   *    这将会使用默认值生成 package.json 文件。
+   *    package.json 文件中包含了项目的名称、版本、描述、作者、许可证等信息，以及项目的依赖包。
+   *    例如，以下是一个 package.json 文件的示例：
+   *    {
+   *      "name": "my-app",
+   *      "version": "1.0.0",
+   *      "description": "My first Node.js app",
+   *      "main": "index.js",
+   *      "scripts": {
+   *        "start": "node index.js"
+   *      },
+   *      "author": "John Doe",
+   *      "license": "MIT",
+   *      "dependencies": {
+   *        "express": "^4.17.1"
+   *      }
+   *    }
+   *    在这个示例中，
+   *     项目的名称是 my-app，
+   *     版本是 1.0.0，
+   *     描述是 My first Node.js app，
+   *     主文件是 index.js，
+   *     脚本是 start，
+   *     作者是 John Doe，
+   *     许可证是 MIT，
+   *     依赖包是 express。
+   *    package.json 文件中的 dependencies 字段列出了项目的依赖包，这些包会在安装项目时自动安装。
+   * 注意：
+   *    1. package name(包名)不能使用中文、大写，默认值是文件夹的名称，所以文件夹的名称也不能使用中文和大写。
+   *    2. version(版本号)遵循语义化版本规范，格式为 x.y.z，其中 x 是主版本号，y 是次版本号，z 是修订号 ，必须位数字，默认是1.0.0。  
+   *    3. ISC证书与MIT证书功能上是相同的，关于开源证书扩展阅读
+   *       https://www.ruanyifeng.com/blog/2011/05/how_to_choose_free_software_licenses.html
+   *    4. package.json 可以手动创建与修改
+   *    5. 使用npm init -y 或者 npm init --yes 可以快速创建package.json文件
+  **/
+  ```
+- #### 3. npm 搜索包
+- ```js
+  /**
+   * 两种搜索方式
+   * 1. 命令行中搜索：   npm search 包名 或者 npm s 包名 
+   * 2. 在npm官网搜索：  https://www.npmjs.com/
+  
+  ```
+  
+- #### 4. require 导入npm包的基本流程
+- ```js  
+  /**
+   * 1. 在node_modules文件夹中查找包
+   * 2. 如果找到包，则根据包的package.json中的main字段指定的文件作为包的入口文件
+   * 3. 如果没有找到包，则去上级目录的node_modules文件夹中查找
+   * 4. 如果没有找到包，则继续向上级目录查找，直到盘根目录 
+   * 5. 如果没有找到包，则报错
+  **/
+  ```
+- #### 5. 生产依赖与开发依赖
+- ```js
+  /**
+   * 生产环境 与 开发环境
+   * 生产环境：项目上线之后，也就是用户访问项目的时候，就是生产环境
+   * 开发环境：项目开发阶段，也就是程序员编写代码的时候，就是开发环境
+   *
+   * 生产依赖 与 开发依赖
+   * 生产依赖：项目上线之后，依然需要使用的包，就是生产依赖
+   * 开发依赖：项目上线之后，不需要使用的包，就是开发依赖
+   * 我们可以在安装时设置选项来区分依赖的类型，目前分为两类：
+   *  类型           安装命令             补充
+   *  生产依赖       npm i -S 包名        -S 等效与 --save , -S是默认选项
+                   npm i --save 包名   包信息保存在package.json的dependencies中
+   *  开发依赖       npm i -D 包名        -D 等效与 --save-dev
+                   npm i --save-dev 包名  包信息保存在package.json的devDependencies中
+   
+   *  其他补充：
+   *  全局依赖       npm i -g 包名        -g 等效与 --global
+                   npm i --global 包名   全局安装的包，可以在命令行中直接使用
+   *  安装所有依赖   npm i                npm i --production 只安装dependencies中的依赖
+   *  卸载依赖       npm uninstall 包名
+   *  更新依赖       npm update 包名
+   *  查看依赖       npm list
+   *  查看全局依赖   npm list -g
+   *  查看依赖的版本   npm list 包名
+   *  查看全局依赖的版本   npm list -g 包名
+   *  查看包的详细信息   npm info 包名
+   *  查看包的更新日志   npm view 包名 versions
+   *  查看全局安装目录位置 npm root -g
+  
+    
+   *  nodemon 可以监听js文件的变化，当文件发生变化时，自动重启项目
+   *  全局安装 npm i -g nodemon
+   *  全局包使用 nodemon app.js
+   *  全局卸载 npm uninstall -g nodemon 或者 npm r -g nodemon
+  **/
+  ```
+  
+- #### 5.修改windows的执行策略
+- ```js
+   /**
+    * windows 默认不允许 npm 全局命令执行脚本文件，所以需要修改执行策略
+    * 第一种方式：
+    * 以管理员身份打开powershell，输入以下命令
+    * set-ExecutionPolicy RemoteSigned
+    * 选择A，表示同意
+    * 修改完成后，就可以执行 npm 全局命令了
+    * 第二种方式：
+    * 在切换cmd命令行执行脚本
+    *
+    **/
+  ```
+  
+- #### 6.环境变量 Path
+- ```js
+  /**
+    * 环境变量 Path 是一个系统变量，用于存储系统可执行文件的路径
+    * 当我们在命令行中输入一个命令时，系统会在 Path 中查找对应的可执行文件
+    * 如果找到了，就会执行该文件，否则就会报错
+    * 我们可以通过修改 Path 来添加我们自己的可执行文件
+    * 在命令行中输入以下命令
+    * setx /M Path "%Path%;C:\Users\用户名\AppData\Roaming\npm"
+    * 其中，C:\Users\用户名\AppData\Roaming\npm 是 npm 全局安装的路径
+    * 修改完成后，就可以在命令行中执行 npm 全局命令了
+    
+    * 补充：应用程序的可执行文件后缀（.exe / .cmd）
+  **/
+  ```
+- #### 7.npm 安装包的所有依赖
+- ```js
+   /**
+    * 安装包依赖
+    * 在项目协作中有一个常用命令就是npm i ,通过该命令可以依据 package.json 和 package-lock.json 文件安装所有依赖
+    * npm i 或者 npm install 会自动安装 package.json 和 package-lock.json 文件中的所有依赖
+    * node_modules 文件夹大多数情况下都不会存入版本库
+   **/
+  ```
+
+- #### 8.npm 安装包的指定版本
+- ```js
+   /**
+    * 安装包的指定版本
+    * 在安装包时，可以通过@指定版本号
+    * npm i express@4.17.1
+    * 这样就可以安装指定版本的包了
+   **/
+  ```
+
+- #### 9.npm 配置命令别名
+- ```js
+   /**
+    * 在package.json 文件中，可以通过 scripts 字段来配置命令别名
+    * 例如：
+    * "scripts": {
+      "start": "node app.js",
+      "test": "echo \"Error: no test specified\" && exit 1"
+    }
+    * 这样就可以通过 npm run start 来执行 node app.js 命令了
+    * 如果想要配置全局命令别名，可以在 package.json 文件中添加 bin 字段
+    * 例如：
+    * "bin": {
+      "myapp": "app.js"
+    }
+    * 这样就可以通过 npm run myapp 来执行 node app.js 命令了
+    * start 可以直接使用npm start 来执行 其他的必须使用 run
+    * npm run 有自动向上级目录查找的特性，跟require函数一样，
+    * 对于陌生的项目，我们可以通过查看scripts属性来参考项目的一些操作
+   **/
+   ```
+
+- #### 10.cnpm 
+- ```js
+  /**
+   * 1.cnpm 介绍
+   * cnpm 是淘宝构建的npmjs.com的完全镜像，也称【淘宝镜像】，网站 https://npmmirror.com/
+   * cnpm 服务器部署在国内阿里云服务器上，可以提高包的下载速度
+   * 官方也提供了一个全局工具包 cnpm ,操作命令与npm 大体相同
+  
+   * 2.安装 cnpm
+   * 通过npm来安装cnpm工具
+   * npm install -g cnpm --registry=https://registry.npmmirror.com
+   * -g 表示全局安装
+   * --registry=https://registry.npmmirror.com 表示指定镜像源
+  
+   * 3.操作命令
+   * 功能                       命令
+   * 初始化                     cnpm init
+   * 安装依赖                   cnpm install 或者 cnpm i
+   * 安装包                     cnpm install 包名 或者 cnpm i 包名 
+                               cnpm i -S 包名
+                               cnpm i -D 包名
+                               cnpm i -g 包名
+   * 卸载包                     cnpm uninstall 包名 或者 cnpm un 包名 或者 cnpm r 包名
+  **/
+  ```
+
+- #### 11.配置淘宝镜像
+- ```js
+  /**
+   * 1.配置淘宝镜像
+   * npm config set registry https://registry.npmmirror.com
+   * npm config get registry 查看镜像源
+   * npm config list 查看所有配置
+   * npm config delete registry 删除镜像源
+   * npm config edit 编辑配置文件
+   * 推荐使用nrm来管理镜像源
+  **/
+  ```
+  
+- #### 12.yarn
+- ```js
+  /**
+   * 1.安装yarn
+   * npm install -g yarn
+   * 2.操作命令
+   * 功能                       命令
+   * 初始化                     yarn init
+   * 安装依赖                   yarn 或者 yarn add
+   * 安装包                     yarn add 包名 或者 yarn add 包名 --save
+                               yarn add 包名 --dev
+                               yarn add 包名 --global
+   * 卸载包                     yarn remove 包名 或者 yarn rm 包名
+   * 更新包                     yarn upgrade 包名 或者 yarn upgrade 包名 --latest
+   * 清空缓存                   yarn cache clean
+   * 查看全局安装的包           yarn global list
+  
+   * 3.配置淘宝镜像
+   * yarn config set registry https://registry.npmmirror.com
+   * 推荐使用yrm来管理镜像源
+   * 包管理工具不要混着用 ，切记！
+  **/
+  ```
+
+- #### 13.npm 发布包
+- ```js 
+  /**
+   * 1.创建与发布
+   * 我们可以将自己开发的工具包发布到npm服务上，方便自己和其他开发者使用，操作如下：
+   *  1.创建文件，并创建文件index.js,在文件中声明函数，使用module.exports导出
+   *  2.在命令行中执行npm init -y，生成package.json文件，填写包的信息（包的名字是唯一的 ,带有测试字眼会被垃圾回收机制回收）
+   *  3.注册账号：https://www.npmjs.com/signup
+   *  4.激活账号：（一定要激活）
+   *  5.修改为官方的官方镜像（命令行中运行 nrm use npm）
+   *  6.登录npm账号：npm login （输入账号，密码，邮箱）
+   *  7.发布：npm publish 提交包
+  
+   * 2.更新包
+   * 后续可以对自己发布的包进行更新，操作如下：
+   *  1.更新包中的代码
+   *  2.测试代码是否可用
+   *  3.修改package.json中的版本号
+   *  4.运行npm publish发布包
+  
+   * 3.删除包
+   * 如果发布的包有错误，或者不再使用，可以删除包，操作如下：
+   *  1.运行npm unpublish 包名 --force
+   * 注意：
+   *  删除包需要满足一定的条件：https://docs.npmjs.com/cli/v6/commands/npm-unpublish
+   *  1.你是发布包的作者
+   *  2.发布小于24小时 
+   *  3.大于24小时后，没有其他包依赖，并且每周小于300下载量，并且只有一个维护者
+   *
+  **/
+  ```
+- #### 14.包管理工具扩展介绍
+- ```js
+   /**
+    * 扩展内容
+    * 在很多语言中都有包管理工具，比如：
+    *   语言                       包管理工具
+    *   Java                       Maven、Gradle
+    *   Python                     pip 
+    *   C#                         NuGet
+    *   前端                        npm、yarn、pnpm/other
+    *   PHP                        Composer
+    *   Go                         go mod
+    *   Rust                       cargo
+    *   Ruby                       rubygems
+    * 
+   
+    * 除了编程语言领域有包管理工具之外，操作系统层面也存在包管理工具，不过这个包指的是【软件包】
+    *   操作系统       包管理工具     网站
+    *   Linux         apt            https://packages.ubuntu.com/
+    *   Linux         yum            https://centos.pkgs.org/
+    *   Windows       Chocolatey     https://chocolatey.org/packages
+    *   macOS         Homebrew       https://brew.sh/
+    *   Centos        yum            https://packages.debian.org/stable/
+    *   Ubuntu        apt            https://packages.ubuntu.com/
+   **/
+  ```
+  
+- ### 7.express框架
+- #### 1. express介绍
+- ```js
+  /**
+    * express介绍(用于开发服务端应用）
+    *   express 是一个基于 Node.js 平台的 web 应用开发框架，提供一系列强大的特性帮助你创建各种 Web 和 Mobile 应用。
+    *   官方网址： https://www.expressjs.com.cn/
+    *   简单地说：express 是一个封装好的工具包，封装很多功能，便于我们开发WEB应用(HTTP服务器)
+    *   express 是一个轻量级的web框架，提供了很多便捷的功能，比如路由、中间件、模板引擎等
+  **/
+  ```
+- #### 2. express安装
+- ```js
+   /**
+    * express安装
+    *   1.安装express
+    *       npm install express
+    *   2.创建express应用
+    **/
+   // 导入express 模块
+   const express = require('express')
+   // 创建express应用
+   const app = express()
+   // 创建路由
+   app.get('/', (req, res) => {
+      res.send('Hello World!')
+   })
+   // 启动express应用
+  app.listen(3000, () => { console.log('Example app listening on port 3000!') })
+  
+  ```
+- #### 3. express路由
+- ```js
+  /**
+    * express路由
+    *   1.路由：指的就是映射关系，客户端请求的地址和服务器端处理请求的函数之间的映射关系
+    *   2.路由的组成：请求方法、路径、回调函数 组成
+    *   3.express中提供了一系列方法，可以很方便的使用路由，使用格式如下：
+    *       app.method(path, callback)
+    *   4.代码示例：
+  **/
+  // 导入express 模块
+  const express = require('express')
+  // 创建express应用
+  const app = express()
+  // 创建get路由
+  app.get('/', (req, res) => { res.send('Hello World!') })
+  // 创建post路由
+  app.post('/', (req, res) => { res.send('Hello World!') })
+  // 创建put路由
+  app.put('/', (req, res) => { res.send('Hello World!') })
+  // 创建delete路由
+  app.delete('/', (req, res) => { res.send('Hello World!') })
+  // 创建方法随意路由
+  app.all('/', (req, res) => { res.send('Hello World!') })
+  // 创建通配符路由（404）
+  app.all('*', (req, res) => { res.send('Hello World!') })
+  // 启动express应用
+  app.listen(3000, () => { console.log('Example app listening on port 3000!') }) 
+  ```
+- #### 4. express获取请求报文参数
+- ```js
+   /**
+    * express框架封装了一些API来方便获取请求报文中的数据，并且兼容原生HTTP模块的获取方法
+   **/
+   // 导入express 模块
+   const express = require('express')
+   // 创建express应用
+   const app = express()
+   // 创建get路由
+   app.get('/', (req, res) => {
+     // 原生操作
+     // 1.获取请求报文中的URL参数
+     console.log(req.query)
+     // 2.获取请求报文中的路径参数
+     console.log(req.params)
+     // 3.获取请求报文中的请求体参数
+     console.log(req.body)
+     // 4.获取请求报文中的请求头参数
+     console.log(req.headers)
+     // 5.获取请求报文中的cookie参数
+     console.log(req.cookies)
+     // 6.获取请求报文中的session参数
+     console.log(req.session)
+     // 7.获取请求报文中的文件
+     console.log(req.file)
+    // express操作（避免了解析）
+    // 1.获取请求报文中的URL参数
+    console.log(req.path)
+    // 2.获取请求报文中的路径参数
+    console.log(req.params)
+    // 3.获取请求头
+    console.log(req.get('host'));
+  
+  })
+   // 启动express应用
+   app.listen(3000, () => { console.log('Example app listening on port 3000!') })
+  ```
+  
+- #### 5. express获取路由参数
+- ```js
+  /**
+    * 路由参数是指 URL 路径中的参数（数据）
+    * 例如：/user/:id，其中 :id 就是路由参数
+    * 路由参数的获取通过 req.params 对象
+  **/
+  // 导入express 模块
+  const express = require('express')
+  // 创建express应用
+  const app = express()
+  // 创建get路由
+  app.get('/user/:id', (req, res) => {
+   // 获取路由参数
+    console.log(req.params)
+  })
+  // 启动express应用
+  app.listen(3000, () => { console.log('Example app listening on port 3000!') })
+  ```
+  
+- #### 6. express响应设置
+- ```js
+  /**
+    * express 框架封装了一些API来方便给客户端响应数据，并且兼容原生HTTP模块的获取方式
+  **/
+  // 导入express 模块
+  const express = require('express')
+  // 创建express应用
+  const app = express()
+  // 创建get路由
+  app.get('/user', (req, res) => {
+   // express 中设置响应的方式兼容HTTP模块方式
+   res.statusCode = 200
+   res.setHeader('Content-Type', 'text/html; charset=utf-8')
+   res.write('hello express')
+   res.end()
+   
+   // express 中设置响应的方式
+    // 1.设置响应状态码
+    // res.status(200)
+    // 2.设置响应头
+    // res.set('Content-Type', 'text/html; charset=utf-8')
+    // 3.设置响应体
+    // res.send('hello express') // 含有中文会自动设置 Content-Type: text/html; charset=utf-8 响应头避免乱码
+  // 连贯操作
+    // res.status(200).set('Content-Type', 'text/html; charset=utf-8').send('hello express')
+  
+   // 其他响应
+    // res.redirect('https://www.baidu.com') // 重定向
+    // res.json({ name: '张三', age: 18 }) // 返回json数据
+    // res.sendFile(__dirname + '/index.html') // 返回文件内容
+    // res.download(__dirname + '/index.html') // 下载文件
+  })
+  // 启动express应用
+  app.listen(3000, () => { console.log('Example app listening on port 3000!') })
+  ```
+  
+- #### 7. express中间件
+- ```js
+  /**
+    * 1. 什么是中间件
+    *   中间件（Middleware）本质就是一个回调函数
+    *   中间件函数可以像路由回调一样访问请求对象（request）、响应对象（response）和应用程序的请求-响应循环中的下一个中间件函数
+    * 2. 中间件的作用
+    *   中间件的作用就是使用函数封装公共操作，简化代码
+    * 3. 中间件的分类
+    *   1. 全局中间件
+    *   2. 路由中间件
+    * 4. 定义全局中间件
+    *   每一个请求到达服务端之后都会执行全局中间件函数
+    *   声明中间件函数
+  **/
+      // 1.全局中间件
+     let middleware = (req, res, next) => {
+      // 实现功能代码
+      // ...
+      // 调用next函数将控制权交给下一个中间件函数
+      // 执行next函数 （当如果希望执行完中间件函数之后，仍然继续执行路由中的回调函数，必须调用next）
+      next()
+            
+      }
+      // 注册全局中间件
+      app.use(middleware)
+  
+      // 2. 路由中间件
+      let checkCodeMiddleware = (req, res, next) => {
+        // 实现功能代码
+        // ...
+        // 调用next函数将控制权交给下一个中间件函数
+        // 执行next函数 （当如果希望执行完中间件函数之后，仍然继续执行路由中的回调函数，必须调用next）
+        next()
+      }
+      // 注册路由中间件(哪个路由需要使用添加哪个路由中间件）
+      app.get('/checkCode', checkCodeMiddleware, (req, res) => {
+        // ...
+      })
+  
+      // 3. 静态资源中间件设置
+      // 访问静态资源时 中间件会根据访问资源类型自动封装响应头类型
+      app.use(express.static(__dirname+'/public'))
+      // 注意事项：
+      //  1. index.html文件为默认打开的资源
+      //  2. 如果静态资源与路由规则同时匹配，谁先匹配谁就响应
+      //  3. 路由响应动态资源，静态资源中间件响应静态资源
+  
+  ```
+  
+- #### 8. express获取请求体数据
+- ```js
+   // 获取请求体数据 body-parser中间件
+   // 1. 安装body-parser中间件
+  // npm install body-parser
+  // 2. 引入body-parser中间件
+  const bodyParser = require('body-parser')
+  // 3.获取中间件函数
+     // 处理querystring 类型数据
+     const querystringParser = bodyParser.urlencoded({ extended: false })
+     // 处理json 类型数据
+     const jsonParser = bodyParser.json()
+  // 4.设置路由中间件，然后使用 request.body 获取请求体数据
+  app.post('/login', querystringParser, (req, res) => {
+    // 获取请求体数据
+    const { username, password } = req.body
+   
+    // ...
+  })
+  ```
+  
+- #### 9. 防盗链
+- ```js
+  // 1.导入 express 模块
+  const express = require('express')
+  // 2.创建 express 应用对象
+  const app = express()
+  // 3.声明全局中间件拦截
+  app.use((req, res, next) => {
+  // 1. 获取请求头中的 referer
+  const referer = req.get('referer')
+  // 2. 判断 referer 是否为空
+  if (referer) {
+    // 3. 获取 referer 的域名部分
+    const host = new URL(referer).host
+    // 4. 判断 host 是否为当前网站
+    if (host !== 'localhost:3000') {
+      // 5. 返回 403 禁止访问
+      res.status(403).send('禁止访问')
+      return
+     }
+    next()
+   }
+  })
+  // 3.设置路由中间件拦截
+  app.use('/public', (req, res, next) => { 
+    // 1. 获取请求头中的 referer
+    const referer = req.get('referer')
+    // 2. 判断 referer 是否为空
+    if (referer) {
+      // 3. 获取 referer 的域名部分
+      const host = new URL(referer).host
+      // 4. 判断域名是否为当前域名
+      if (host === 'localhost:3000') {
+        // 5. 如果是当前域名，则继续处理请求
+        next()
+      } else {
+        // 6. 如果不是当前域名，则返回
+        res.send('非法盗链')
+      }
+    }
+  })
+  ```
+  
+- #### 10. 路由模块化
+- ```js
+  // 1.创建一个模块文件夹（routes）
+  // 2.在模块文件夹中分别创建不同模块的 js文件(如：user.js)
+  // 3.在 user.js 中定义路由
+  const express = require('express')
+  const router = express.Router()
+  router.get('/login', (req, res) => {
+   res.send('登录页面')
+  })
+  router.get('/register', (req, res) => {
+    res.send('注册页面')
+  })
+  module.exports = router
+  // 4.在主模块app.js 中引入路由模块
+  const express = require('express')
+  const app = express()
+  const userRouter = require('./routes/user')
+  app.use(userRouter)
+  app.listen(3000, () => {
+    console.log('服务器已启动')
+  })
+  // 
+  ```
+  
+- #### 11. EJS模板引擎
+- ```js
+  /**
+   * 1. 什么是模板引擎
+   *  模板引擎是分离用户界面和业务数据的一种技术
+   *  通过模板引擎，可以将数据动态的渲染到用户界面上
+   *  模板引擎有很多种，如：art-template、ejs、pug等
+   *  这里我们使用ejs模板引擎
+  
+   * 2. 什么是ejs
+   *  ejs是一个基于Node.js的模板引擎，它可以将数据动态的渲染到HTML页面中
+   *  官网： https://ejs.co/
+   *  中文网站： https://ejs.bootcss.com/
+  
+   * 3. 如何使用ejs
+   *  1. 安装ejs
+   *    npm install ejs --save
+   **/
+   // 示例代码：
+  
+   // 1.引入ejs
+   const ejs = require('ejs')
+   // 2.定义数据
+   const str = 'hello world'
+   const data = ['张三', '李四', '王五']
+   let isLogin = true
+   // 3.ejs解析模板返回结构
+   // <%= %> 是ejs解析内容的标记，作用是输出当前表达式的执行结构
+   // 1.变量渲染
+   //   const str = ejs.render('<%= str %>', {str: str})
+   // 2.数组渲染
+        const str = ejs.render(`<ul>
+                                   <% data.forEach(item=>{ %>
+                                     <li><%= item %></li>
+                                     <% }) %>
+                                </ul>`, {data: data})
+  
+   // 3.条件渲染
+      const str = ejs.render(`<% if(isLogin){ %>
+                                  <p>欢迎回来</p>
+                                  <% }else{ %>
+                                  <p>请先登录</p>
+                                  <% } %>`, {isLogin: isLogin})
+  ```
+  
+  
+  
+  
+   
+
+   
+
+  
+  
+
+
+  
+
+
+  
+   
+   
+   
+
+
+  
+  
+  
+
+  
   
    
 
