@@ -1816,6 +1816,9 @@
   const express = require('express')
   const app = express()
   const userRouter = require('./routes/user')
+  // 如果设置路由前缀
+  // app.use('/api', 导入的模块路由)
+  // app.use('/api', userRouter)
   app.use(userRouter)
   app.listen(3000, () => {
     console.log('服务器已启动')
@@ -1867,6 +1870,224 @@
                                   <p>请先登录</p>
                                   <% } %>`, {isLogin: isLogin})
   ```
+
+- #### 12.Express 中使用ejs
+- ```js
+  // 导入 express 模块
+  const express = require('express')
+  // 导入 ejs 模块
+  const ejs = require('ejs')
+  // 导入 path 模块
+  const path = require('path')
+  // 创建 express 的服务器实例
+  const app = express()
+  // 告诉 express 服务器，使用 ejs 作为模板引擎
+  app.set('view engine', 'ejs') // pug twing 
+  // 设置模板文件存放位置 模板文件：具有模板语法内容的文件
+  app.set('views',path.resolve(__dirname + './views'))
+  // 定义路由
+  app.get('/', (req, res) => { 
+    // 渲染 EJS 模板，并渲染到浏览器中
+    // res.render(模板的文件名, 数据)
+   // 例如：
+   let str = 'hello world'
+   res.render('home', {str: str})
+  // 在views 目录中创建 home.ejs 文件 不然找不到这个文件
+  })
+  // 启动服务器
+  app.listen(3000, () => {
+    console.log('Express server running at http://127.0.0.1:3000')
+  })
+  ```
+
+- #### 13.express-generator工具
+- ```js
+  // 作用：通过应用生成工具 express-generator 来快速创建一个 express 应用骨架
+  // 1.安装express-generator
+     // npm install express-generator -g
+  // 2.创建express应用
+     // express -e  myapp  // -e 表示使用 ejs 模板 
+     // 也可以使用 npx express  myapp 
+  // 3.安装依赖
+     // cd myapp && npm install
+  // 4.启动应用
+     // npm start
+  // 5.访问应用
+     // localhost:3000
+  // 6.需要热部署配置
+     //  {"scripts": {
+     //   "start": "node ./bin/www" 中 node 修改为nodemon
+     //   "dev": "nodemon ./bin/www" 或者添加启动项
+     //    }
+     //  }
+  // 7.添加模块或者修改自定义内容可自行处理
+  ```
+  
+- #### 14.express 文件上传报文
+- ```js
+  // 1.创建文件上传ejs文件模板（form表单 enctype="multipart/form-data"）
+  // 2.下载文件处理工具包（formidable）
+     // npm install formidable --save
+  // 3.引入formidable
+  const {formidable}= require("formidable");
+  // 4.使用formidable处理文件上传
+  router.post('/portrait', function(req, res, next) {
+  // 创建formidable实例
+  const form = formidable({
+    multiples: true,
+    //设置上传文件的保存目录
+    uploadDir:__dirname +  "/../public/uploads",
+    //保留文件扩展名
+    keepExtensions: true
+  });
+  // 解析请求
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    // 服务器保存该图片访问的url地址 保存在数据库中
+    let url = "/uploads/" + files.portait[0].newFilename;
+    res.send(url);
+   });
+  });
+  ```
+- #### 15.lowdb
+- ```js
+  // 1.安装lowdb 且为每条json数据添加唯一id
+     // npm install lowdb
+     // npm install shortid
+  // 
+  // 2.使用lowdb（创建lowdb文件 封装如下操作）
+    const low = require('lowdb')
+    const shortid = require('shortid')
+  // 3.引入FileSync模块
+    const FileSync = require('lowdb/adapters/FileSync') 
+    const adapter = new FileSync(__dirname + '/../data/db.json')
+    // 获取db对象
+    const db = low(adapter)
+    // 创建id
+    let id = shortid.generate();
+    // 初始化数据
+    db.defaults({ posts: [], user: {} }).write()
+    // 添加数据
+    db.get('posts').push({ id: id, title: 'lowdb' }).write()
+    // 插入数据
+    db.get('posts').unshift({ id: id, title: 'lowdb0' }).write()
+    // 获取所有posts数据
+    db.get('posts').value()
+    // 获取id为1的数据
+    db.get('posts').find({ id: 1 }).value()
+    // 获取id为1的数据的title
+    db.get('posts').find({ id: 1 }).get('title').value()
+    // 更新id为1的数据的title
+    db.get('posts').find({ id: 1 }).assign({ title: 'lowdb1' }).write()
+    // 删除id为1的数据
+    db.get('posts').remove({ id: 1 }).write()
+    // 删除所有posts数据
+    db.get('posts').remove().write()
+  
+  ```
+  
+- ### 8.MongoDB
+- #### 1.MongoDB简介
+- ```js
+  /**
+   * 1.什么是MongoDB
+   * MongoDB是一个基于分布式文件存储的数据库，官方网址： https://www.mongodb.com/
+   * MongoDB 将数据存储为一个文档，数据结构由键值(key=>value)对组成。MongoDB 文档类似于 JSON 对象。字段值可以包含其他文档，数组及文档数组。
+   * 2.数据库是什么
+   * 数据库（Database）是按照数据结构来组织、存储和管理数据的应用程序。
+   * 3.数据库的作用
+   * 数据库的主要作用就是 管理数据，对数据进行 增（c）、删 （d）、改（u）、查（r）操作。
+   * 4.数据库管理数据的特点
+   *   相比于纯文件管理数据，数据库管理数据有如下特点：
+   *   1.速度更快
+   *   2.扩展性更强
+   *   3.安全性更高
+   *   4.数据持久化
+   *   5.数据结构化
+   *   6.数据一致性
+   * 5.为什么选择MongoDB
+   *   1.易用性：MongoDB 是一个面向文档存储的数据库，操作起来比较简单和容易。
+   *   2.灵活性：MongoDB 非常灵活，它不需要像关系型数据库那样预先定义和设置表结构。
+   *   3.可扩展性：MongoDB 是一个分布式数据库，可以很容易地扩展到多台服务器。
+   *   4.高性能：MongoDB 是一个高性能的数据库，读写速度非常快。
+   *   5.高可用性：MongoDB 支持自动复制和故障转移，可以保证数据的可靠性和可用性。
+   *   6.语法相似：操作语法与JavaScript语法相似，容易上手,学习成本低。
+   * 6.应用场景
+   *   1.内容管理系统、博客和 论坛，如WordPress、Joomla、Drupal等。
+   *   2.实时应用，如实时分析、实时搜索、实时广告等。
+   *   3.移动应用，如移动应用的后端存储。
+   *   4.游戏，如游戏数据存储。
+   *   5.物联网，如物联网设备的数据存储。
+   *   6.大数据，如大数据分析。
+   *   7.电子商务，如电商网站的商品信息、订单信息等。
+  **/
+  ```
+- #### 2.MongoDB核心概念
+- ```js
+  /**
+   * 1.数据库（database）
+   * 数据库是一个物理容器，用于存储一个或多个集合。一个数据库通常包含一个或多个集合，每个集合包含一个或多个文档。
+   * 2.集合（collection）
+   * 集合是一组文档，类似于关系型数据库中的表。集合中的文档可以具有不同的结构，类似于关系型数据库中的行
+   * 3.文档（document）
+   * 文档是MongoDB中的基本数据结构，类似于关系型数据库中的行。文档由键值对组成，类似于JSON对象。
+   * 4.字段（field）
+   * 字段是文档中的键值对，类似于关系型数据库中的列。字段名是字符串，字段值可以是任何类型的数据。
+   * 5.索引（index）
+   * 索引是用于加速查询操作的数据结构。MongoDB 支持多种类型的索引，如单字段索引、复合索引、全文索引等。
+   * 6.查询（query）
+   * 查询是用于从集合中检索文档的操作。查询可以指定查询条件、排序方式、投影等。
+   * 7.更新（update）
+   * 更新是用于修改集合中的文档的操作。更新操作可以修改文档中的字段值、添加或删除字段等。
+   * 8.删除（delete）
+   * 删除是用于从集合中删除文档的操作。删除操作可以指定删除条件。
+   * 9.聚合（aggregation）
+   * 聚合是用于对集合中的文档进行分组和计算的操作。聚合操作可以指定聚合管道，如分组、过滤、排序、计算等。
+   * 10.事务（transaction）
+   * 事务是用于保证一组操作要么全部成功，要么全部失败的操作。MongoDB 4.0及以上版本支持多文档事务。
+   * 11.复制（replication）
+   * 复制是用于将数据从一个节点复制到另一个节点的操作。MongoDB 支持自动复制和手动复制。
+   * 12.分片（sharding）
+   * 分片是用于将数据分布在多个节点上的操作。MongoDB 支持自动分片和手动分片。
+   * 13.备份（backup）
+   * 备份是用于将数据从一个节点复制到另一个节点的操作。MongoDB 支持自动备份和手动备份。
+   * 14.恢复（restore）
+   * 恢复是用于将数据从一个节点复制到另一个节点的操作。MongoDB 支持自动恢复和手动恢复。
+   * 15.监控（monitoring）
+   * 监控是用于监视MongoDB性能和状态的操作。MongoDB 提供了多种监控工具，如mongostat、mongotop、mongoreplay等。
+   * 16.安全性（security）
+   * 安全性是用于保护MongoDB数据免受未授权访问的操作。MongoDB 提供了多种安全性功能，如身份验证、授权、加密等。
+   * 可以通过JSON文件来理解MongoDB中的数据结构。例如，以下是一个包含用户信息的JSON文件：
+   * {
+   *   "_id": ObjectId("5f9a3c8e4f9a3c8e4f9a3c8e"),
+   *   "name": "John Doe",
+   *   "age": 30,
+   *   "email": "john.doe@example.com",
+   *   "address": {
+   *     "street": "123 Main St",
+   *     "city": "Anytown",
+   *     "state": "CA",
+   *     "zip": "12345"
+   *   },
+   *   "list": [
+   *     { "item": "apple", "quantity": 2 },  
+   *  ]
+   * }
+   * 这个JSON文件就好比是一个数据库，一个MongoDB服务下可以有N个数据库，每个数据库下可以有N个集合，每个集合下可以有N个文档。
+   * JSON文件中的一级属性的数组值好比一个集合，
+   * 数组中的对象好比是文档，
+   * 对象中的属性和值好比是文档中的字段和值。
+   * 一般情况下：
+   *   1.一个项目使用一个数据库，
+   *   2.一个集合会存储同一种类型的数据
+  **/
+  ```
+  
+  
+  
   
   
   
