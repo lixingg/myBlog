@@ -2093,15 +2093,496 @@
    *   2.建议选择zip类型，通用性更强
    *   3.配置步骤如下：
    *    1.将压缩包移动到自己选择的位置进行解压
-   *    2.在解压后的文件夹中创建data文件夹，mongodb会将数据默认保存在这个文件夹
+   *    2.在解压后的文件夹中创建data文件夹，mongodb会将数据默认保存在这个文件夹（自定义位置 启动的时候使用命令 mongod --dbpath 指定data）
    *    3.以mongodb中bin目录作为工作目录，启动命令行
-   *    4.在命令行中输入mongod启动mongodb服务
+   *    4.在命令行中输入mongod启动mongod服务（命令行指的是mongod文件夹bin目录下的命令行） 
+   * 2.使用MongoDB:
+   *   1.在命令行中输入mongo启动mongo客户端（命令行指的是mongod文件夹bin目录下的命令行） 
   **/
   ```
+- #### 4.常用命令
+- ```js
+  /**
+   *  数据库命令
+   * 1.查看当前数据库
+   *   1.命令：db
+   * 2.显示所有数据库
+   *   1.命令：show dbs
+   * 3.切换数据库
+   *   1.命令：use 数据库名
+   * 4.删除数据库
+   *   1.命令：db.dropDatabase()
+  **/
+  
+  /**
+   * 集合命令
+   * 1.创建集合
+   *   1.命令：db.createCollection('集合名')
+   * 2.查看当前数据库中所有的集合
+   *   1.命令：show collections
+   * 3.查看集合中的所有文档
+   *   1.命令：db.集合名.find()
+   * 4.重命名集合
+   *   1.命令：db.集合名.renameCollection("新集合名")
+   * 5.删除集合
+   *   1.命令：db.集合名.drop()
+  **/
+  
+  /**
+   * 文档命令
+   * 1.插入文档
+   *   1.命令：db.集合名.insert(文档对象)
+       例如： db.user.insert({name:"张三",age:18})
+   * 2.更新文档
+   *   1.命令：db.集合名.update({查询条件},{更新内容})
+       例如： db.user.update({name:"张三"},{$set:{age:20},$push:{sex:"男"}})
+   * 3.删除文档
+   *   1.命令：db.集合名.remove({查询条件})
+       例如： db.user.remove({name:"张三"})
+   * 4.查询文档
+   *   1.命令：db.集合名.find({查询条件})
+       例如： db.user.find({name:"张三"})
+   * 5.查询所有文档
+   *   1.命令：db.集合名.find()
+       例如： db.user.find()
+   * 6.查询指定数量的文档
+   *   1.命令：db.集合名.find().limit(数量)
+       例如： db.user.find().limit(2)
+   * 7.跳过指定数量的文档
+   *   1.命令：db.集合名.find().skip(数量)
+       例如： db.user.find().skip(2)
+   * 8.排序查询
+   *   1.命令：db.集合名.find().sort({字段名:1})
+       例如： db.user.find().sort({age:1})
+   * 9.查询指定字段
+   *   1.命令：db.集合名.find({查询条件},{字段名:1})
+       例如： db.user.find({name:"张三"},{name:1,age:1})
+   * 10.查询不等于
+   *   1.命令：db.集合名.find({字段名:{$ne:值}})
+       例如： db.user.find({age:{$ne:18}})
+   * 11.查询大于
+   *   1.命令：db.集合名.find({字段名:{$gt:值}})
+       例如： db.user.find({age:{$gt:18}})
+   * 12.查询小于
+   *   1.命令：db.集合名.find({字段名:{$lt:值}})
+       例如： db.user.find({age:{$lt:18}})
+   * 13.查询大于等于
+   *   1.命令：db.集合名.find({字段名:{$gte:值}})
+       例如： db.user.find({age:{$gte:18}})
+   * 14.查询小于等于
+   *   1.命令：db.集合名.find({字段名:{$lte:值}})
+       例如： db.user.find({age:{$lte:18}})
+   * 15.查询包含
+   *   1.命令：db.集合名.find({字段名:{$in:[值1,值2]}})
+       例如： db.user.find({name:{$in:["张三","李四"]}})
+   * 16.查询不包含
+   *   1.命令：db.集合名.find({字段名:{$nin:[值1,值2]}})
+       例如： db.user.find({name:{$nin:["张三","李四"]}})
+   * 17.查询空值
+   *   1.命令：db.集合名.find({字段名:{$in:[null]}})
+       例如： db.user.find({name:{$in:[null]}})
+  **/
+  ```
+- ### 9.Mongoose
+- #### 1.介绍及安装使用
+- ```js
+   /**
+    *  1.介绍
+    *    Mongoose 是一个对象文档模型库，官网 ： https://mongoosejs.com/ 或 https://mongoosejs.net/
+    *  2.作用
+    *    方便使用代码操作 MongoDB 数据库  
+    *  3.使用流程：
+    *    1.安装 mongoose
+    *      npm i mongoose
+    *    2.引入 mongoose
+    *      const mongoose = require('mongoose')
+          // 设置 striceQuery 为 true
+          // 此时 mongoose 会以严格模式运行，即在没有使用 schema 定义的字段，将无法保存到数据库
+          mongoose.set('strictQuery', true)
+    *    3.连接数据库
+    *      mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true})
+    *    4.设置连接回调
+    *      连接成功 （官方推荐使用once，不推荐使用on ,只连接一次）
+    *      mongoose.connection.once('open', () => {
+    *       console.log('连接成功')
+    *       // 5.创建文档结构对象（设置集合中文档的属性以及属性值类型）
+    *       const UserSchema = new mongoose.Schema({
+    *         name: String,
+    *         age: Number,
+    *         email: String,
+    *         password: String,
+    *         status: {
+    *           type: Number,
+    *           default: 1
+    *         }
+    *       })
+    *       // 6.创建文档模型对象 （对文档操作的封装对象）
+    *       const UserModel = mongoose.model('User', UserSchema)
+    *       // 7.新增
+    *       UserModel.create({
+    *          name: '张三',
+    *          age: 20,
+    *          email: '123@qq.com',
+    *          password: '123456',
+    *          status: 1
+    *          }, (err, doc) => {
+    *          判断是否有错误
+    *          if (err) {
+    *             console.log(err)
+    *             return;
+    *             }
+    *          console.log(doc)
+    *          关闭数据库连接 （项目运行过程中，不会添加改代码）
+    *          mongoose.disconnect()
+    *       }) 
+    *    })
+    *      连接失败
+    *      mongoose.connection.on('error', () => {
+    *       console.log('连接失败')
+    *      })
+    *      连接关闭
+    *      mongoose.connection.on('close', () => {
+    *       console.log('连接关闭')
+    *      })
+   **/
+  ```
+  
+- #### 2.字段类型
+- ```js
+   /**
+    * 文档结构可以选的常用字段类型列表
+    *  类型             描述
+    *  String          字符串
+    *  Number          数字
+    *  Date            日期
+    *  Buffer          二进制（Buffer 对象）
+    *  Boolean         布尔值
+    *  Mixed           任意类型，需要使用 mongoose.Schema.Types.Mixed指定
+    *  ObjectId        对象ID，需要使用 mongoose.Schema.Types.ObjectId指定
+    *  Decimal128      高精度数字，需要使用 mongoose.Schema.Types.Decimal128指定
+    *  Array           数组，也可以使用[]来标识，指定一个数组，数组中的每个值都必须是给定类型
+   **/
+  
+  ```
+  
+- #### 3.字段验证
+- ```js
+   /**
+    * 1. required: true  必填项
+    * 2. default: 默认值
+    * 3. enum: ['A', 'B', 'C']  枚举值
+    * 4. maxlength: 10  最大长度
+    * 5. minlength: 5  最小长度
+    * 6. max:
+    * 7. min:
+    * 8. match: /正则表达式/  正则表达式
+    * 9. validate: function(value) { return value.length > 5 }  自定义验证函数
+    * 10. trim: true  去除字符串两端的空格
+    * 11. lowercase: true  将字符串转换为小写
+    * 12. uppercase: true  将字符串转换为大写
+    * 13. unique: true  唯一值
+    * 14. sparse: true  稀疏索引
+    * 15. select: false  不查询该字段
+    * 16. ref: 'Model'  引用其他模型
+    * 17. enum: ['A', 'B', 'C'] 枚举值必须是传递的这几个值不然报错
+   **/
+   // 使用案例：
+   const mongoose = require('mongoose');
+   const Schema = mongoose.Schema;
+   const UserSchema = new Schema({
+     name: { type: String, required: true },
+     age: { type: Number, min: 18, max: 60 },
+     email: { type: String, unique: true, match: /.+@.+\..+/ },
+     password: { type: String, required: true, select: false },
+     role: { type: String, enum: ['admin', 'user'] },
+     createdAt: { type: Date, default: Date.now },
+     updatedAt: { type: Date, default: Date.now },
+   });
+   const User = mongoose.model('User', UserSchema);
+  ```
+  
+- #### 4.操作文档
+- ```js
+   // 删除文档
+   const mongoose = require('mongoose');
+   mongoose.connect('mongodb://localhost/users', { useNewUrlParser: true, useUnifiedTopology: true });
+   mongoose.connection.once('open', () => {
+      // 创建文档结构对象
+      // 设置集合中文档的属性以及属性值类型
+     const userSchema = mongoose.Schema({
+       name: String,
+       age: Number,
+      });
+     // 创建模型对象 对文档操作的封装对象 mongoose 会使用集合名称的复数，创建集合（User => 生成文档名称 Users）
+     const User = mongoose.model('User', userSchema)
+     // 删除一条数据
+     User.deleteOne({ name: '张三' }, (err,data) => {
+        if (err) {
+         console.log('删除失败',err);
+          return;
+         }
+        // 删除成功 输出 删除的数据
+        console.log(data);
+     })
+     // 批量删除数据
+     User.deleteMany({ age: { $gt: 20 } }, (err,data) => {
+        if (err) {
+         console.log('删除失败',err);
+          return;
+         }
+        // 删除成功 输出 删除的数据
+        console.log(data);
+     })
+     // 更新文档 更新一条
+     User.updateOne({ name: '张三' }, { age: 18 }, (err,data) => {
+        if (err) {
+         console.log('更新失败',err);
+          return;
+         }
+        // 更新成功 输出 更新的数据
+        console.log(data);
+     })
+     // 更新文档 更新多条
+     User.updateMany({ age: { $gt: 20 } }, { age: 18 }, (err,data) => {
+        if (err) {
+         console.log('更新失败',err);
+          return;
+         }
+        // 更新成功 输出 更新的数据
+        console.log(data);
+     })
+     // 查询文档 查询一条
+     User.findOne({ name: '张三' }, (err,data) => {
+         if (err) {
+         console.log('查询失败',err);
+          return;
+         }
+        // 查询成功 输出 查询的数据
+        console.log(data);
+     })
+     // 查询文档 查询多条
+     User.find({ age: { $gt: 20 } }, (err,data) => {
+        if (err) {
+         console.log('查询失败',err);
+          return;
+         }
+        // 查询成功 输出 查询的数据
+     })
+     // 根据ID查询文档
+     User.findById('5f9b8e9c6f9b8e9c6f9b8e9c', (err,data) => {
+        if (err) {
+         console.log('查询失败',err);
+          return;
+         }
+        // 查询成功 输出 查询的数据
+        console.log(data);
+     })
+     // 查询所有文档 （查询参数项可省略）
+     User.find({}, (err,data) => {
+        if (err) {
+         console.log('查询失败',err);
+          return;
+         }
+        // 查询成功 输出 查询的数据
+        console.log(data);
+     })
+     
+   })
+    
+  ```
+  
+- #### 5.条件控制
+- ```js
+  /**
+   *   符号                          含义            
+       $set:                        修改
+       $inc:                        递增
+       $unset:                      删除
+       $push:                       添加
+       $addToSet:                   添加到集合中
+       $pop:                        删除
+       $pull:                       删除
+       $pullAll:                    删除多个
+       $pushAll:                    添加多个
+       $each:                       遍历
+       $slice:                      截取
+       $ne:                         不等于
+       $gt:                         大于
+       $gte:                        大于等于
+       $lt:                         小于
+       $lte:                        小于等于
+       $in:                         在集合中
+       $nin:                        不在集合中
+       $or:                         或
+       $nor:                        逻辑非
+       $not:                        不等于
+       $exists:                     存在
+       $all:                        全部
+       $elemMatch:                  元素匹配
+       $size:                       长度
+       $mod:                        取模
+       $regex:                      正则
+       $text:                       文本搜索
+       $where:                      条件
+       $geoNear:                    地理位置搜索
+       $near:                       地理位置搜索
+       $nearSphere:                 地理位置搜索
+       $maxDistance:                最大距离
+       $minDistance:                最小距离
+       $geoWithin:                  地理位置搜索
+       $box:                        矩形
+       $center:                     圆心
+       $centerSphere:               圆心
+       $polygon:                    多边形
+       $uniqueDocs:                 唯一文档
+       $bitsAllClear:               位运算
+       $bitsAllSet:                 位运算
+       $bitsAnyClear:               位运算
+       $bitsAnySet:                 位运算
+       $comment:                    注释
+       $isolated:                   隔离
+       $elemMatch:                  元素匹配
+       $exists:                     存在
+       $type:                       类型
+ 
+  **/
+  
+   // 案例：
+   // 1.运算符
+   db.getCollection('user').find({age:{$gt:20}}) // 年龄大于20
+  // 2.逻辑或运算符
+   db.getCollection('user').find({$or:[{age:{$gt:20}},{age:{$lt:10}}]}) // 年龄大于20或者小于10
+  // 3.逻辑与运算符
+   db.getCollection('user').find({$and:[{age:{$gt:20}},{age:{$lt:30}}]}) // 年龄大于20并且小于30
+  // 4.正则匹配（条件中可以直接使用JS的正则语法，通过正则可以进行模糊查询）
+   db.getCollection('user').find({name:/李/}) // 名字含有李的
+   db.getCollection('user').find({name:new RegExp('z')}) // 名字含有李的
   
   
+  ```
+- #### 6.个性化读取
+- ```js
+    // 1.字段筛选
+       // 0:不要的字段
+       // 1:要的字段
+       db.getCollection('user').find().select({name:1,age:1,_id:0}).exec(function (err, docs) {
+           if (err) throw err;
+           console.log(docs);
+           mongoose.connection.close()
+        })
+    // 2.数据排序
+       // sort:排序，1:升序，-1:降序
+       db.getCollection('user').find().sort({age:1}).exec(function (err, docs) {
+           if (err) throw err;
+           console.log(docs);
+           mongoose.connection.close()
+        })
+    // 3.数据分页
+       // limit:限制条数
+       // skip:跳过条数
+       db.getCollection('user').find().skip(10).limit(10).exec(function (err, docs) {
+           if (err) throw err;
+           console.log(docs);
+           mongoose.connection.close()
+        }) 
+    // 4.数据统计
+       // count:统计条数
+       db.getCollection('user').count(function (err, count) {
+         if (err) throw err;
+             console.log(count);
+           mongoose.connection.close()
+     })
+    // 5.数据去重
+       // distinct:去重
+       db.getCollection('user').distinct('name',function (err, docs) {
+         if (err) throw err;
+           console.log(docs);
+           mongoose.connection.close()
+       })
   
-  
+  ```
+- #### 7.代码模块化
+- ```js
+   // 创建一个config.js文件，用于存放数据库配置信息
+   module.exports = {
+    DBNAME: 'users',
+    DBHOST: 'localhost',
+    DBPORT: '27017',
+   }
+  ```
+- ```js
+  /**
+   * @description: 封装数据库操作
+   * @param {*} success 连接成功回调函数
+   * @param {*} error 连接失败回调函数
+   * @return {*}
+  **/
+  // 提取公共代码块 db/db.js
+  module.exports = function(success,error){
+       // 如果不传递失败的回调 设置一个默认值
+       if(typeof error !== 'function'){
+          error=()=>{
+              throw new Error('连接失败')
+           }
+        }
+      // 1.引入模块
+      const mongoose = require('mongoose');
+      // 导入配置文件
+      const { DBNAME, DBHOST, DBPORT } = require('./config')
+      // 设置 strictQuery 为 true
+      mongoose.set('strictQuery', true);
+      // 2.连接数据库
+      mongoose.connect(`mongodb://${DBHOST}:${DBPORT}/${DBNAME}`, { useNewUrlParser: true, useUnifiedTopology: true });
+      // 3.设置回调
+      // 设置连接成功回调 once 只执行一次 事件回调函数只执行一次
+      mongoose.connection.once('open', function () {
+         success()
+       })
+      // 4.设置连接失败回调
+      mongoose.connection.on('error', function () {
+         error()
+       })
+      // 5.设置关闭回调
+      mongoose.connection.on('close', function () {})
+   }
+  ```
+- ```js
+   // 抽离 modules/user.js
+   //  1.引入模块
+   const mongoose = require('mongoose')
+   // 设置集合中文档的属性以及属性值类型
+   let UserSchema = new mongoose.Schema({
+           name: String,
+           age: Number,
+           email: String
+           })  
+   // 3.创建模型
+   let UserModel = mongoose.model('User', UserSchema)
+  //  4.导出模型对象
+   module.exports = UserModel
+  ```
+- ```js
+  // 使用封装模块
+    // 导入 common.js文件
+    const db = require('./db/db.js')
+    // 导入 User 模型
+    const UserModel = require('./modules/user.js')
+    // 1.调用函数
+    db(()=>{
+        UserModel.create({  
+                     name:'张三',
+                     age:18,
+                     email:'zhangsan@qq.com'
+                     },(err,doc)=>{
+                  if(err) throw err;
+                 console.log(doc)
+                 })
+      console.log('连接成功')
+    })
+  ```
+
+    
+
   
   
   
