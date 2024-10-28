@@ -1,4 +1,70 @@
 ## Uni-app 专栏
+### 1、uni-app简介
+- 1.uni-app 是一个使用 Vue.js 开发所有前端应用的框架，开发者编写一套代码，
+可发布到iOS、Android、H5、以及各种小程序（微信/支付宝/百度/头条/QQ/钉钉/淘宝）、快应用等多个平台。
+
+- 2.uniapp是一个框架
+- - vue.js + 微信小程序 = uniapp
+
+### 2、选择uniapp的原因
+- 1.优点：
+- - - 1.跨平台，一套代码，多端运行，一次开发，多端运行
+- - - 虽然要走条件编译
+- - - 2.节省时间
+- - 2.缺点：
+- - - 1.性能比原生差（不如 flutter、react-native）
+- - - 2.上架有问题
+- - 3.适用场景：
+- - - 1.公司定位：中小公司
+- - - 2.花钱少，时间少
+
+### 3、目录结构
+- pages：页面文件存放目录
+- static：静态资源目录（图片、字体、css等）
+- unpackage：存放打包文件
+- App.vue：根组件（不含template）
+- index.html：入口文件
+- main.js：js入口文件
+- manifest.json：应用配置文件
+- pages.json：页面配置文件
+- uni.scss：全局样式文件
+
+### 4、条件编译
+- 1.条件编译：根据平台的不同，执行不同的代码
+- 2.条件编译的写法：
+- - - #ifdef 条件
+- - - - 条件编译代码
+- - - #endif
+- 3.条件编译的条件：
+- - - - H5：h5
+- - - - 微信小程序：mp-weixin
+- - - - App：app-plus
+- - - - nvue：app-nvue
+- - 4.条件编译的例子：
+- - - ```html
+      <!--      #ifdef H5--> 
+      <div>h5</div>
+      <!--      #endif-->
+      ```
+      ```js
+      // #ifdef H5
+      console.log('h5')
+      // #endif
+      ```
+      ```css
+      /* #ifdef H5 */
+      div{
+        color: red;
+      }
+      /* #endif */
+      ```
+- - 5.[条件编译详情](https://uniapp.dcloud.io/platform?id=条件编译)
+- - 6.条件编译的注意事项：
+- - - 1.app-plus 是无法判断是ios还是安卓的 
+- - - - 解决办法：uni.getSystemInfoSync().platform;获取设备类型 做if判断
+
+### 3、uniapp基础语法
+
 
 ### 1、uniapp安卓本地打包成apk
 
@@ -89,3 +155,5 @@
 
 ### 自己写的仿抖音app(无毒可以扫码下载安装玩，特此声明仅用于学习)
 -  <img src="/douPlayer.png">
+
+###

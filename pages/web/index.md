@@ -183,6 +183,9 @@ outline: deep
 </pre> 
 -    [专栏详情](./Echarts.md)
 
+### 15、map专栏
+-    [专栏详情](./map.md)
+
 ### 15、疑难解答
 
 <pre>
