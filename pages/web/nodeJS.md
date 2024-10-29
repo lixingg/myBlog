@@ -2580,6 +2580,12 @@
       console.log('连接成功')
     })
   ```
+  
+- ### 9.图形化操作工具
+- - 我们可以使用图形化操作工具对MongoDB数据库进行操作，常用的图形化工具包括
+- - - 1.Robo 3T 免费的， [下载地址](https://github.com/Studio3T/robomongo/releases)
+- - - 2.Navicat Premium 收费，功能强大， [下载地址](https://www.navicat.com.cn/download/navicat-premium)
+- 
 
     
 
