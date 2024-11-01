@@ -42,3 +42,6 @@
 - HTML、CSS、JavaScript
 
 - ### 2.环境安装和编辑器推荐
+- 环境推荐使用phpstudy，下载地址：https://www.xp.cn/
+- 编辑器推荐使用[vscode](https://code.visualstudio.com/)、[phpstorm](https://www.jetbrains.com/phpstorm/)
+             、[sublime](https://www.sublimetext.com/)、[hbuilder](https://www.dcloud.io/hbuilderx.html)等
