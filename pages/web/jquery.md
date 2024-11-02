@@ -445,15 +445,15 @@
         $("ul").html(""); // 3.清空匹配的元素里面的内容（将子孙删除保留自己）
         ```
         
-### 5、jQuery 事件
-- #### 1.事件注册
+#### 7.jQuery 事件
+- ##### 1.事件注册
 - - 1.单个事件注册
 - - - ```js
         $("div").click(function(){  })
         $("div").mouseenter(function(){  })
       ```
 
-- #### 2.事件处理
+- ##### 2.事件处理
 - - 1.事件处理on
 - - - on()方法在匹配元素上绑定一个或多个事件的事件处理函数
 - - - ```js
@@ -482,4 +482,164 @@
       $("div").off("click", "p") // 2.移除事件委托（事件代理）
       $("div").off({  click: function(){  }, mouseenter: function(){  }  }) // 3.移除多个事件
       $("div").off() // 4.移除所有事件
+      $("div").once("click",function() {
+        alert("hello");
+      }) // 5.只触发一次事件
       ```
+      
+- - 3.事件处理trigger（自动触发事件）
+- - - 有些事件希望自动触发，比如轮播图自动播放功能跟点击右侧按钮一致。可以利用定时器自动触发右侧按钮点击事件，不必鼠标点击触发。
+- - - ```js
+      // element.trigger( type [, extraParameters ] )
+      // type：要触发的事件类型，如"click"或"keydown"。
+      // extraParameters：可选参数，一个数组，用于传递给事件处理程序。
+      $("div").on('click',function(){  console.log("hello");  }) // 1.添加事件
+      $("div").click(); // 2.手动触发事件
+      $("div").trigger("click") // 3.自动触发事件
+      $("div").triggerHandler("click") // 4.自动触发事件，不触发默认行为
+      $("div").trigger("click", [param1, param2, param3]) // 5.自动触发事件，并传递参数
+      ```
+
+- - 4.事件对象
+- - - 事件被触发，就会有事件对象的产生
+- - - ```js
+      element.on(events, [selector], handler)
+      // events：一个或多个空格分隔的事件类型和可选的命名空间，如"click"或"keydown.myPlugin"。
+      // selector：一个选择器字符串，用于过滤冒泡上来的事件。如果为空，则表示不进行过滤。
+      // handler：当匹配到的事件触发时，所执行的函数。
+      $("div").on("click", function(event) {})
+      // event：事件对象，包含了事件的相关信息，如事件类型、目标元素、鼠标位置等。
+      // event.type：事件类型，如"click"或"keydown"。
+      // event.target：事件的目标元素，即触发事件的元素。
+      // event.pageX：鼠标相对于文档的X坐标。
+      // event.pageY：鼠标相对于文档的Y坐标。
+      // event.preventDefault()：阻止事件的默认行为。
+      // event.stopPropagation()：阻止事件的冒泡。
+      // event.stopImmediatePropagation()：阻止事件的冒泡，并阻止后续的事件处理程序执行。
+      ```
+
+- ##### 3.其他事件
+- - 1.拷贝对象
+- - - 如果想要把某个对象拷贝（合并）给另外一个对象使用，此时可以使用$.extend()方法
+- - - - ```js
+        // 语法：
+        $.extend([deep], target, object1, [objectN])
+        // deep：可选参数，如果设置为true，则进行深拷贝，否则进行浅拷贝。
+        // target：目标对象，拷贝到该对象上。
+        // object1, [objectN]：源对象，从这些对象中拷贝属性到目标对象上。
+        var target = {name: "Tom", age: 18};
+        var object1 = {name: "Jerry", gender: "male"};
+        var object2 = {age: 20, gender: "female"};
+        $.extend(target, object1, object2);
+        console.log(target); // {name: "Jerry", age: 20, gender: "female"}
+        ```
+
+- - 2.多库共存
+- - - jQuery使用$作为标识符，如果与其他库冲突，可以使用$.noConflict()方法释放$标识符，然后使用jQuery代替$。
+- - - - ```js
+        // 1.解决方案一：
+        // 使用jQuery的别名$，如：jQuery("div")
+        // 示例：
+        jQuery(function() {})
+        // 2.解决方案二：
+        // jQuery变量规定新的名称：$.noConflict()
+        // 示例：
+        var $jq = $.noConflict();
+        $jq(function() {})
+        ```
+
+- - 3.其他方法
+- - - ```js
+        // $.trim()：去除字符串两端的空格。
+        // $.type()：判断数据的类型。
+        // $.isArray()：判断是否为数组。
+        // $.isFunction()：判断是否为函数。
+        // $.isPlainObject()：判断是否为普通对象。
+        // $.isEmptyObject()：判断是否为空对象。
+        // $.parseJSON()：将JSON字符串转换为JavaScript对象。
+        // $.parseXML()：将XML字符串转换为XML文档对象。
+        // $.ajax()：发送AJ
+        // $.get()：发送GET请求。
+        // $.post()：发送POST请求。
+        // $.getJSON()：发送GET请求并解析JSON数据。
+        // $.getScript()：发送GET请求并加载JavaScript文件。
+      ```
+      
+- - 4.jQuery插件
+- - - 1.jQuery插件是扩展jQuery功能的第三方库，可以通过jQuery的extend()方法来扩展jQuery的功能。
+- - - 2.jQuery插件常用网站：
+- - - - 1.jQuery插件库：http://www.jq22.com/
+- - - - 2.jQuery之家：http://www.htmleaf.com/ （推荐）
+- - - - 3.jQuery插件网：http://www.jq-school.com/
+- - - 3.jQuery插件的使用步骤：
+- - - - 1.下载jQuery插件：从jQuery插件网站下载所需的jQuery插件，并将其引入到HTML文件中。
+- - - - 2.引入jQuery插件：在HTML文件中引入jQuery插件，可以通过以下方式引入：
+- - - - - 1.直接引入jQuery插件文件：
+- - - - - 2.通过CDN引入jQuery插件：
+- - - - 3.复制html、css、js(调用插件)
+
+- - - 4.常用插件：
+- - - - 1.瀑布流插件（Masonry.js）
+- - - - 2.轮播图插件（Bootstrap Carousel）
+- - - - 3.图片懒加载（EasyLazyLoad.js）
+- - - - 4.日期选择器插件（DatePicker.js）
+- - - - 5.表单验证插件（jQuery Validation Plugin）
+- - - - 6.弹出层插件（Layer.js）
+- - - - 7.滚动条插件（NiceScroll.js）
+- - - - 8.滚动监听插件（ScrollMagic.js）
+- - - - 9.图表插件（Chart.js）
+- - - - 10.地图插件（Leaflet.js）
+- - - - 11.富文本编辑器插件（Quill.js）
+- - - - 12.视频播放器插件（Video.js）
+- - - - 13.音频播放器插件（Howler.js）
+- - - - 14.动画插件（Animate.css）
+- - - - 15.模态框插件（Bootstrap Modal）
+- - - - 16.导航插件（Bootstrap Navbar）
+- - - - 17.全屏滚动插件（fullPage.js）
+- - - - 18.响应式表格插件（Responsive Tables）
+- - - - 19.图片预览插件（Magnific Popup）
+- - - - 20.图片裁剪插件（cropper.js）
+- - - - 21.图片上传插件（Dropzone.js）
+- - - - 22.图片压缩插件（Compressor.js）
+- - - - 23.图片预览插件（Viewer.js）
+- - - - 24.图片拖拽插件（Draggable.js）
+- - - - 25.图片旋转插件（Rotate.js）
+- - - - 26.图片缩放插件（Zoom.js）
+- - - - 27.图片滤镜插件（Filterizr.js）
+- - - - 28.图片拖拽排序插件（Sortable.js）
+- - - - 29.bootstrap JS（Bootstrap.js）
+
+#### 8.jQuery尺寸、位置操作
+- - 方法：
+- -            语法                                 用法
+- -            width()/height()                    获取匹配元素的宽度和高度 只算 width/height
+- -            innerWidth()/innerHeight()          获取匹配元素的宽度和高度 包含 padding
+- -            outerWidth()/outerHeight()          获取匹配元素的宽度和高度 包含 padding、border
+- -            outerWidth(true)/outerHeight(true)  获取匹配元素的宽度和高度 包含 padding、border、margin
+- -            offset()                            获取匹配元素相对于文档的偏移（浏览器窗口）
+- -            position()                          获取匹配元素相对于其父元素的偏移（父级带有定位的盒子）
+- -            scrollTop()/scrollLeft()            获取匹配元素相对滚动条顶部的偏移/相对滚动条左侧的偏移
+- -            scroll()                            设置匹配元素相对滚动条顶部的偏移/相对滚动条左侧的偏移
+- -            offsetParent()                      获取最近的被定位的祖先元素
+
+- - 使用：
+- - - ```js
+      // 获取元素相对于文档的偏移
+      var offset = $('#box').offset();
+      console.log(offset.left, offset.top);
+      // 设置元素偏移量
+      $('#box').offset({
+        left: 100,
+        top: 200
+      })
+      // 获取元素相对于父元素的偏移（这个方法只能获取不能设置）
+      var position = $('#box').position();
+      console.log(position.left, position.top);
+      
+      // 获取元素相对滚动条顶部的偏移
+      var scrollTop = $(document).scrollTop();
+      // 设置元素相对滚动条顶部的偏移
+      $(document).scrollTop(100);
+      ```
+
+        
