@@ -239,3 +239,10 @@ pre{
 /*.title{
     padding-left: 10px !important;
 }*/
+/*.vp-doc div[class*='language-'], .vp-block {*/
+/*    position: relative;*/
+/*    margin: 16px -24px;*/
+/*    background-color: #282c34;*/
+/*    overflow-x: auto;*/
+/*    transition: background-color 0.5s;*/
+/*}*/

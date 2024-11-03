@@ -45,3 +45,5 @@
 - 环境推荐使用phpstudy，下载地址：https://www.xp.cn/
 - 编辑器推荐使用[vscode](https://code.visualstudio.com/)、[phpstorm](https://www.jetbrains.com/phpstorm/)
              、[sublime](https://www.sublimetext.com/)、[hbuilder](https://www.dcloud.io/hbuilderx.html)等
+- phpstudy安装完成后，启动服务器，创建自定义站点，点击管理选中打开浏览器，出现如下界面，则表示安装成功
+

@@ -48,6 +48,7 @@ export default defineConfig({
                     // {text: 'React-native', link: '/pages/web/react-native'},
                     {text: 'uni-app', link: '/pages/web/uni-app'},
                     {text: 'PHP', link: '/pages/web/php'},
+                    {text: 'webpack', link: '/pages/web/webpack'},
                     // {text: 'vite', link: '/pages/web/vite'},
                     // {text: 'Echarts', link: '/pages/web/Echarts'},
                     // {text: 'Flutter', link: '/pages/web/flutter'},
