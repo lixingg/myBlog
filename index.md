@@ -13,13 +13,13 @@ hero:
   actions:
     - theme: brand
       text: 博客
-      link: https://blog.loverzz.cn
+      link: http://123.60.71.169
     - theme: brand
       text: 单应用
-      link: http://123.60.71.169
-    - theme: alt
+      link: http://123.60.71.169:8242
+    - theme: brand
       text: 微服务
-#      link: http://123.60.71.169
+      link: http://123.60.71.169:8233/#/login
     - theme: brand
       text: APP
       image:
