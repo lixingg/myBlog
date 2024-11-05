@@ -524,3 +524,5 @@
    ```
 
 ### 12、[electron-vite](/pages/web/electron-vite.md)
+
+### 13、[electron-vue](/pages/web/electron-vue.md)
