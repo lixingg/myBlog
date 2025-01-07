@@ -321,7 +321,6 @@ const peer = new RTCPeerConnection({
     // 向信令服务器发送offer
     socket.value?.emit('sendOffer',{offer,roomId})
     ```
-    
 - - 2.用户B收到用户A的offer
 - - ```javascript
      // 接收方 接收offer
@@ -334,6 +333,25 @@ const peer = new RTCPeerConnection({
     
 - - 3.用户B创建RTCPeerConnection对象，添加本地音视频流，设置远程描述的offer,生成answer,并且通过信令服务器将answer发送给用户A
 - - ```javascript
+       // 获取本地音视频流
+       const getLocalStream = async () => {
+       //共享屏幕
+       // return navigator.mediaDevices.getDisplayMedia({ video: true, audio: true }).then(stream => {
+       // localVideo.value!.srcObject = stream // 将音视频流赋值给video标签
+       // localVideo.value!.play() // 播放音视频流
+       // localStream.value = stream
+       // return stream
+       // });
+       //开启音频摄像头
+       const stream = await navigator.mediaDevices.getUserMedia({ // 获取音视频流
+         video: true, // 是否获取视频
+         audio: true // 是否获取音频
+       })
+       localVideo.value!.srcObject = stream // 将音视频流赋值给video标签
+       localVideo.value!.play() // 播放音视频流
+       localStream.value = stream
+       return stream
+       }
      // 接收方 接收offer
     // 创建RTCPeerConnection对象
     peer.value = new RTCPeerConnection()
@@ -530,6 +548,8 @@ const peer = new RTCPeerConnection({
  
   </script>
   ```
+
+注意：
 
     
 
