@@ -342,7 +342,7 @@ const peer = new RTCPeerConnection({
        // localStream.value = stream
        // return stream
        // });
-       //开启音频摄像头
+       //开启音频摄像头 （注意：浏览器安全策略，部署到服务器如果是非https，则无法开启摄像头，getUserMedia不存在该方法）
        const stream = await navigator.mediaDevices.getUserMedia({ // 获取音视频流
          video: true, // 是否获取视频
          audio: true // 是否获取音频
@@ -549,7 +549,6 @@ const peer = new RTCPeerConnection({
   </script>
   ```
 
-注意：
 
     
 
