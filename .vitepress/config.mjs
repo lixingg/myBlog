@@ -72,6 +72,7 @@ export default defineConfig({
                     {text: 'Python', link: '/pages/server/Python'},
                     {text: 'GO', link: '/pages/server/GO'},
                     {text: 'AI', link: '/pages/server/AI'},
+
                     {text: '技术中心', link: '/pages/server/'},
                     // {text: '面试宝典', link: '/vue/vue2'}
                 ]
@@ -79,6 +80,8 @@ export default defineConfig({
             {
                 text: '运维',
                 items: [
+                    {text: 'Linux', link: '/pages/operation/Linux'},
+                    {text: 'Nginx', link: '/pages/operation/Nginx'},
                     {text: '技术中心', link: '/pages/operation/'},
                     // {text: '面试宝典', link: '/vue/vue2'}
                 ]

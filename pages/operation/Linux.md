@@ -1,0 +1,154 @@
+# Linux 
+### 1、认识Linux
+- Linux，全称GNU/Linux，是一种免费使用和自由传播的类UNIX操作系统，其内核由林纳斯·本纳第克特·托瓦兹于1991年10月5日首次发布，
+它主要受到Minix和Unix思想的启发，是一个基于POSIX的多用户、多任务、支持多线程和多CPU的操作系统。它能运行主要的Unix工具软件、应用程序和网络协议。
+它支持32位和64位硬件。Linux继承了Unix以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统。Linux有上百种不同的发行版，
+如基于社区开发的debian、archlinux，和基于商业开发的Red Hat Enterprise Linux、SUSE、Oracle Linux等。
+
+- 1.使用SSH连接服务器
+- - window 安装SSH（安装地址） [mls-software.com](http://www.mls-software.com/opensshd.html)
+- - Macbook 免安装自带
+
+- 2.使用方式
+- - 打开终端
+- - ssh  账号默认root@服务器地址 例子  ssh root@123 然后选择Y ，然后输入密码即可
+- 
+- 3.基本命令
+-  **ls** 命令 （用来查看当前的目录的文件）
+-  **cd** 用来切换目录
+-  **wget** 命令用来下载一些东西
+- - nodejs 下载地址下载 | Node.js 中文网
+- - 执行以下命令
+- - wget https://cdn.npmmirror.com/binaries/node/v14.19.1/node-v14.19.1-linux-x64.tar.xz
+- - 下载完成之后
+- - 解压
+- 使用tar 命令
+- -  -c: 压缩
+- -  -x：解压
+- -  -t：查看内容
+- -  -r：向压缩归档文件末尾追加文件
+- -  -u：更新原压缩包中的文件
+- - 这五个是独立的命令，压缩解压都要用到其中一个，可以和别的命令连用但只能用其中一个。下面的参数是根据需要在压缩或解压档案时可选的。
+- -  -z：有gzip属性的
+- -  -j：有bz2属性的
+- -  -Z：有compress属性的
+- -  -v：显示所有过程
+- -  -O：将文件解开到标准输出
+- - 下面的参数-f是必须的
+- - -f: 使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。
+- - tar -cf all.tar *.jpg
+- - 这条命令是将所有.jpg的文件打成一个名为all.tar的包。-c是表示产生新的包，-f指定包的文件名。
+- - tar -rf all.tar *.gif
+- - 这条命令是将所有.gif的文件增加到all.tar的包里面去。-r是表示增加文件的意思。
+- - tar -uf all.tar logo.gif
+- - 这条命令是更新原来tar包all.tar中logo.gif文件，-u是表示更新文件的意思。
+- - tar -tf all.tar
+- - 这条命令是列出all.tar包中所有文件，-t是列出文件的意思
+- - tar -xf all.tar
+- - 这条命令是解出all.tar包中所有文件，-x是解开的意思
+- - 压缩
+- - tar –cvf jpg.tar *.jpg （将目录里所有jpg文件打包成tar.jpg）
+- - tar –czf jpg.tar.gz *.jpg   （将目录里所有jpg文件打包成jpg.tar后，并且将其用gzip压缩，生成一个gzip压缩过的包，命名为jpg.tar.gz）
+- - tar –cjf jpg.tar.bz2 *.jpg （将目录里所有jpg文件打包成jpg.tar后，并且将其用bzip2压缩，生成一个bzip2压缩过的包，命名为jpg.tar.bz2）
+- - tar –cZf jpg.tar.Z *.jpg   （将目录里所有jpg文件打包成jpg.tar后，并且将其用compress压缩，生成一个umcompress压缩过的包，命名为jpg.tar.Z）
+- - rar a jpg.rar *.jpg （rar格式的压缩，需要先下载rar for Linux）
+- - zip jpg.zip *.jpg （zip格式的压缩，需要先下载zip for linux）
+
+- - 解压
+- - tar –xvf file.tar （解压 tar包）
+- - tar -xzvf file.tar.gz （解压tar.gz）
+- - tar -xjvf file.tar.bz2   （解压 tar.bz2）
+- - tar –xZvf file.tar.Z  （解压tar.Z）
+- - unrar e file.rar （解压rar）
+- - unzip file.zip （解压zip）
+- - 我们执行  tar -xvf node-v14.19.1-linux-x64.tar.xz
+- - 4.配置环境变量
+- **pwd**命令（用于显示工作目录）
+- - 使用pwd命令获取node bin 的位置
+- - 前往跟目录下面的etc/profile 此文件涉及系统的环境，即环境变量相关。这里修改会对所有用户起作用
+- - 使用vi命令编辑该文件
+- - vi profile
+- - 然后按一下I键 进入编辑模式
+- - 在最后一行添加
+- - export PATH=$PATH:你的目录/node-v14.19.1-linux-x64/bin
+- - 然后执行 source profile 或者重启linux
+- - 配置淘宝代理 npm config set registry https://registry.npm.taobao.org
+
+### 2、Linux文件属性
+- ls -l 查看文件属性信息
+- - <img src="/operation/linux1.jpg">
+- - 首字母作用
+- - 文件的开头对应是 -
+- - 目录开头对应的是d
+- - 快捷方式对应的是l
+- - U盘对应的是b
+- - 鼠标键盘等硬件对应的c
+
+- Linux文件属性
+- - 每三个一组rw-
+- - -为缺少权限
+- - <img src="/operation/linux2.jpg">
+- - 第二行的数量 代表你有多少文件 和目录里面有多少文件
+- - <img src="/operation/linux3.jpg">
+- - 第三行表示
+- - 创建该文件用户的名字  第二个是改文件所属用户组的名字
+- - 第一个就是用户名 第二个就是组名
+- - <img src="/operation/linux4.jpg">
+- - 第四行表示改文件和文件夹所属的体积
+- - <img src="/operation/linux5.jpg">
+- - 第五行表示 创建改文件的日期
+- - <img src="/operation/linux6.jpg">
+- - 第六行代表的就是文件或者文件夹等一系列的名称
+- - <img src="/operation/linux7.jpg">
+
+### 3、Linux权限
+- <img src="/operation/linux0.jpg">
+- RWX 分别是可读 可写 可执行权限
+- 这个权限我们可以修改使用chmod 777 文件名
+- 读------R对应数字4
+- 写------W对应数字2
+- 可执行-----X对应数字1
+- 所以7就是可读可写可执行权限
+- <img src="/operation/linux8.png">
+- 我们可以创建一个用户测试一下 使用adduser 账号  passwd 给用户设置密码
+- 我们root账号把index.txt 设置700 （执行命令 chmod 700 index.txt）
+- 无权限 的用户将无法读写 （执行index.txt 提示 Permission denied）
+
+### 4、Linux防火墙
+- 1.firewalld的基本使用
+- - 启动： systemctl start firewalld
+- - 关闭： systemctl stop firewalld
+- - 查看状态： systemctl status firewalld
+- - 开机禁用 ： systemctl disable firewalld
+- - 开机启用 ： systemctl enable firewalld
+- 2.systemctl是CentOS7的服务管理工具中主要的工具，它融合了service和chkconfig的功能于一体。
+- - 启动一个服务：systemctl start firewalld.service
+- - 关闭一个服务：systemctl stop firewalld.service
+- - 重启一个服务：systemctl restart firewalld.service
+- - 显示一个服务的状态：systemctl status firewalld.service
+- - 在开机时启用一个服务：systemctl enable firewalld.service
+- - 在开机时禁用一个服务：systemctl disable firewalld.service
+- - 查看服务是否开机启动：systemctl is-enabled firewalld.service
+- - 查看已启动的服务列表：systemctl list-unit-files|grep enabled
+- - 查看启动失败的服务列表：systemctl --failed
+- 3.配置firewalld-cmd
+- - 查看版本： firewall-cmd --version
+- - 查看帮助： firewall-cmd --help
+- - 显示状态： firewall-cmd --state
+- - 查看所有打开的端口： firewall-cmd --zone=public --list-ports
+- - 更新防火墙规则： firewall-cmd --reload
+- - 查看区域信息:  firewall-cmd --get-active-zones
+- - 查看指定接口所属区域： firewall-cmd --get-zone-of-interface=eth0
+- - 拒绝所有进站连接： firewall-cmd --panic-on
+- - 取消拒绝状态： firewall-cmd --panic-off
+- - 查看是否拒绝进站连接： firewall-cmd --query-panic
+- - 添加
+- - 开放端口（临时）： firewall-cmd --zone=public --add-port=80/tcp --permanent （--permanent永久生效，没有此参数重启后失效）
+- - 重新加载
+- - firewall-cmd --reload
+- - 查看端口是否开放
+- - firewall-cmd --zone=public --query-port=80/tcp
+- - 删除
+- - 删除端口： firewall-cmd --zone= public --remove-port=80/tcp --permanent
+- - 删除服务： firewall-cmd --zone= public --remove-service=http --permanent
+
