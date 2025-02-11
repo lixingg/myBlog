@@ -15,7 +15,6 @@ permissions:
 concurrency:
   group: pages
   cancel-in-progress: false
-
 jobs:
   # 构建工作
   build:
