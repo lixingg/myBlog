@@ -83,7 +83,6 @@ export default defineConfig({
                     {text: 'Linux', link: '/pages/operation/Linux'},
                     {text: 'Nginx', link: '/pages/operation/Nginx'},
                     {text: '技术中心', link: '/pages/operation/'},
-
                     // {text: '面试宝典', link: '/vue/vue2'}
                 ]
             },

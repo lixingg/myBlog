@@ -20,4 +20,3 @@ Unity 支持多种编程语言，包括 C#、JavaScript 和 Boo，并且可以�
 - 13.项目创建完成会开启新的窗口，点击右上角的layout，选择布局（by 3）
 - 14.点击Editor，选择Edit，选择Preferences，选择External Tools，选择Visual Studio，选择Visual Studio Community，点击确定
 - 15.点击Editor，选择Edit，选择Preferences，选择Language，选择简体中文，（关闭编辑器重启项目生效）
-- 

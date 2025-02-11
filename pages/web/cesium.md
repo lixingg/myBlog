@@ -4,9 +4,9 @@
 ### 3、[cesium 官方文档](https://cesium.com/downloads/cesiumjs/releases/1.83/Documentation/)
 ### 4、Cesium安装
 
-```js
+```bash
 npm install cesium
 ```
-```js
+```bash
 npm i cesium vite-plugin-cesium -D
 ```
