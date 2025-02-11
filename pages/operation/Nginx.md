@@ -332,7 +332,7 @@ nginx 配置文件
         proxy_pass http://localhost:9000/;
    }
   ```
-- 截取到/api/ 将会转发到 http://localhost:9000/
+- 截取到/api/ 将会转发到 \http://localhost:9000/
 - proxy_set_header
 - 该指令可以更改Nginx服务器接收到的客户端请求的请求头信息，然后将新请求头发送给代理的服务器
 - proxy_set_header X-Real-IP $remote_addr;
@@ -743,7 +743,7 @@ X-Forwarded-For 就变成了如下形式
   ```
 - #### 1.默认状态是按照轮询的方式去做负载的
 - 使用express 启动三个服务 分别是9001 9002 9003
-- ```javascript
+- ```js
   const express = require('express')
   var num = 1
   const app = express()
