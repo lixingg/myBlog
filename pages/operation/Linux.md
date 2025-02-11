@@ -151,4 +151,4 @@
 - - 删除
 - - 删除端口： firewall-cmd --zone= public --remove-port=80/tcp --permanent
 - - 删除服务： firewall-cmd --zone= public --remove-service=http --permanent
-
+- -
