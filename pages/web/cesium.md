@@ -10,3 +10,4 @@ npm install cesium
 ```bash
 npm i cesium vite-plugin-cesium -D
 ```
+

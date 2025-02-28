@@ -463,7 +463,6 @@ const peer = new RTCPeerConnection({
     }
     ```
 
-    
 - - [案例演示](http://123.60.71.169:8242/#/InstantMessaging/webRtcUse)
 
 - ### 拓展：[peerjs](https://peerjs.com/docs/#start)

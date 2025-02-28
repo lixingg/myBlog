@@ -209,3 +209,4 @@ function patch(oldVnode, vnode) { // oldVnode是老节点，vnode是新节点
           2.如果没找到，那么就创建新节点，添加到旧节点的前面
         6.创建 或者 删除
 ```
+

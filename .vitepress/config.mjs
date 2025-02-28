@@ -52,6 +52,7 @@ export default defineConfig({
                     {text: 'threeJS', link: '/pages/web/threeJS'},
                     {text: '数字孪生', link: '/pages/web/digital-twin'},
                     {text: 'WebRTC', link: '/pages/web/WebRTC'},
+                    {text: 'Unity', link: '/pages/web/Unity'},
                     // {text: 'vite', link: '/pages/web/vite'},
                     // {text: 'Echarts', link: '/pages/web/Echarts'},
                     // {text: 'Flutter', link: '/pages/web/flutter'},
