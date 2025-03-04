@@ -1,7 +1,7 @@
 ## typescript 专栏
 
 ### 1、TypeScript 介绍 
-- <img src="/web/TS1.jpg">
+- <img src="/web/TS1.jpg" />
 - 1.TypeScript 是由微软开发的， 是基于JavaScript 的一个扩展语言
 - 2.TypeScript 包含了 JavaScript 的所有内容，即：TypeScript 是 JavaScript 的超集.
 - 3.TypeScript 增加了：静态类型检查、接口、泛型等很多现代开发特性，因此更适合大型项目的开发。
@@ -750,7 +750,7 @@
   }
   ```
 - #### 11、属性修饰符
-- <img src="/web/TS2.jpg">
+- <img src="/web/TS2.jpg" />
 - **public 修饰符**
 - Person 类
 - ```typescript
@@ -1196,7 +1196,7 @@
   泛型允许我们在定义函数、类或接⼝时，使⽤类型参数来表示未指定的类型，这些参数在具体 使⽤时，才被指定具体的类型，
   泛型能让同⼀段代码适⽤于多种类型，同时仍然保持类型的安全性。
   ```
-- 举例：如下代码中 <T> 就是泛型，（不⼀定⾮叫 T ），设置泛型后即可在函数中使⽤ T 来表示该类型：
+- 举例：如下代码中 \<T> 就是泛型，（不⼀定⾮叫 T ），设置泛型后即可在函数中使⽤ T 来表示该类型：
 - 泛型函数
 - ```typescript
   function logData<T>(data: T): T {
@@ -1206,7 +1206,7 @@
   logData<number>(100)
   logData<string>('hello')
   ```
-- **泛型可以有多个**
+- 泛型可以有多个
 - ```typescript
   function logData<T, U>(data1: T, data2: U): T | U {
     console.log(data1,data2)
