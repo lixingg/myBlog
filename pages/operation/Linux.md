@@ -72,7 +72,7 @@
 - - 在最后一行添加
 - - export PATH=$PATH:你的目录/node-v14.19.1-linux-x64/bin
 - - 然后执行 source profile 或者重启linux
-- - 配置淘宝代理 npm config set registry https://registry.npm.taobao.org
+- - 配置淘宝代理 npm config set registry https://registry.npmmirror.com
 
 ### 2、Linux文件属性
 - ls -l 查看文件属性信息

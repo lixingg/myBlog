@@ -97,6 +97,7 @@ export default defineConfig({
             {
                 text: '软件',
                 items: [
+                    {text: 'vscode', link: '/pages/softWare/vscode'},
                     {text: '操作文档', link: '/pages/softWare/'},
                     // {text: '面试宝典', link: '/vue/vue2'}
                 ]
