@@ -14,7 +14,7 @@ hero:
     - theme: brand
       text: 博客
 #      link: http://123.60.71.169
-      link: https://blog.loverzz.cn/
+      link: http://blog.loverzz.site
     - theme: brand
       text: 单应用
       link: http://123.60.71.169:8242
