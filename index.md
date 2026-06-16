@@ -25,13 +25,18 @@ hero:
       text: APP
       image:
         src: /app.svg
-      link: http://123.60.71.169:8241/douPlayer.apk    
+      link: http://123.60.71.169:8241/douPlayer.apk 
     - theme: alt
       text: 小程序
 #      link: http://123.60.71.169
     - theme: alt
       text: 桌面端
-#      link: http://123.60.71.169      
+#      link: http://123.60.71.169 
+    - theme: brand
+      text: UI库
+      image:
+        src: /app.svg
+      link: https://docs.loverzz.site
 features:
   - title: 关注前沿
     icon:
