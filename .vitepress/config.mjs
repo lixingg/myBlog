@@ -46,6 +46,7 @@ export default defineConfig({
                     {text: 'JQuery', link: '/pages/web/jquery'},
                     {text: 'PWA', link: '/pages/web/pwa'},
                     {text: 'AI', link: '/pages/web/AI'},
+                    {text: 'Cesium', link: '/pages/web/cesium'},
                     // {text: 'React-native', link: '/pages/web/react-native'},
                     {text: 'uni-app', link: '/pages/web/uni-app'},
                     {text: 'PHP', link: '/pages/web/php'},
