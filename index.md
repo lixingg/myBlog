@@ -14,7 +14,7 @@ hero:
     - theme: brand
       text: 博客
 #      link: http://123.60.71.169
-      link: http://blog.loverzz.site
+      link: http://blog.loverzz.asia
     - theme: brand
       text: 单应用
       link: http://123.60.71.169:8242
@@ -36,7 +36,7 @@ hero:
       text: UI库
       image:
         src: /app.svg
-      link: https://docs.loverzz.site
+      link: https://docs.loverzz.asia
 features:
   - title: 关注前沿
     icon:
